@@ -1,0 +1,27 @@
+# 网站配置
+title: Andy的GNSS工坊
+description: 多年嵌入式实战经验，知识分享，拒绝重复造轮子！
+baseurl: "" # 如果部署在子目录，填写子目录名称
+url: "https://shenqislx.github.io" # 您的GitHub Pages地址
+
+theme: minima
+
+# 插件
+gems:
+  - jekyll-feed
+
+# 排除文件
+exclude:
+  - README.md
+  - LICENSE
+  - .vscode/
+
+# Markdown处理
+markdown: kramdown
+highlighter: rouge
+
+# 其他配置
+collections:
+  articles:
+    output: true
+    permalink: /articles/:path/
