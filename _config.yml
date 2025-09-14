@@ -24,4 +24,4 @@ highlighter: rouge
 collections:
   articles:
     output: true
-    permalink: /articles/:path/
+    permalink: /articles/:name/
