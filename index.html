@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Andy的GNSS接收机工坊</title>
+    <title>Andy的GNSS工坊</title>
     <style>
         body {
             font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -15,10 +15,9 @@
         }
         
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
-            text-align: center;
         }
         
         .header {
@@ -27,6 +26,7 @@
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
+            text-align: center;
         }
         
         h1 {
@@ -42,65 +42,110 @@
             margin-bottom: 30px;
         }
         
-        .content {
+        .columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .column {
             background: rgba(255, 255, 255, 0.9);
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
         }
         
-        .coming-soon {
-            font-size: 1.5em;
-            color: #e74c3c;
-            margin: 20px 0;
+        .column-title {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
         }
         
-        .features {
-            text-align: left;
-            margin: 30px 0;
-        }
-        
-        .features li {
-            margin: 10px 0;
-            padding: 10px;
+        .article {
             background: rgba(52, 152, 219, 0.1);
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
             border-left: 4px solid #3498db;
+        }
+        
+        .article h3 {
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+        
+        .article p {
+            color: #7f8c8d;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        .article-date {
+            font-size: 0.9em;
+            color: #95a5a6;
+            margin-top: 10px;
+        }
+        
+        .coming-soon {
+            text-align: center;
+            color: #e74c3c;
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 8px;
+            border: 2px dashed #e74c3c;
         }
         
         .footer {
             margin-top: 40px;
             color: rgba(255, 255, 255, 0.8);
             font-size: 0.9em;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Andy的GNSS接收机工坊</h1>
-            <div class="subtitle">全球导航卫星系统技术研究与开发</div>
+            <h1>Andy的GNSS工坊</h1>
+            <div class="subtitle">全球导航卫星系统技术研究与开发专栏</div>
         </div>
         
-        <div class="content">
-            <div class="coming-soon">🚧 网站正在建设中 🚧</div>
-            
-            <div class="features">
-                <h3>即将推出的内容：</h3>
-                <ul>
-                    <li>GNSS接收机硬件设计与开发</li>
-                    <li>卫星导航信号处理技术</li>
-                    <li>定位算法研究与实现</li>
-                    <li>开源项目与教程</li>
-                    <li>技术文章与心得分享</li>
-                </ul>
+        <div class="columns">
+            <!-- GNSS接收机技术专栏 -->
+            <div class="column">
+                <h2 class="column-title">GNSS接收机技术</h2>
+                
+                <div class="article">
+                    <h3>GNSS接收机基本原理与架构</h3>
+                    <p>本文介绍了GNSS接收机的基本工作原理、硬件架构和信号处理流程，包括射频前端、基带处理和导航解算等关键模块。</p>
+                    <div class="article-date">发布日期: 2024-01-15</div>
+                </div>
+                
+                <div class="coming-soon">更多文章即将发布...</div>
             </div>
             
-            <p>欢迎关注这个空间，我将在这里分享GNSS接收机相关的技术内容和项目进展。</p>
+            <!-- GNSS定位算法专栏 -->
+            <div class="column">
+                <h2 class="column-title">GNSS定位算法</h2>
+                
+                <div class="article">
+                    <h3>最小二乘法在GNSS定位中的应用</h3>
+                    <p>详细讲解最小二乘法在GNSS定位解算中的数学原理和实现方法，包括观测方程建立和误差处理。</p>
+                    <div class="article-date">发布日期: 2024-01-10</div>
+                </div>
+                
+                <div class="coming-soon">更多文章即将发布...</div>
+            </div>
         </div>
         
         <div class="footer">
-            © 2024 Andy的GNSS接收机工坊 | 使用 Creative Commons CC0 许可证
+            © 2024 Andy的GNSS工坊 | 使用 Creative Commons CC0 许可证
         </div>
     </div>
 </body>
