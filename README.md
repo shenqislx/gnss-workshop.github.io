@@ -26,7 +26,7 @@ gnss-workshop/
 ## 🌐 访问方式
 
 本项目通过GitHub Pages部署，访问地址：
-https://shenqislx.github.io/gnss-workshop.github.io/
+https://shenqislx.github.io/
 
 ## 📄 许可证
 
