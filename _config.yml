@@ -1,4 +1,5 @@
 # 网站配置
+include: [".html"]
 title: Andy的GNSS工坊
 description: 多年嵌入式实战经验，知识分享，拒绝重复造轮子！
 baseurl: "" # 对于username.github.io仓库，保持为空
