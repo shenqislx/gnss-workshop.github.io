@@ -4,7 +4,7 @@ description: 多年嵌入式实战经验，知识分享，拒绝重复造轮子�
 baseurl: "" # 对于username.github.io仓库，保持为空
 url: "https://shenqislx.github.io" # 您的GitHub用户名.github.io
 
-theme: minima
+# theme: minima
 
 # 插件
 gems:
