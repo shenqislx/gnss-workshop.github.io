@@ -1,7 +1,7 @@
 ---
-layout: article
 title: "粗时导航五状态方程理论与应用"
-date: 2024-01-25
+layout: article
+date: 2024-09-14
 ---
 
 # 粗时导航定位技术
