@@ -5,34 +5,288 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }} - {{ site.title }}</title>
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+            --border-color: #eaeaea;
+        }
+        
         body {
             font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
             line-height: 1.6;
-            background-color: #f8f8f8;
+            color: var(--text-color);
+            background-color: var(--light-bg);
         }
-        .article-header {
-            text-align: center;
-            margin-bottom: 30px;
+        
+        /* 页眉样式 */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .article-content {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: #3498db;
+        
+        .site-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .site-title a {
+            color: white;
             text-decoration: none;
         }
-        /* 公式居中 */
-        .katex-display {
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav li {
+            margin-left: 1.5rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--secondary-color);
+        }
+        
+        /* 主内容区域 */
+        .main-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 20px;
+            display: flex;
+        }
+        
+        .article-container {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        .article-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .article-header h1 {
+            margin: 0 0 0.5rem;
+            font-size: 2rem;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .article-content {
+            padding: 2rem;
+        }
+        
+        /* 文章内容样式 */
+        .article-content h1, .article-content h2, .article-content h3 {
+            color: var(--primary-color);
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.3em;
+        }
+        
+        .article-content h2 {
+            font-size: 1.75rem;
+        }
+        
+        .article-content h3 {
+            font-size: 1.4rem;
+        }
+        
+        .article-content p {
             margin: 1em 0;
+            line-height: 1.8;
+        }
+        
+        .article-content ul, .article-content ol {
+            padding-left: 2em;
+        }
+        
+        .article-content blockquote {
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 1em;
+            margin-left: 0;
+            color: #555;
+            font-style: italic;
+        }
+        
+        .article-content code {
+            background-color: #f5f5f5;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            font-size: 0.9em;
+        }
+        
+        .article-content pre {
+            background-color: #f5f5f5;
+            padding: 1em;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .article-content pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        
+        /* 公式样式 */
+        .katex-display {
+            margin: 1.5em 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--secondary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+            z-index: 1000;
+        }
+        
+        .back-to-top:hover {
+            background-color: var(--primary-color);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+            
+            nav li {
+                margin: 0 0.75rem;
+            }
+            
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .article-header {
+                padding: 1.5rem;
+            }
+            
+            .article-content {
+                padding: 1.5rem;
+            }
         }
     </style>
 
@@ -77,17 +331,95 @@
     </script>
 </head>
 <body>
-    <div class="article-content">
-        <div class="article-header">
-            <h1>{{ page.title }}</h1>
-            {% if page.date %}
-                <p>发布日期: {{ page.date | date: "%Y-%m-%d" }}</p>
-            {% endif %}
+    <!-- 页眉 -->
+    <header>
+        <div class="header-container">
+            <h1 class="site-title"><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ '/' | relative_url }}">首页</a></li>
+                    <li><a href="{{ '/articles' | relative_url }}">文章</a></li>
+                    <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <div class="main-container">
+        <article class="article-container">
+            <div class="article-header">
+                <h1>{{ page.title }}</h1>
+                <div class="article-meta">
+                    {% if page.date %}
+                        <span><i class="far fa-calendar-alt"></i> {{ page.date | date: "%Y-%m-%d" }}</span>
+                    {% endif %}
+                    <span><i class="fas fa-user"></i> Andy</span>
+                </div>
+            </div>
+            
+            <div class="article-content">
+                {{ content }}
+                
+                <div style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <a href="{{ '/' | relative_url }}" style="display: inline-flex; align-items: center; color: var(--secondary-color); text-decoration: none;">
+                        <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i> 返回首页
+                    </a>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>关于本站</h3>
+                <p>{{ site.description }}</p>
+                <p>多年嵌入式实战经验，知识分享，拒绝重复造轮子！</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul>
+                    <li><a href="{{ '/' | relative_url }}">首页</a></li>
+                    <li><a href="{{ '/articles' | relative_url }}">文章列表</a></li>
+                    <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub 仓库</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>联系方式</h3>
+                <ul>
+                    <li><a href="https://github.com/shenqislx" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </div>
         </div>
         
-        {{ content }}
+        <div class="copyright">
+            &copy; {{ 'now' | date: "%Y" }} {{ site.title }} | 保留所有权利
+        </div>
+    </footer>
 
-        <a href="{{ '/' | relative_url }}" class="back-link">← 返回首页</a>
-    </div>
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" title="返回顶部">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- 返回顶部脚本 -->
+    <script>
+        // 当页面滚动超过300px时显示返回顶部按钮
+        window.onscroll = function() {
+            var backToTop = document.querySelector('.back-to-top');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTop.style.display = "flex";
+            } else {
+                backToTop.style.display = "none";
+            }
+        };
+        
+        // 初始状态隐藏
+        document.querySelector('.back-to-top').style.display = "none";
+    </script>
 </body>
 </html>
