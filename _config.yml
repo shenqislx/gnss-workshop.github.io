@@ -19,6 +19,11 @@ exclude:
 # Markdown处理
 markdown: kramdown
 highlighter: rouge
+kramdown:
+  math_engine: mathjax
+  math_engine_opts: {}
+  input: GFM
+  parse_block_html: true
 
 # 其他配置
 collections:

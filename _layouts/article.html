@@ -12,6 +12,7 @@
             margin: 0 auto;
             padding: 20px;
             line-height: 1.6;
+            background-color: #f8f8f8;
         }
         .article-header {
             text-align: center;
@@ -29,7 +30,17 @@
             color: #3498db;
             text-decoration: none;
         }
+        /* 公式居中 */
+        .katex-display {
+            margin: 1em 0;
+        }
     </style>
+
+    <!-- 引入 MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
 </head>
 <body>
     <div class="article-content">
@@ -41,7 +52,7 @@
         </div>
         
         {{ content }}
-        
+
         <a href="{{ '/' | relative_url }}" class="back-link">← 返回首页</a>
     </div>
 </body>
