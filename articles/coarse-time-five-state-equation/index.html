@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>粗时导航五状态方程理论与应用 - Andy的GNSS工坊</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+            --border-color: #eaeaea;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+        }
+        
+        /* 页眉样式 */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .site-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .site-title a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav li {
+            margin-left: 1.5rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--secondary-color);
+        }
+        
+        /* 主内容区域 */
+        .main-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 20px;
+            display: flex;
+        }
+        
+        .article-container {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        .article-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .article-header h1 {
+            margin: 0 0 0.5rem;
+            font-size: 2rem;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .article-content {
+            padding: 2rem;
+        }
+        
+        /* 文章内容样式 */
+        .article-content h1, .article-content h2, .article-content h3 {
+            color: var(--primary-color);
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.3em;
+        }
+        
+        .article-content h2 {
+            font-size: 1.75rem;
+        }
+        
+        .article-content h3 {
+            font-size: 1.4rem;
+        }
+        
+        .article-content p {
+            margin: 1em 0;
+            line-height: 1.8;
+        }
+        
+        .article-content ul, .article-content ol {
+            padding-left: 2em;
+        }
+        
+        .article-content blockquote {
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 1em;
+            margin-left: 0;
+            color: #555;
+            font-style: italic;
+        }
+        
+        .article-content code {
+            background-color: #f5f5f5;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            font-size: 0.9em;
+        }
+        
+        .article-content pre {
+            background-color: #f5f5f5;
+            padding: 1em;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .article-content pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        
+        /* 公式样式 */
+        .katex-display {
+            margin: 1.5em 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--secondary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+            z-index: 1000;
+        }
+        
+        .back-to-top:hover {
+            background-color: var(--primary-color);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+            
+            nav li {
+                margin: 0 0.75rem;
+            }
+            
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .article-header {
+                padding: 1.5rem;
+            }
+            
+            .article-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+
+    <!-- 引入 MathJax -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          processEscapes: true,
+          processEnvironments: true,
+          packages: ['base', 'ams', 'noerrors', 'noundefined']
+        },
+        loader: {
+          load: ['[tex]/noerrors', '[tex]/noundefined']
+        },
+        svg: {
+          fontCache: 'global'
+        },
+        options: {
+          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+          renderActions: {
+            /* 添加一个自定义的渲染动作，即使有错误也尝试渲染 */
+            findScript: [10, function (doc) {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = {node: text, delim: '', n: 0};
+                math.end = {node: text, delim: '', n: 0};
+                doc.math.push(math);
+              }
+            }, '']
+          }
+        }
+      };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</head>
+<body>
+    <!-- 页眉 -->
+    <header>
+        <div class="header-container">
+            <h1 class="site-title"><a href="/">Andy的GNSS工坊</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="/">首页</a></li>
+                    <li><a href="/articles">文章</a></li>
+                    <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <div class="main-container">
+        <article class="article-container">
+            <div class="article-header">
+                <h1>粗时导航五状态方程理论与应用</h1>
+                <div class="article-meta">
+                    
+                        <span><i class="far fa-calendar-alt"></i> 2025-09-14</span>
+                    
+                    <span><i class="fas fa-user"></i> Andy</span>
+                </div>
+            </div>
+            
+            <div class="article-content">
+                <h1 id="粗时导航定位技术">粗时导航定位技术</h1>
+
+<p>粗时导航技术是一种在全球导航卫星系统（GNSS）接收机初始时间信息存在较大偏差（数量级为秒或分钟）时，仍能实现有效定位的算法。它通过扩展状态参数，将传统的四参数模型（三维位置与接收机钟差）增强为五参数模型，新增参数为接收机粗时间误差。</p>
+
+<h2 id="核心问题"><strong>核心问题</strong></h2>
+
+<p>在标准单点定位中，我们假设接收机钟差$\delta t$是一个小量（通常在毫秒级），可以通过伪距观测方程与三维坐标一起解算。然而，当接收机没有精确的初始时间信息时，其内部时钟可能与系统时间存在数秒、数分钟甚至更大的偏差。这个巨大的钟差（记为$\Delta T$）如果被当作$\delta t$来处理，会引入巨大的误差，导致定位失败。这是因为良好的最小二乘估计依赖于对卫星视线方向（Line-Of-Sight,
+LOS）的良好的线性化近似，而粗时间误差可能引入较大的卫星位置误差，从而破坏线性化（使LOS投影矢量失真）。</p>
+
+<p>设接收机内部记录的测量时刻为$t_{m}$，其与真实GNSS系统时$t_{u}$之间的关系：</p>
+
+\[t_{u} = t_{m} + \Delta T - \delta t\]
+
+<p>其中，$\Delta T$
+即为待估计的<strong>粗时间误差</strong>。（后面会解释$\Delta T$与$\delta t$符号相反的原因）。</p>
+
+<p>该误差$\Delta T$会导致卫星位置计算错误。卫星位置是信号发射时刻的函数$X^{s}(t)$，使用错误的接收时间$t_{m}$来计算信号发射时刻和卫星位置，会引入显著误差，从而使传统模型失效。粗时导航通过将$\Delta T$作为一个待估状态量，在迭代计算中同时修正接收机位置、钟差和用于计算卫星位置的时间基准。</p>
+
+<p>参数辨析：</p>
+
+<ul>
+  <li>
+    <p>$\delta t$：接收机钟差。表示接收机晶体抖动导致的相对于GNSS系统时的精密偏差，是一个小量（微秒级到毫秒级），直接影响伪距观测值。</p>
+  </li>
+  <li>
+    <p>$\Delta T$：粗时间误差。表示接收机初始时间与系统时之间的巨大偏差（秒级到分钟级），它不直接体现在伪距观测值中，而是通过影响卫星位置的计算间接影响定位。</p>
+  </li>
+</ul>
+
+<p>五状态模型即同时估计三维位置坐标、精密接收机钟差$\delta t$和粗时间误差$\Delta T$。</p>
+
+<h2 id="观测模型"><strong>观测模型</strong></h2>
+
+<p>对于第$i$颗卫星，其伪距观测方程可表述为：</p>
+
+\[P_{r}^{i} = \rho_{r}^{i} + c(\delta t_{r} - \delta t^{i}) + I_{r}^{i} + T_{r}^{i} + \epsilon_{P}^{i}\]
+
+<p>其中：</p>
+
+<ul>
+  <li>
+    <p>$P_{r}^{i}$ 为接收机测得的伪距观测值。</p>
+  </li>
+  <li>
+    <p>\(\rho_{r}^{i} = \left\|\mathbf{X}_{r} - \mathbf{X}^{i}(t_{u} - \tau^{i})\right\|\) 为接收机与卫星之间的几何距离。\(\mathbf{X}_{r}\)为接收机位置矢量，\(\mathbf{X}^{i}\)为卫星位置矢量，\(\tau^{i}\)为信号传播时间。</p>
+  </li>
+  <li>
+    <p>$c$为光速。</p>
+  </li>
+  <li>
+    <p>$\delta t_{r}$为待估的接收机钟差。</p>
+  </li>
+  <li>
+    <p>$\delta t^{i}$为卫星钟差（由广播星历修正）。</p>
+  </li>
+  <li>
+    <p>$I_{r}^{i}, T_{r}^{i}$分别为电离层和对流层延迟（可通过模型修正或忽略）。</p>
+  </li>
+  <li>
+    <p>$\epsilon_{P}^{i}$为包含多路径效应、测量噪声等未建模误差。</p>
+  </li>
+</ul>
+
+<p>关键点在于几何距离$\rho_{r}^{i}$的计算。卫星位置$\mathbf{X}^{i}$必须在正确的信号发射时刻$t^{i}$计算。因此，观测模型隐式地依赖于待估参数$\Delta T$。</p>
+
+<h2 id="线性化方程"><strong>线性化方程</strong></h2>
+
+<p>基于泰勒级数展开，在近似点\(\mathbf{X}_{r,0},\delta t_{r,0},\Delta T_{0}\)处对观测方程进行线性化。</p>
+
+<h3 id="状态向量">状态向量</h3>
+
+<p>定义状态向量$\mathbf{x}$及其改正数向量$\delta\mathbf{x}$：</p>
+
+\[\mathbf{x} = \begin{bmatrix}
+\mathbf{X}_{r} \\
+c\delta t_{r} \\
+\Delta T
+\end{bmatrix},\quad\delta\mathbf{x} = \begin{bmatrix}
+\delta\mathbf{X}_{r} \\
+\delta(c\delta t_{r}) \\
+\delta(\Delta T)
+\end{bmatrix} = \begin{bmatrix}
+\Delta x \\
+\Delta y \\
+\Delta z \\
+\Delta b \\
+\Delta t
+\end{bmatrix}\]
+
+<p>接收机钟差参数的单位是米，粗时间误差参数的单位是秒。</p>
+
+<h3 id="线性化观测方程">线性化观测方程</h3>
+
+<p>对于每颗卫星$i$，伪距残差$P^{i}$为：（假设大气延迟已经用模型修正，同时忽略多路径效应的影响）</p>
+
+\[l_{P}^{i} = P_{r}^{i} - (P_{r}^{i})_{0} = P_{r}^{i} - [\rho_{r,0}^{i} + c(\delta t_{r,0} - \delta t^{i})]\]
+
+<p>线性化后的方程为：</p>
+
+\[l_{P}^{i} = - \mathbf{e}_{r}^{i} \cdot \delta\mathbf{X}_{r} + \delta(c\delta t_{r}) + \dot{\rho}^{i} \cdot \delta(c\Delta T)/c\]
+
+<p>其中：</p>
+
+<ul>
+  <li>
+    <p>$\mathbf{e}_{r}^{i}$为接收机至卫星$i$的视线方向（LOS）单位矢量。</p>
+  </li>
+  <li>
+    <p>$\dot{\rho}^{i}$为接收机与卫星$i$之间的几何距离变化率（即径向速度），其计算涉及卫星速度矢量$\mathbf{v}^{i}$:</p>
+
+\[\dot{\rho}^{i} = \mathbf{e}_{r}^{i} \cdot (\mathbf{v}^{i} - \mathbf{v}_{r}) \approx \mathbf{e}_{r}^{i} \cdot \mathbf{v}^{i}\]
+  </li>
+</ul>
+
+<p>（通常忽略接收机速度$\mathbf{v}_{r}$，认为其静止）。</p>
+
+<h3 id="设计矩阵与参数估计">设计矩阵与参数估计</h3>
+
+<p>将所有$m$颗卫星的方程组成法方程系统：</p>
+
+\[\mathbf{l} = \mathbf{H}\delta\mathbf{x} + \epsilon\]
+
+<p>其中，设计矩阵$\mathbf{H}$的每一行对应一颗卫星：</p>
+
+\[\mathbf{H}^{i} = \begin{bmatrix}
+ - e_{x}^{i} &amp; - e_{y}^{i} &amp; - e_{z}^{i} &amp; 1 &amp; \frac{\dot{\rho}^{i}}{c}
+\end{bmatrix}\]
+
+<p>或等价于：</p>
+
+\[\mathbf{H}^{i} = \begin{bmatrix}
+ - \mathbf{e}_{r}^{i} &amp; 1 &amp; s^{i}
+\end{bmatrix},\quad 其中\quad s^{i} = \frac{\dot{\rho}^{i}}{c} = \mathbf{e}_{r}^{i} \cdot \frac{\mathbf{v}^{i}}{c}\]
+
+<p>参数改正数$\delta\mathbf{x}$的最小二乘解为：</p>
+
+\[\delta\mathbf{x} = (\mathbf{H}^{T}\mathbf{H})^{-1}\mathbf{H}^{T}\mathbf{l}\]
+
+<p>通过迭代计算\(\delta\mathbf{x} \rightarrow \mathbf{x}_{k + 1} = \mathbf{x}_{k} + \delta\mathbf{x}\)，直至收敛，即可求解出所有五个状态参数。</p>
+
+<h2 id="工程实践"><strong>工程实践</strong></h2>
+
+<h3 id="agnss技术">AGNSS技术</h3>
+
+<p>粗时导航在实际工程中主要的一个场景，是在AGNSS场景下的快速冷启动定位。独立GNSS冷启动在首次定位前通常要经过捕获、跟踪、位同步、帧同步、收集星历等过程，以至于首次定位时间（Time-To-First-Fix,
+TTFF）通常会消耗30秒以上。AGNSS技术通过从网络下发辅助时间、位置和星历，能够大大缩短TTFF。仅就粗时导航而言，在AGNSS场景下，能够帮助接收机跳过位同步、帧同步、收集星历的过程，在理想的卫星环境下实现1~3秒TTFF的冷启动定位。</p>
+
+<p>举个例子，接收机在跟踪到某颗卫星的信号后以及位同步之前，通常能够从跟踪环路中拿到亚毫秒信息（即1毫秒以下部分的精确发射时刻）。此时毫秒以上部分的信息未知，无法进行经典四参数单点定位。然而，在辅助时间和辅助位置的帮助下，通过五参数粗时导航定位解算，能够快速拿到准确的接收机时间。此时的接收机时间精度一般在微秒级（或更优），足够用来反推观测数据的整数毫秒部分，因而相当于跳过了位同步、帧同步的过程，直接获取完整的伪距观测。</p>
+
+<p>需要注意，线性化方程中，所有观测对应同一个粗时间误差。类似于接收机钟差是公共量，这意味着所有观测中整数毫秒$N$的误差（不是$N$本身）也是公共量。因此，假如初始位置或者初始时间引入的误差太大破坏了这个假设，那么五状态方程也无法正确收敛。</p>
+
+<p>幸运的是，AGNSS服务引入的先验误差一般不会太大，大多数情况下不会出现这个问题。如果一定要考虑这种情况下的粗时导航，可以用格网搜索的方式尝试去找到合理的先验位置和时间，或者可以尝试使用RTK技术中常用的LAMBDA最小二乘降相关整数搜索算法。</p>
+
+<h3 id="几何不变性约束">几何不变性约束</h3>
+
+<p>由此延伸，五状态方程本身默认了所有观测中的整数毫秒误差是相同的，那么如果我们主动为这些整数之间的关系添加一个强约束，理论上是否能够增强模型的鲁棒性？</p>
+
+<p>事实正是如此，这个约束来自卫星星座的几何构型本身，可以称之为几何不变性约束。我们假设某颗卫星的整数毫秒是准确的，将其作为参考星，固定其他卫星相对于参考星整数毫秒基准的相对值，从而实现对整数毫秒的约束。即使参考星的初始整数毫秒设置错误也没有关系，因为这个误差会传播到每个观测上，在最小二乘解算时被粗时间误差参数$\Delta T$吸收。</p>
+
+<p>由初始位置计算的先验LOS几何距离$\rho_{r,0}^{i}$：</p>
+
+\[\begin{matrix}
+\rho_{r,0}^{i} = \rho_{r}^{i} - c\Delta T
+\end{matrix}\]
+
+<p>卫星跟踪后拿到的亚毫秒时间$T_{TX,0}$：</p>
+
+\[T_{TX,0} = T_{TX} - N \cdot 1ms\]
+
+<p>伪距观测的计算：</p>
+
+\[P_{r}^{i} = (T_{RX} - T_{TX}) \cdot c = \rho_{r}^{i} + c(\delta t_{r} - \delta t^{i})\]
+
+<p>分别将前两个公式带入最后一个公式：</p>
+
+\[(T_{RX} - T_{TX,0} - N \cdot 1ms) \cdot c = \rho_{r,0}^{i} + c\Delta T + c(\delta t_{r} - \delta t^{i})\]
+
+<p>将已知量移至等式左侧：</p>
+
+\[\rho_{r,0}^{i} + T_{TX,0} - c \cdot \delta t^{i} = （T_{RX} - \Delta T - \delta t_{r} - N \cdot 1ms) \cdot c\]
+
+<p>不难发现，等式右侧中$T_{RX} - \Delta T - \delta t_{r}$仅与接收机时间有关，在与参考星做差后被完全消除，仅剩下该观测的整数毫秒参数。因此，通过计算（所有观测的）等式左侧的数值，可以固定其他卫星相对于参考星整数毫秒的相对值。</p>
+
+<p>至于选择参考星的方法有很多，比如根据卫星观测质量（CN0、高度角等），或者通过”几何残差中位数法”。无论哪种方法，参考星一定不能包含较大的误差（比如以多路径效应为首的非模型化误差），否则同样会导致最小二乘无法正确收敛。</p>
+
+<p>所谓的”整数毫秒误差是相同的”，指的是当接收机粗时间误差$\Delta T$是1毫秒的整数倍（$N \cdot 1ms$）时，由这个误差引起的各卫星伪距误差（$\delta\rho^{i} = \dot{\rho}^{i} \cdot \Delta T$）之间的差值，不足以使任何一颗卫星的伪距测量值跨越1毫秒的整数边界。更准确的表述是，<strong>对所有卫星对</strong>$\mathbf{（i,j)}$<strong>，由时间</strong>$\mathbf{\Delta T}$<strong>引入的伪距误差之差</strong>$\mathbf{\delta}\mathbf{\rho}^{\mathbf{i}}\mathbf{- \delta}\mathbf{\rho}^{\mathbf{j}}$<strong>，必须小于1毫秒</strong>。</p>
+
+<p>当然，这也同样是该约束的失效条件，考虑到卫星LOS速度一般在 ±1000
+m/s以内，满足几何不变性约束的初始接收机时间误差范围通常在150秒~600秒（分别对应卫星对相对速度2000m/s和500m/s）。当然，不能孤立的考虑初始时间的误差，太大的初始位置误差也会破坏该约束。当初始位置误差过大时，甚至会破坏模型的线性化假设，导致整个最小二乘失效。为了保证约束可靠性，一般会对初始位置的不确定度做一个比较保守的限制，比如100Km以内（近似1/3个ms）。</p>
+
+<h2 id="qa">Q&amp;A</h2>
+
+<p><strong>Q1：同样是表征接收机时间的误差，为什么粗时间参数</strong>$\mathbf{\Delta T}$<strong>和钟差参数的</strong>$\mathbf{\delta}\mathbf{t}_{\mathbf{r}}$<strong>线性化系数不同？</strong></p>
+
+<p>如果两者系数完全相同的话，线性化矩阵对应的两列完全相关，法方程会有秩亏问题，导致最小二乘不可解（参数不可估计）。</p>
+
+<p>虽然两者都表示的是接收机时间的误差，但在实际解算中，进行了不同的参数化处理。$\delta t_{r}$因为数值上非常小，直接将其反映在伪距误差中。$\Delta T$数值较大，能够对站星间的几何距离产生影响，因此对其进行了重新参数化，建模为粗时导致的卫星轨道误差。如此以来，就能保证两者的线性化系数独立不相关（$\delta t_{r}$对各卫星的影响相同，$\Delta T$则由于LOS单位矢量的原因，对各卫星影响不同）：</p>
+
+\[\mathbf{e}_{r}^{i} = \frac{\partial\rho}{\partial_{xyz}}\]
+
+\[\dot{\rho}^{i} = \frac{\partial\rho}{\partial_{\Delta T}} = \frac{\partial\rho}{\partial_{xyz}}\frac{\partial_{xyz}}{\partial_{\Delta}T} = \mathbf{e}_{r}^{i} \cdot \mathbf{v}^{i}\]
+
+<p>换句话说，正是因为$\delta t_{r}$足够小，以至于无法对卫星位置产生明显影响，才保证了其与$\Delta T$能够同时被有效估计。</p>
+
+<p>这也是为什么，有两类观测不受粗时导航的欢迎：极高仰角的卫星（$\Delta T$与$\delta\mathbf{X}_{r}$的系数相关）和近地同步轨道GEO卫星（$\Delta T$的系数接近0）的观测。</p>
+
+<p><strong>Q2：同样是LOS单位矢量，为什么粗时间参数</strong>$\mathbf{\Delta T}$<strong>和几何位置</strong>$\mathbf{\delta}\mathbf{X}_{\mathbf{r}}$<strong>的线性化参数符号相反？</strong></p>
+
+<p>这与两者表征的物理含义有关。$\delta X_{r}$反映的是伪距观测量对接收机几何位置的影响，而$\Delta T$则主要反映的是卫星发射时刻的误差（Q1提到了虽然$\Delta T$是接收机时间误差，但是对其重新参数化为卫星位置的误差，卫星位置的计算只与发射时刻有关）。</p>
+
+<p>因为发射时刻与伪距的符号相反：</p>
+
+\[P_{r} = (T_{RX} - T_{TX}) \ast c\]
+
+<p>因此$\Delta T$和$\delta X_{r}$的参数符号相反。</p>
+
+                
+                <div style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <a href="/" style="display: inline-flex; align-items: center; color: var(--secondary-color); text-decoration: none;">
+                        <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i> 返回首页
+                    </a>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>关于本站</h3>
+                <p>多年嵌入式实战经验，知识分享，拒绝重复造轮子！</p>
+                <p>多年嵌入式实战经验，知识分享，拒绝重复造轮子！</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul>
+                    <li><a href="/">首页</a></li>
+                    <li><a href="/articles">文章列表</a></li>
+                    <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub 仓库</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>联系方式</h3>
+                <ul>
+                    <li><a href="https://github.com/shenqislx" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2025 Andy的GNSS工坊 | 保留所有权利
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" title="返回顶部">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- 返回顶部脚本 -->
+    <script>
+        // 当页面滚动超过300px时显示返回顶部按钮
+        window.onscroll = function() {
+            var backToTop = document.querySelector('.back-to-top');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTop.style.display = "flex";
+            } else {
+                backToTop.style.display = "none";
+            }
+        };
+        
+        // 初始状态隐藏
+        document.querySelector('.back-to-top').style.display = "none";
+    </script>
+</body>
+</html>
