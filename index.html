@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andy的GNSS工坊</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        
+        .columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .column {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .column-title {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .article {
+            background: rgba(52, 152, 219, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .article h3 {
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+        
+        .article p {
+            color: #7f8c8d;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        .article-date {
+            font-size: 0.9em;
+            color: #95a5a6;
+            margin-top: 10px;
+        }
+        
+        .coming-soon {
+            text-align: center;
+            color: #e74c3c;
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 8px;
+            border: 2px dashed #e74c3c;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Andy的GNSS工坊</h1>
+            <div class="subtitle">多年嵌入式实战经验，知识分享，拒绝重复造轮子！</div>
+        </div>
+        
+        <div class="columns">
+            <!-- GNSS接收机技术专栏 -->
+            <div class="column">
+                <h2 class="column-title">GNSS接收机技术</h2>
+                
+                <div class="article">
+                    <h3><a href="articles/coarse-time-five-state-equation/" style="color: inherit; text-decoration: none;">粗时导航五状态方程理论与应用</a></h3>
+                    <p>粗时导航技术是一种在全球导航卫星系统（GNSS）接收机初始时间信息存在较大偏差（数量级为秒或分钟）时，仍能实现有效定位的算法。它通过扩展状态参数，将传统的四参数模型（三维位置与接收机钟差）增强为五参数模型，新增参数为接收机粗时间误差。</p>
+                    <div class="article-date">发布日期: 2025-09-14</div>
+                </div>
+                
+                <div class="coming-soon">更多文章即将发布...</div>
+            </div>
+            
+            <!-- GNSS定位算法专栏 -->
+            <div class="column">
+                <h2 class="column-title">GNSS定位算法</h2>
+                
+                <div class="coming-soon">更多文章即将发布...</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            © 2024 Andy的GNSS工坊 | 使用 Creative Commons CC0 许可证
+        </div>
+    </div>
+</body>
+</html>
