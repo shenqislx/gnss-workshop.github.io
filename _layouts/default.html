@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }} | {{ site.title }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+    <!-- 页眉 -->
+    <header>
+        <div class="header-container">
+            <h1 class="site-title"><a href="{{ '/' | relative_url }}">Andy的GNSS工坊</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ '/' | relative_url }}">首页</a></li>
+                    <li><a href="{{ '/articles' | relative_url }}">文章</a></li>
+                    <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    {{ content }}
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>关于本站</h3>
+                <p>Andy的GNSS工坊是一个专注于全球导航卫星系统技术的知识分享平台，致力于提供高质量的技术文章和实用指南。</p>
+                <p>多年嵌入式实战经验，知识分享，拒绝重复造轮子！</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul>
+                    <li><a href="{{ '/' | relative_url }}">首页</a></li>
+                    <li><a href="{{ '/articles' | relative_url }}">文章列表</a></li>
+                    <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub 仓库</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>联系方式</h3>
+                <p>欢迎通过以下方式与我联系，分享您的想法和建议。</p>
+                <div class="social-links">
+                    <a href="https://github.com/shenqislx" target="_blank"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; {{ 'now' | date: "%Y" }} AndyのGNSS工坊 | 使用 Creative Commons CC0 许可证
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" title="返回顶部">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- 脚本 -->
+    <script>
+        // 返回顶部按钮
+        const backToTopButton = document.querySelector('.back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
