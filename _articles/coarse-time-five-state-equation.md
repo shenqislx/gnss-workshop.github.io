@@ -1,7 +1,7 @@
 ---
 title: "粗时导航五状态方程理论与应用"
 layout: article
-date: 2024-09-14
+date: 2025-09-14
 ---
 
 # 粗时导航定位技术
@@ -40,7 +40,7 @@ $$P_{r}^{i} = \rho_{r}^{i} + c(\delta t_{r} - \delta t^{i}) + I_{r}^{i} + T_{r}^
 
 - $P_{r}^{i}$ 为接收机测得的伪距观测值。
 
-- $\rho_{r}^{i} = \|\mathbf{X}_{r} - \mathbf{X}^{i}(t_{u} - \tau^{i})\|$ 为接收机与卫星之间的几何距离。$\mathbf{X}_{r}$为接收机位置矢量，$\mathbf{X}^{i}$为卫星位置矢量，$\tau^{i}$为信号传播时间。
+- $$\rho_{r}^{i} = \left\|\mathbf{X}_{r} - \mathbf{X}^{i}(t_{u} - \tau^{i})\right\|$$ 为接收机与卫星之间的几何距离。$$\mathbf{X}_{r}$$为接收机位置矢量，$$\mathbf{X}^{i}$$为卫星位置矢量，$$\tau^{i}$$为信号传播时间。
 
 - $c$为光速。
 
@@ -56,7 +56,7 @@ $$P_{r}^{i} = \rho_{r}^{i} + c(\delta t_{r} - \delta t^{i}) + I_{r}^{i} + T_{r}^
 
 ## **线性化方程**
 
-基于泰勒级数展开，在近似点$\mathbf{X}_{r,0},\delta t_{r,0},\Delta T_{0}$处对观测方程进行线性化。
+基于泰勒级数展开，在近似点$$\mathbf{X}_{r,0},\delta t_{r,0},\Delta T_{0}$$处对观测方程进行线性化。
 
 ### 状态向量
 
@@ -88,15 +88,15 @@ $$l_{P}^{i} = P_{r}^{i} - (P_{r}^{i})_{0} = P_{r}^{i} - [\rho_{r,0}^{i} + c(\del
 
 线性化后的方程为：
 
-$$l_{P}^{i} = - \mathbf{e}_{r}^{i} \cdot \delta\mathbf{X}_{r} + \delta(c\delta t_{r}) + {\dot{\rho}}^{i} \cdot \delta(c\Delta T)/c$$
+$$l_{P}^{i} = - \mathbf{e}_{r}^{i} \cdot \delta\mathbf{X}_{r} + \delta(c\delta t_{r}) + \dot{\rho}^{i} \cdot \delta(c\Delta T)/c$$
 
 其中：
 
 - $\mathbf{e}_{r}^{i}$为接收机至卫星$i$的视线方向（LOS）单位矢量。
 
-- ${\dot{\rho}}^{i}$为接收机与卫星$i$之间的几何距离变化率（即径向速度），其计算涉及卫星速度矢量$\mathbf{v}^{i}$:
+- $\dot{\rho}^{i}$为接收机与卫星$i$之间的几何距离变化率（即径向速度），其计算涉及卫星速度矢量$\mathbf{v}^{i}$:
 
-  $${\dot{\rho}}^{i} = \mathbf{e}_{r}^{i} \cdot (\mathbf{v}^{i} - \mathbf{v}_{r}) \approx \mathbf{e}_{r}^{i} \cdot \mathbf{v}^{i}$$
+  $$\dot{\rho}^{i} = \mathbf{e}_{r}^{i} \cdot (\mathbf{v}^{i} - \mathbf{v}_{r}) \approx \mathbf{e}_{r}^{i} \cdot \mathbf{v}^{i}$$
 
 （通常忽略接收机速度$\mathbf{v}_{r}$，认为其静止）。
 
@@ -109,20 +109,20 @@ $$\mathbf{l} = \mathbf{H}\delta\mathbf{x} + \epsilon$$
 其中，设计矩阵$\mathbf{H}$的每一行对应一颗卫星：
 
 $$\mathbf{H}^{i} = \begin{bmatrix}
- - e_{x}^{i} & - e_{y}^{i} & - e_{z}^{i} & 1 & \frac{{\dot{\rho}}^{i}}{c}
+ - e_{x}^{i} & - e_{y}^{i} & - e_{z}^{i} & 1 & \frac{\dot{\rho}^{i}}{c}
 \end{bmatrix}$$
 
 或等价于：
 
 $$\mathbf{H}^{i} = \begin{bmatrix}
  - \mathbf{e}_{r}^{i} & 1 & s^{i}
-\end{bmatrix},\quad 其中\quad s^{i} = \frac{{\dot{\rho}}^{i}}{c} = \mathbf{e}_{r}^{i} \cdot \frac{\mathbf{v}^{i}}{c}$$
+\end{bmatrix},\quad 其中\quad s^{i} = \frac{\dot{\rho}^{i}}{c} = \mathbf{e}_{r}^{i} \cdot \frac{\mathbf{v}^{i}}{c}$$
 
 参数改正数$\delta\mathbf{x}$的最小二乘解为：
 
 $$\delta\mathbf{x} = (\mathbf{H}^{T}\mathbf{H})^{-1}\mathbf{H}^{T}\mathbf{l}$$
 
-通过迭代计算$\delta\mathbf{x} \rightarrow \mathbf{x}_{k + 1} = \mathbf{x}_{k} + \delta\mathbf{x}$，直至收敛，即可求解出所有五个状态参数。
+通过迭代计算$$\delta\mathbf{x} \rightarrow \mathbf{x}_{k + 1} = \mathbf{x}_{k} + \delta\mathbf{x}$$，直至收敛，即可求解出所有五个状态参数。
 
 ## **工程实践**
 
@@ -169,7 +169,7 @@ $$\rho_{r,0}^{i} + T_{TX,0} - c \cdot \delta t^{i} = （T_{RX} - \Delta T - \del
 
 至于选择参考星的方法有很多，比如根据卫星观测质量（CN0、高度角等），或者通过"几何残差中位数法"。无论哪种方法，参考星一定不能包含较大的误差（比如以多路径效应为首的非模型化误差），否则同样会导致最小二乘无法正确收敛。
 
-所谓的"整数毫秒误差是相同的"，指的是当接收机粗时间误差$\Delta T$是1毫秒的整数倍（$N \cdot 1ms$）时，由这个误差引起的各卫星伪距误差（$\delta\rho^{i} = {\dot{\rho}}^{i} \cdot \Delta T$）之间的差值，不足以使任何一颗卫星的伪距测量值跨越1毫秒的整数边界。更准确的表述是，**对所有卫星对**$\mathbf{（i,j)}$**，由时间**$\mathbf{\Delta T}$**引入的伪距误差之差**$\mathbf{\delta}\mathbf{\rho}^{\mathbf{i}}\mathbf{- \delta}\mathbf{\rho}^{\mathbf{j}}$**，必须小于1毫秒**。
+所谓的"整数毫秒误差是相同的"，指的是当接收机粗时间误差$\Delta T$是1毫秒的整数倍（$N \cdot 1ms$）时，由这个误差引起的各卫星伪距误差（$\delta\rho^{i} = \dot{\rho}^{i} \cdot \Delta T$）之间的差值，不足以使任何一颗卫星的伪距测量值跨越1毫秒的整数边界。更准确的表述是，**对所有卫星对**$\mathbf{（i,j)}$**，由时间**$\mathbf{\Delta T}$**引入的伪距误差之差**$\mathbf{\delta}\mathbf{\rho}^{\mathbf{i}}\mathbf{- \delta}\mathbf{\rho}^{\mathbf{j}}$**，必须小于1毫秒**。
 
 当然，这也同样是该约束的失效条件，考虑到卫星LOS速度一般在 ±1000
 m/s以内，满足几何不变性约束的初始接收机时间误差范围通常在150秒\~600秒（分别对应卫星对相对速度2000m/s和500m/s）。当然，不能孤立的考虑初始时间的误差，太大的初始位置误差也会破坏该约束。当初始位置误差过大时，甚至会破坏模型的线性化假设，导致整个最小二乘失效。为了保证约束可靠性，一般会对初始位置的不确定度做一个比较保守的限制，比如100Km以内（近似1/3个ms）。
@@ -184,7 +184,7 @@ m/s以内，满足几何不变性约束的初始接收机时间误差范围通�
 
 $$\mathbf{e}_{r}^{i} = \frac{\partial\rho}{\partial_{xyz}}$$
 
-$${\dot{\rho}}^{i} = \frac{\partial\rho}{\partial_{\Delta T}} = \frac{\partial\rho}{\partial_{xyz}}\frac{\partial_{xyz}}{\partial_{\Delta}T} = \mathbf{e}_{r}^{i} \cdot \mathbf{v}^{i}$$
+$$\dot{\rho}^{i} = \frac{\partial\rho}{\partial_{\Delta T}} = \frac{\partial\rho}{\partial_{xyz}}\frac{\partial_{xyz}}{\partial_{\Delta}T} = \mathbf{e}_{r}^{i} \cdot \mathbf{v}^{i}$$
 
 换句话说，正是因为$\delta t_{r}$足够小，以至于无法对卫星位置产生明显影响，才保证了其与$\Delta T$能够同时被有效估计。
 
