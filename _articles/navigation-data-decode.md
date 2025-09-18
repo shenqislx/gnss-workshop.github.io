@@ -85,12 +85,14 @@ $T_{tx} = WN + TOW + Bit\_ms + \frac{Code\_phase}{Code\_length}$
 
 刚找到帧头时的比特缓存器：
 
+```
 |Bit0-Bit31|Bit32-Bit63|... |Bit(n*32)-(Bit_cnt_restored-1)               |
                             |<-------IncompleteWord------>|<--EmptyBits-->|
                             |<----------------- 32 bits ----------------->|
 |uint32[0] |uint32[1]  |... |uint32[n]                                    |
 |WordX     |WordX+1    |... |TLM Word                                     |
 |SubframeY                  |SubframeY+1
+```
 
 其中，Bit_cnt_restored是同步头之前收集的比特数，n是对应的字数（向上取整）。Bit_cnt_restored-1是同步头之前的最后一个比特的位置。
 由于找同步头的过程是滑动窗口，因此Bit_cnt_restored-1往前数30个比特是TLM字，即比特缓存器中的比特并没有按照字对齐。
@@ -98,10 +100,12 @@ $T_{tx} = WN + TOW + Bit\_ms + \frac{Code\_phase}{Code\_length}$
 
 按字对齐后的比特缓存器：
 
+```
 |Bit0-Bit31|Bit32-Bit63|... |Bit((n-1)*32)-Bit((n-1)*32+31)|
                             |<---------- 32 bits --------->|
 |uint32[0] |uint32[1]  |... |uint32[n-1]                   |
 |Word9     |Word8      |... |WordX+1                       |
+```
 
 如果你是从右（TLM）至左一个一个收集字，那要小心，字的顺序可能跟子帧中的顺序是反向的，也就是说，缓冲器中的第一个字是子帧中的最后一个字（Word9）。
 
