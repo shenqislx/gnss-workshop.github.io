@@ -1,0 +1,349 @@
+---
+title: 文章列表 - Andy的GNSS工坊
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }}</title>
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+            --border-color: #eaeaea;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+        }
+        
+        /* 页眉样式 */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .site-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .site-title a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav li {
+            margin-left: 1.5rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--secondary-color);
+        }
+        
+        /* 主内容区域 */
+        .main-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+        
+        .articles-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            padding: 2rem;
+        }
+        
+        .articles-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .articles-header h1 {
+            color: var(--primary-color);
+            margin: 0 0 0.5rem;
+            font-size: 2rem;
+        }
+        
+        .articles-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .article-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+        }
+        
+        .article-item:last-child {
+            border-bottom: none;
+        }
+        
+        .article-title {
+            font-size: 1.4rem;
+            margin: 0 0 0.5rem;
+        }
+        
+        .article-title a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .article-title a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .article-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .article-excerpt {
+            margin: 0.5rem 0 0;
+            color: #555;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--secondary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+            z-index: 1000;
+        }
+        
+        .back-to-top:hover {
+            background-color: var(--primary-color);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+            
+            nav li {
+                margin: 0 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页眉 -->
+    <header>
+        <div class="header-container">
+            <h1 class="site-title"><a href="{{ site.baseurl }}/">Andy的GNSS工坊</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ site.baseurl }}/">首页</a></li>
+                    <li><a href="{{ site.baseurl }}/articles">文章</a></li>
+                    <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <div class="main-container">
+        <div class="articles-container">
+            <div class="articles-header">
+                <h1>文章列表</h1>
+                <p>这里是所有GNSS相关技术文章的集合</p>
+            </div>
+            
+            <ul class="articles-list">
+                {% for article in site.articles %}
+                <li class="article-item">
+                    <h2 class="article-title">
+                        <a href="{{ site.baseurl }}/articles/{{ article.slug }}/">{{ article.title }}</a>
+                    </h2>
+                    <div class="article-meta">
+                        {% if article.date %}
+                        <span><i class="far fa-calendar-alt"></i> {{ article.date | date: "%Y-%m-%d" }}</span>
+                        {% endif %}
+                        {% if article.author %}
+                        <span><i class="fas fa-user"></i> {{ article.author }}</span>
+                        {% endif %}
+                    </div>
+                    {% if article.excerpt %}
+                    <p class="article-excerpt">{{ article.excerpt }}</p>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>关于本站</h3>
+                <p>多年嵌入式实战经验，知识分享，拒绝重复造轮子！</p>
+                <p>多年嵌入式实战经验，知识分享，拒绝重复造轮子！</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul>
+                    <li><a href="{{ site.baseurl }}/">首页</a></li>
+                    <li><a href="{{ site.baseurl }}/articles">文章列表</a></li>
+                    <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub 仓库</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>联系方式</h3>
+                <ul>
+                    <li><a href="https://github.com/shenqislx" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2025 Andy的GNSS工坊 | 保留所有权利
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" title="返回顶部">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- 返回顶部脚本 -->
+    <script>
+        // 当页面滚动超过300px时显示返回顶部按钮
+        window.onscroll = function() {
+            var backToTop = document.querySelector('.back-to-top');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTop.style.display = "flex";
+            } else {
+                backToTop.style.display = "none";
+            }
+        };
+        
+        // 初始状态隐藏
+        document.querySelector('.back-to-top').style.display = "none";
+    </script>
+</body>
+</html>
