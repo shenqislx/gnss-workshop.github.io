@@ -1,7 +1,7 @@
 # 网站配置
 title: Andy的GNSS工坊
 description: 多年嵌入式实战经验，知识分享，拒绝重复造轮子！
-baseurl: "" # 对于username.github.io仓库，保持为空
+baseurl: "/gnss-workshop.github.io" # 对于非username.github.io仓库，设置为/仓库名
 url: "https://shenqislx.github.io" # 您的GitHub用户名.github.io
 
 # theme: minima
