@@ -87,7 +87,7 @@ $T_{tx} = WN + TOW + Bit\_ms + \frac{Code\_phase}{Code\_length}$
 
 ```
 |Bit0-Bit31|Bit32-Bit63|... |Bit(n*32)-(Bit_cnt_restored-1)               |
-                            |<-------IncompleteWord------>|<--EmptyBits-->|
+                            |<-----------TLM LSB--------->|<--EmptyBits-->|
                             |<----------------- 32 bits ----------------->|
 |uint32[0] |uint32[1]  |... |uint32[n]                                    |
 |WordX     |WordX+1    |... |TLM Word                                     |
@@ -96,7 +96,7 @@ $T_{tx} = WN + TOW + Bit\_ms + \frac{Code\_phase}{Code\_length}$
 
 其中，Bit_cnt_restored是同步头之前收集的比特数，n是对应的字数（向上取整）。Bit_cnt_restored-1是同步头之前的最后一个比特的位置。
 由于找同步头的过程是滑动窗口，因此Bit_cnt_restored-1往前数30个比特是TLM字，即比特缓存器中的比特并没有按照字对齐。
-为了方便后续的解析，需要将比特缓存器中的比特按照字对齐，并移除未收集完整的字。
+为了方便后续的解析，需要将比特缓存器中的比特按照字对齐(到UINT32边界)，并移除未收集完整的字。
 
 按字对齐后的比特缓存器：
 
