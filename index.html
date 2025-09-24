@@ -69,6 +69,90 @@
             margin-right: auto;
         }
         
+        .cta-buttons {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, color 0.2s;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+        }
+        
+        .btn-primary {
+            background: var(--secondary);
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(52, 152, 219, 0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+        
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            padding: 0.5rem 0;
+            min-width: 200px;
+            display: none;
+            z-index: 100;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+        
+        .dropdown:hover .dropdown-menu,
+        .dropdown:focus-within .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--primary);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(52, 152, 219, 0.08);
+            color: var(--secondary);
+        }
+        
         /* 专栏布局 */
         .columns {
             display: grid;
@@ -226,11 +310,24 @@
         <div class="header">
             <h1>Andy的GNSS工坊</h1>
             <div class="subtitle">多年嵌入式实战经验，知识分享，拒绝重复造轮子！</div>
+            <div class="cta-buttons">
+                <a class="btn btn-primary" href="/gnss-workshop.github.io/articles"><i class="fas fa-list"></i> 文章列表</a>
+                <div class="dropdown">
+                    <a class="btn btn-outline dropdown-toggle" href="#column-receiver-tech" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-compass"></i> 专栏导航 <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu" role="menu">
+                        <a class="dropdown-item" href="#column-receiver-tech"><i class="fas fa-satellite-dish"></i> GNSS接收机技术</a>
+                        <a class="dropdown-item" href="#column-positioning-algorithms"><i class="fas fa-calculator"></i> GNSS定位算法</a>
+                        <a class="dropdown-item" href="#column-test-tools"><i class="fas fa-flask"></i> 测试开发工具</a>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="columns">
             <!-- GNSS接收机技术专栏 -->
-            <div class="column">
+            <div class="column" id="column-receiver-tech">
                 <h2 class="column-title"><i class="fas fa-satellite-dish"></i>GNSS接收机技术</h2>
                 
                 <div class="article-card">
@@ -257,8 +354,17 @@
             </div>
             
             <!-- GNSS定位算法专栏 -->
-            <div class="column">
+            <div class="column" id="column-positioning-algorithms">
                 <h2 class="column-title"><i class="fas fa-calculator"></i>GNSS定位算法</h2>
+                
+                <div class="coming-soon">
+                    <i class="fas fa-hourglass-half"></i> 更多文章即将发布...
+                </div>
+            </div>
+            
+            <!-- 测试开发工具专栏 -->
+            <div class="column" id="column-test-tools">
+                <h2 class="column-title"><i class="fas fa-flask"></i>测试开发工具</h2>
                 
                 <div class="coming-soon">
                     <i class="fas fa-hourglass-half"></i> 更多文章即将发布...

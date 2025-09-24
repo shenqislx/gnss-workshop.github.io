@@ -75,6 +75,53 @@
             color: var(--secondary-color);
         }
         
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            padding: 0.5rem 0;
+            min-width: 200px;
+            display: none;
+            z-index: 100;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+        
+        .dropdown:hover .dropdown-menu,
+        .dropdown:focus-within .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(52, 152, 219, 0.08);
+            color: var(--secondary-color);
+        }
+        
         /* 主内容区域 */
         .main-container {
             max-width: 1000px;
@@ -348,6 +395,16 @@
                     <li><a href="{{ site.baseurl }}/">首页</a></li>
                     <li><a href="{{ site.baseurl }}/articles">文章</a></li>
                     <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="{{ site.baseurl }}/#column-receiver-tech" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-compass"></i> 专栏导航 <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item" href="{{ site.baseurl }}/#column-receiver-tech"><i class="fas fa-satellite-dish"></i> GNSS接收机技术</a>
+                            <a class="dropdown-item" href="{{ site.baseurl }}/#column-positioning-algorithms"><i class="fas fa-calculator"></i> GNSS定位算法</a>
+                            <a class="dropdown-item" href="{{ site.baseurl }}/#column-test-tools"><i class="fas fa-flask"></i> 测试开发工具</a>
+                        </div>
+                    </li>
                 </ul>
             </nav>
         </div>
