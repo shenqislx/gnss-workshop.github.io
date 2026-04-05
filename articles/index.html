@@ -8,7 +8,7 @@ title: 文章列表 - Andy的GNSS工坊
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
-    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -299,20 +299,20 @@ title: 文章列表 - Andy的GNSS工坊
     <!-- 页眉 -->
     <header>
         <div class="header-container">
-            <h1 class="site-title"><a href="{{ site.baseurl }}/">Andy的GNSS工坊</a></h1>
+            <h1 class="site-title"><a href="../">Andy的GNSS工坊</a></h1>
             <nav>
                 <ul>
-                    <li><a href="{{ site.baseurl }}/">首页</a></li>
-                    <li><a href="{{ site.baseurl }}/articles">文章</a></li>
+                    <li><a href="../">首页</a></li>
+                    <li><a href="./">文章</a></li>
                     <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub</a></li>
                     <li class="dropdown">
-                        <a class="dropdown-toggle" href="{{ site.baseurl }}/#column-receiver-tech" aria-haspopup="true" aria-expanded="false">
+                        <a class="dropdown-toggle" href="../#column-receiver-tech" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-compass"></i> 专栏导航 <i class="fas fa-chevron-down"></i>
                         </a>
                         <div class="dropdown-menu" role="menu">
-                            <a class="dropdown-item" href="{{ site.baseurl }}/#column-receiver-tech"><i class="fas fa-satellite-dish"></i> GNSS接收机技术</a>
-                            <a class="dropdown-item" href="{{ site.baseurl }}/#column-positioning-algorithms"><i class="fas fa-calculator"></i> GNSS定位算法</a>
-                            <a class="dropdown-item" href="{{ site.baseurl }}/#column-test-tools"><i class="fas fa-flask"></i> 测试开发工具</a>
+                            <a class="dropdown-item" href="../#column-receiver-tech"><i class="fas fa-satellite-dish"></i> GNSS接收机技术</a>
+                            <a class="dropdown-item" href="../#column-positioning-algorithms"><i class="fas fa-calculator"></i> GNSS定位算法</a>
+                            <a class="dropdown-item" href="../#column-test-tools"><i class="fas fa-flask"></i> 测试开发工具</a>
                         </div>
                     </li>
                 </ul>
@@ -328,9 +328,9 @@ title: 文章列表 - Andy的GNSS工坊
                 <p>这里是所有GNSS相关技术文章的集合</p>
                 <p>
                     <strong>专栏导航：</strong>
-                    <a href="{{ site.baseurl }}/#column-receiver-tech">GNSS接收机技术</a> ·
-                    <a href="{{ site.baseurl }}/#column-positioning-algorithms">GNSS定位算法</a> ·
-                    <a href="{{ site.baseurl }}/#column-test-tools">测试开发工具</a>
+                    <a href="../#column-receiver-tech">GNSS接收机技术</a> ·
+                    <a href="../#column-positioning-algorithms">GNSS定位算法</a> ·
+                    <a href="../#column-test-tools">测试开发工具</a>
                 </p>
             </div>
             
@@ -338,7 +338,7 @@ title: 文章列表 - Andy的GNSS工坊
                 {% for article in site.articles %}
                 <li class="article-item">
                     <h2 class="article-title">
-                        <a href="{{ site.baseurl }}/articles/{{ article.slug }}/">{{ article.title }}</a>
+                        <a href="./{{ article.slug }}/">{{ article.title }}</a>
                     </h2>
                     <div class="article-meta">
                         {% if article.date %}
@@ -369,8 +369,8 @@ title: 文章列表 - Andy的GNSS工坊
             <div class="footer-section">
                 <h3>快速链接</h3>
                 <ul>
-                    <li><a href="{{ site.baseurl }}/">首页</a></li>
-                    <li><a href="{{ site.baseurl }}/articles">文章列表</a></li>
+                    <li><a href="../">首页</a></li>
+                    <li><a href="./">文章列表</a></li>
                     <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub 仓库</a></li>
                 </ul>
             </div>
