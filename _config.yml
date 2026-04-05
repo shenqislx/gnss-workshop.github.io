@@ -1,8 +1,8 @@
 # 网站配置
 title: Andy的GNSS工坊
 description: 多年嵌入式实战经验，知识分享，拒绝重复造轮子！
-baseurl: "" # 使用自定义域名部署时留空
-url: "https://hqz.is-a.dev" # 自定义域名
+baseurl: "/gnss-workshop.github.io" # 当前仍通过 GitHub Pages 项目路径访问
+url: "https://shenqislx.github.io" # 当前 GitHub Pages 主机
 
 # theme: minima
 
