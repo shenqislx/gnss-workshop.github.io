@@ -1,11 +1,11 @@
 ---
 ---
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Andy的GNSS工坊</title>
+    <title>Andy's GNSS Workshop</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -310,18 +310,18 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Andy的GNSS工坊</h1>
-            <div class="subtitle">多年嵌入式实战经验，知识分享，拒绝重复造轮子！</div>
+            <h1>Andy's GNSS Workshop</h1>
+            <div class="subtitle">Engineering notes and implementation patterns from years of embedded GNSS development.</div>
             <div class="cta-buttons">
-                <a class="btn btn-primary" href="articles"><i class="fas fa-list"></i> 文章列表</a>
+                <a class="btn btn-primary" href="articles"><i class="fas fa-list"></i> Article Index</a>
                 <div class="dropdown">
                     <a class="btn btn-outline dropdown-toggle" href="#column-receiver-tech" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-compass"></i> 专栏导航 <i class="fas fa-chevron-down"></i>
+                        <i class="fas fa-compass"></i> Topic Navigator <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" href="#column-receiver-tech"><i class="fas fa-satellite-dish"></i> GNSS接收机技术</a>
-                        <a class="dropdown-item" href="#column-positioning-algorithms"><i class="fas fa-calculator"></i> GNSS定位算法</a>
-                        <a class="dropdown-item" href="#column-test-tools"><i class="fas fa-flask"></i> 测试开发工具</a>
+                        <a class="dropdown-item" href="#column-receiver-tech"><i class="fas fa-satellite-dish"></i> GNSS Receiver Engineering</a>
+                        <a class="dropdown-item" href="#column-positioning-algorithms"><i class="fas fa-calculator"></i> GNSS Positioning Algorithms</a>
+                        <a class="dropdown-item" href="#column-test-tools"><i class="fas fa-flask"></i> Test & Developer Tooling</a>
                     </div>
                 </div>
             </div>
@@ -330,11 +330,11 @@
         <div class="columns">
             <!-- GNSS接收机技术专栏 -->
             <div class="column" id="column-receiver-tech">
-                <h2 class="column-title"><i class="fas fa-satellite-dish"></i>GNSS接收机技术</h2>
+                <h2 class="column-title"><i class="fas fa-satellite-dish"></i>GNSS Receiver Engineering</h2>
                 
                 <div class="article-card">
-                    <h3><a href="articles/navigation-data-decode/">GNSS导航电文比特解码</a></h3>
-                    <p>导航电文解码是GNSS接收机软件的关键环节之一，也是很多从业者入门时领取到的"新手村任务"之一。本文详细介绍了电文解码的原理与工程实践。</p>
+                    <h3><a href="articles/navigation-data-decode/">GNSS Navigation Message Bitstream Decoding</a></h3>
+                    <p>Navigation message decoding is a core stage in GNSS receiver firmware and often the first serious implementation task for new engineers. This article covers theory, bit-level parsing strategy, and production-ready practices.</p>
                     <div class="article-meta">
                         <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-18</span>
                         <span><i class="fas fa-user"></i>Andy</span>
@@ -342,8 +342,8 @@
                 </div>
                 
                 <div class="article-card">
-                    <h3><a href="articles/coarse-time-five-state-equation/">粗时导航五状态方程理论与应用</a></h3>
-                    <p>粗时导航技术是一种在全球导航卫星系统（GNSS）接收机初始时间信息存在较大偏差（数量级为秒或分钟）时，仍能实现有效定位的算法。</p>
+                    <h3><a href="articles/coarse-time-five-state-equation/">Coarse-Time Navigation: Five-State Equation, Theory, and Practice</a></h3>
+                    <p>Coarse-time navigation enables valid positioning even when the receiver's initial time estimate is biased by seconds or minutes. The post explains the five-state model and its engineering use cases.</p>
                     <div class="article-meta">
                         <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-14</span>
                         <span><i class="fas fa-user"></i>Andy</span>
@@ -351,17 +351,17 @@
                 </div>
                 
                 <div class="coming-soon">
-                    <i class="fas fa-hourglass-half"></i> 更多文章即将发布...
+                    <i class="fas fa-hourglass-half"></i> More technical posts are in progress...
                 </div>
             </div>
             
             <!-- GNSS定位算法专栏 -->
             <div class="column" id="column-positioning-algorithms">
-                <h2 class="column-title"><i class="fas fa-calculator"></i>GNSS定位算法</h2>
+                <h2 class="column-title"><i class="fas fa-calculator"></i>GNSS Positioning Algorithms</h2>
                 
                 <div class="article-card">
-                    <h3><a href="articles/calculate-dop/">GNSS DOP计算与Sherman–Morrison快速更新</a></h3>
-                    <p>详细介绍GNSS定位中DOP（精度衰减因子）的计算方法，以及使用Sherman–Morrison公式进行矩阵逆快速更新的技术原理和应用。</p>
+                    <h3><a href="articles/calculate-dop/">GNSS DOP Computation and Sherman-Morrison Fast Updates</a></h3>
+                    <p>A detailed walkthrough of DOP (Dilution of Precision) computation in GNSS positioning, plus a practical method to accelerate inverse-matrix updates with the Sherman-Morrison formula.</p>
                     <div class="article-meta">
                         <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-28</span>
                         <span><i class="fas fa-user"></i>Andy</span>
@@ -369,17 +369,17 @@
                 </div>
                 
                 <div class="coming-soon">
-                    <i class="fas fa-hourglass-half"></i> 更多文章即将发布...
+                    <i class="fas fa-hourglass-half"></i> More technical posts are in progress...
                 </div>
             </div>
             
             <!-- 测试开发工具专栏 -->
             <div class="column" id="column-test-tools">
-                <h2 class="column-title"><i class="fas fa-flask"></i>测试开发工具</h2>
+                <h2 class="column-title"><i class="fas fa-flask"></i>Test & Developer Tooling</h2>
                 
                 <div class="article-card">
-                    <h3><a href="articles/cursor-extension-market-cfg/">Cursor扩展商店无法正常下载插件</a></h3>
-                    <p>解决Cursor IDE扩展商店无法正常下载插件的问题，通过修改配置文件直接从VS Code上下载插件。</p>
+                    <h3><a href="articles/cursor-extension-market-cfg/">Fixing Cursor Extension Marketplace Download Failures</a></h3>
+                    <p>This guide resolves Cursor IDE marketplace download failures by adjusting configuration and routing extension downloads through the VS Code source endpoint.</p>
                     <div class="article-meta">
                         <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-24</span>
                         <span><i class="fas fa-user"></i>Andy</span>
@@ -387,7 +387,7 @@
                 </div>
                 
                 <div class="coming-soon">
-                    <i class="fas fa-hourglass-half"></i> 更多文章即将发布...
+                    <i class="fas fa-hourglass-half"></i> More technical posts are in progress...
                 </div>
             </div>
         </div>
@@ -396,7 +396,7 @@
             <div class="social-links">
                 <a href="https://github.com/shenqislx" target="_blank"><i class="fab fa-github"></i></a>
             </div>
-            © 2025 Andy的GNSS工坊 | 使用 Creative Commons CC0 许可证
+            © 2025 Andy's GNSS Workshop | Licensed under Creative Commons CC0
         </div>
     </div>
 </body>
