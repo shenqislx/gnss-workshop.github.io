@@ -1,308 +1,304 @@
 ---
 ---
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Andy's GNSS Workshop</title>
+    <title>Andy的GNSS工坊</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
+            --bg: #f4f1e8;
+            --bg-soft: #faf8f2;
+            --surface: #ffffff;
+            --text: #1f1f1b;
+            --muted: #5e5a52;
+            --line: rgba(31, 31, 27, 0.12);
+            --primary: #171716;
+            --accent: #ad6b35;
+            --shadow: 0 12px 36px rgba(35, 31, 24, 0.08);
+            --radius-lg: 20px;
+            --radius-md: 14px;
         }
-        
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            color: var(--dark);
-            line-height: 1.6;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 15% -10%, #e7ddca 0%, transparent 45%),
+                radial-gradient(circle at 95% 5%, #e7dfce 0%, transparent 30%),
+                var(--bg);
+            font-family: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+            line-height: 1.7;
         }
-        
+
         .container {
-            max-width: 1200px;
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 2.5rem 1.25rem 3rem;
         }
-        
-        /* 头部样式 */
+
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 3rem 2rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-            text-align: center;
             position: relative;
             overflow: hidden;
+            padding: 3rem 2rem;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(165deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 246, 236, 0.92) 100%);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.8rem;
+            text-align: center;
         }
-        
-        .header::before {
-            content: '';
+
+        .header::after {
+            content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            inset: auto -40% -65% auto;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(173, 107, 53, 0.16) 0%, rgba(173, 107, 53, 0) 70%);
+            pointer-events: none;
         }
-        
+
         h1 {
+            margin: 0;
+            font-family: "Source Han Serif SC", "Noto Serif SC", "Songti SC", serif;
+            font-size: clamp(2rem, 4.2vw, 3.4rem);
+            line-height: 1.2;
             color: var(--primary);
-            font-size: 2.8rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
+            letter-spacing: 0.015em;
         }
-        
+
         .subtitle {
-            color: var(--gray);
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 760px;
+            margin: 1rem auto 0;
+            color: var(--muted);
+            font-size: clamp(1rem, 2.1vw, 1.25rem);
         }
-        
+
         .cta-buttons {
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             display: flex;
             justify-content: center;
-            gap: 1rem;
+            align-items: center;
+            gap: 0.8rem;
             flex-wrap: wrap;
         }
-        
+
         .btn {
-            display: inline-block;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            border-radius: 999px;
             text-decoration: none;
+            padding: 0.62rem 1.2rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, color 0.2s;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+            border: 1px solid transparent;
+            transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
         }
-        
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
         .btn-primary {
-            background: var(--secondary);
             color: #fff;
+            background: var(--primary);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
         }
-        
+
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
         }
-        
+
         .btn-outline {
-            background: transparent;
-            color: var(--secondary);
-            border: 2px solid var(--secondary);
+            color: var(--primary);
+            background: rgba(255, 255, 255, 0.85);
+            border-color: var(--line);
         }
-        
+
         .btn-outline:hover {
-            background: rgba(52, 152, 219, 0.12);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            background: #fff;
+            border-color: rgba(31, 31, 27, 0.25);
         }
-        
-        /* 下拉菜单 */
+
         .dropdown {
             position: relative;
         }
-        
-        .dropdown-toggle {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            cursor: pointer;
-        }
-        
+
         .dropdown-menu {
             position: absolute;
-            top: 110%;
+            top: 112%;
             left: 0;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-            padding: 0.5rem 0;
-            min-width: 200px;
+            min-width: 230px;
             display: none;
-            z-index: 100;
-            border: 1px solid rgba(0,0,0,0.06);
+            padding: 0.45rem;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: #fff;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+            text-align: left;
+            z-index: 30;
         }
-        
+
         .dropdown:hover .dropdown-menu,
         .dropdown:focus-within .dropdown-menu {
             display: block;
         }
-        
+
         .dropdown-item {
             display: block;
-            padding: 0.6rem 1rem;
-            color: var(--primary);
             text-decoration: none;
-            white-space: nowrap;
+            color: var(--text);
+            border-radius: 8px;
+            padding: 0.55rem 0.75rem;
+            font-size: 0.92rem;
         }
-        
+
         .dropdown-item:hover {
-            background: rgba(52, 152, 219, 0.08);
-            color: var(--secondary);
+            background: var(--bg-soft);
+            color: var(--accent);
         }
-        
-        /* 专栏布局 */
+
         .columns {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1rem;
         }
-        
+
         .column {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(3px);
+            box-shadow: 0 8px 24px rgba(36, 30, 19, 0.05);
+            padding: 1.25rem;
         }
-        
-        .column:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        
+
         .column-title {
+            margin: 0 0 1rem;
+            font-size: 1.2rem;
             color: var(--primary);
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 3px solid var(--secondary);
             display: flex;
             align-items: center;
+            gap: 0.55rem;
         }
-        
+
         .column-title i {
-            margin-right: 0.8rem;
-            color: var(--secondary);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            background: var(--accent);
+            font-size: 0.85rem;
         }
-        
-        /* 文章卡片 */
+
         .article-card {
-            background: rgba(52, 152, 219, 0.08);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid var(--secondary);
-            transition: all 0.3s;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.9rem;
+            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
         }
-        
+
         .article-card:hover {
-            background: rgba(52, 152, 219, 0.15);
-            transform: translateX(5px);
+            transform: translateY(-2px);
+            border-color: rgba(173, 107, 53, 0.35);
+            box-shadow: 0 10px 22px rgba(27, 25, 22, 0.09);
         }
-        
+
         .article-card h3 {
-            color: var(--primary);
-            margin: 0 0 0.8rem 0;
-            font-size: 1.3rem;
+            margin: 0;
+            font-size: 1.06rem;
+            line-height: 1.45;
         }
-        
+
         .article-card h3 a {
             color: inherit;
             text-decoration: none;
-            transition: color 0.3s;
         }
-        
+
         .article-card h3 a:hover {
-            color: var(--secondary);
+            color: var(--accent);
         }
-        
+
         .article-card p {
-            color: var(--gray);
-            margin: 0 0 1rem 0;
+            margin: 0.65rem 0 0.85rem;
+            color: var(--muted);
+            font-size: 0.94rem;
         }
-        
+
         .article-meta {
             display: flex;
-            align-items: center;
-            font-size: 0.9rem;
-            color: var(--gray);
+            flex-wrap: wrap;
+            gap: 0.9rem;
+            font-size: 0.84rem;
+            color: var(--muted);
         }
-        
-        .article-meta i {
-            margin-right: 0.5rem;
-            color: var(--secondary);
-        }
-        
-        .article-date {
-            margin-right: 1.5rem;
-        }
-        
-        /* 即将发布样式 */
+
         .coming-soon {
-            text-align: center;
+            border: 1px dashed rgba(173, 107, 53, 0.45);
             color: var(--accent);
-            font-size: 1.1rem;
-            margin: 1.5rem 0;
-            padding: 1.2rem;
-            background: rgba(231, 76, 60, 0.08);
-            border-radius: 8px;
-            border: 2px dashed var(--accent);
-        }
-        
-        /* 页脚样式 */
-        .footer {
-            margin-top: 3rem;
+            border-radius: 10px;
+            padding: 0.8rem;
             text-align: center;
-            padding: 2rem 0;
-            color: var(--gray);
-            font-size: 0.9rem;
+            background: rgba(173, 107, 53, 0.08);
+            font-size: 0.92rem;
+            margin-top: 0.2rem;
         }
-        
+
+        .footer {
+            margin-top: 2.4rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+
         .social-links {
-            margin: 1rem 0;
+            margin: 0.4rem 0 0.7rem;
         }
-        
+
         .social-links a {
-            color: var(--gray);
-            margin: 0 0.5rem;
+            color: var(--muted);
+            margin: 0 0.35rem;
             font-size: 1.2rem;
-            transition: color 0.3s;
         }
-        
+
         .social-links a:hover {
-            color: var(--secondary);
+            color: var(--accent);
         }
-        
-        /* 响应式设计 */
+
         @media (max-width: 768px) {
             .container {
+                padding-top: 1.2rem;
+            }
+
+            .header {
+                padding: 2rem 1rem;
+            }
+
+            .columns {
+                gap: 0.8rem;
+            }
+
+            .column {
                 padding: 1rem;
             }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .subtitle {
-                font-size: 1.1rem;
-            }
-            
-            .columns {
-                grid-template-columns: 1fr;
-            }
-            
-            .column {
-                padding: 1.5rem;
-            }
-            
-            .column-title {
-                font-size: 1.5rem;
+
+            .dropdown-menu {
+                left: 50%;
+                transform: translateX(-50%);
             }
         }
     </style>
@@ -310,93 +306,90 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Andy's GNSS Workshop</h1>
-            <div class="subtitle">Engineering notes and implementation patterns from years of embedded GNSS development.</div>
+            <h1>Andy的GNSS工坊</h1>
+            <div class="subtitle">多年嵌入式实战经验，知识分享，拒绝重复造轮子！</div>
             <div class="cta-buttons">
-                <a class="btn btn-primary" href="articles"><i class="fas fa-list"></i> Article Index</a>
+                <a class="btn btn-primary" href="articles"><i class="fas fa-list"></i>文章列表</a>
                 <div class="dropdown">
-                    <a class="btn btn-outline dropdown-toggle" href="#column-receiver-tech" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-compass"></i> Topic Navigator <i class="fas fa-chevron-down"></i>
+                    <a class="btn btn-outline" href="#column-receiver-tech" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-compass"></i>专栏导航 <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" href="#column-receiver-tech"><i class="fas fa-satellite-dish"></i> GNSS Receiver Engineering</a>
-                        <a class="dropdown-item" href="#column-positioning-algorithms"><i class="fas fa-calculator"></i> GNSS Positioning Algorithms</a>
-                        <a class="dropdown-item" href="#column-test-tools"><i class="fas fa-flask"></i> Test & Developer Tooling</a>
+                        <a class="dropdown-item" href="#column-receiver-tech"><i class="fas fa-satellite-dish"></i> GNSS接收机技术</a>
+                        <a class="dropdown-item" href="#column-positioning-algorithms"><i class="fas fa-calculator"></i> GNSS定位算法</a>
+                        <a class="dropdown-item" href="#column-test-tools"><i class="fas fa-flask"></i> 测试开发工具</a>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="columns">
-            <!-- GNSS接收机技术专栏 -->
             <div class="column" id="column-receiver-tech">
-                <h2 class="column-title"><i class="fas fa-satellite-dish"></i>GNSS Receiver Engineering</h2>
-                
+                <h2 class="column-title"><i class="fas fa-satellite-dish"></i>GNSS接收机技术</h2>
+
                 <div class="article-card">
-                    <h3><a href="articles/navigation-data-decode/">GNSS Navigation Message Bitstream Decoding</a></h3>
-                    <p>Navigation message decoding is a core stage in GNSS receiver firmware and often the first serious implementation task for new engineers. This article covers theory, bit-level parsing strategy, and production-ready practices.</p>
+                    <h3><a href="articles/navigation-data-decode/">GNSS导航电文比特解码</a></h3>
+                    <p>导航电文解码是GNSS接收机软件的关键环节之一，也是很多从业者入门时领取到的“新手村任务”之一。本文详细介绍了电文解码的原理与工程实践。</p>
                     <div class="article-meta">
                         <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-18</span>
                         <span><i class="fas fa-user"></i>Andy</span>
                     </div>
                 </div>
-                
+
                 <div class="article-card">
-                    <h3><a href="articles/coarse-time-five-state-equation/">Coarse-Time Navigation: Five-State Equation, Theory, and Practice</a></h3>
-                    <p>Coarse-time navigation enables valid positioning even when the receiver's initial time estimate is biased by seconds or minutes. The post explains the five-state model and its engineering use cases.</p>
+                    <h3><a href="articles/coarse-time-five-state-equation/">粗时导航五状态方程理论与应用</a></h3>
+                    <p>粗时导航技术是一种在全球导航卫星系统（GNSS）接收机初始时间信息存在较大偏差（数量级为秒或分钟）时，仍能实现有效定位的算法。</p>
                     <div class="article-meta">
                         <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-14</span>
                         <span><i class="fas fa-user"></i>Andy</span>
                     </div>
                 </div>
-                
+
                 <div class="coming-soon">
-                    <i class="fas fa-hourglass-half"></i> More technical posts are in progress...
+                    <i class="fas fa-hourglass-half"></i> 更多文章即将发布...
                 </div>
             </div>
-            
-            <!-- GNSS定位算法专栏 -->
+
             <div class="column" id="column-positioning-algorithms">
-                <h2 class="column-title"><i class="fas fa-calculator"></i>GNSS Positioning Algorithms</h2>
-                
+                <h2 class="column-title"><i class="fas fa-calculator"></i>GNSS定位算法</h2>
+
                 <div class="article-card">
-                    <h3><a href="articles/calculate-dop/">GNSS DOP Computation and Sherman-Morrison Fast Updates</a></h3>
-                    <p>A detailed walkthrough of DOP (Dilution of Precision) computation in GNSS positioning, plus a practical method to accelerate inverse-matrix updates with the Sherman-Morrison formula.</p>
+                    <h3><a href="articles/calculate-dop/">GNSS DOP计算与Sherman–Morrison快速更新</a></h3>
+                    <p>详细介绍GNSS定位中DOP（精度衰减因子）的计算方法，以及使用Sherman–Morrison公式进行矩阵逆快速更新的技术原理和应用。</p>
                     <div class="article-meta">
                         <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-28</span>
                         <span><i class="fas fa-user"></i>Andy</span>
                     </div>
                 </div>
-                
+
                 <div class="coming-soon">
-                    <i class="fas fa-hourglass-half"></i> More technical posts are in progress...
+                    <i class="fas fa-hourglass-half"></i> 更多文章即将发布...
                 </div>
             </div>
-            
-            <!-- 测试开发工具专栏 -->
+
             <div class="column" id="column-test-tools">
-                <h2 class="column-title"><i class="fas fa-flask"></i>Test & Developer Tooling</h2>
-                
+                <h2 class="column-title"><i class="fas fa-flask"></i>测试开发工具</h2>
+
                 <div class="article-card">
-                    <h3><a href="articles/cursor-extension-market-cfg/">Fixing Cursor Extension Marketplace Download Failures</a></h3>
-                    <p>This guide resolves Cursor IDE marketplace download failures by adjusting configuration and routing extension downloads through the VS Code source endpoint.</p>
+                    <h3><a href="articles/cursor-extension-market-cfg/">Cursor扩展商店无法正常下载插件</a></h3>
+                    <p>解决Cursor IDE扩展商店无法正常下载插件的问题，通过修改配置文件直接从VS Code上下载插件。</p>
                     <div class="article-meta">
                         <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-24</span>
                         <span><i class="fas fa-user"></i>Andy</span>
                     </div>
                 </div>
-                
+
                 <div class="coming-soon">
-                    <i class="fas fa-hourglass-half"></i> More technical posts are in progress...
+                    <i class="fas fa-hourglass-half"></i> 更多文章即将发布...
                 </div>
             </div>
         </div>
-        
+
         <div class="footer">
             <div class="social-links">
                 <a href="https://github.com/shenqislx" target="_blank"><i class="fab fa-github"></i></a>
             </div>
-            © 2025 Andy's GNSS Workshop | Licensed under Creative Commons CC0
+            © 2025 Andy的GNSS工坊 | 使用 Creative Commons CC0 许可证
         </div>
     </div>
 </body>
