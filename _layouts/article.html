@@ -4,349 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }} - {{ site.title }}</title>
-    <link rel="alternate" type="application/atom+xml" title="{{ site.title }} Atom Feed" href="{{ '/feed.xml' | relative_url }}">
-    <link rel="stylesheet" href="../../assets/css/style.css">
+    <meta name="description" content="{% if page.summary %}{{ page.summary }}{% else %}{{ page.excerpt | strip_html | strip_newlines | truncate: 110 }}{% endif %}">
+    <link rel="alternate" type="application/atom+xml" title="{{ site.title }} Atom Feed" href="{{ '/articles/feed.xml' | relative_url }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --text-color: #333;
-            --light-bg: #f9f9f9;
-            --border-color: #eaeaea;
-        }
-        
-        body {
-            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--light-bg);
-        }
-        
-        /* 页眉样式 */
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .site-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0;
-        }
-        
-        .site-title a {
-            color: white;
-            text-decoration: none;
-        }
-        
-        nav ul {
-            list-style: none;
-            display: flex;
-            margin: 0;
-            padding: 0;
-        }
-        
-        nav li {
-            margin-left: 1.5rem;
-        }
-        
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        nav a:hover {
-            color: var(--secondary-color);
-        }
-        
-        /* 下拉菜单 */
-        .dropdown {
-            position: relative;
-        }
-        
-        .dropdown-toggle {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            cursor: pointer;
-            padding: 0.4rem 0.6rem;
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.25);
-        }
-        
-        .dropdown-menu {
-            position: absolute;
-            top: 110%;
-            right: 0;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-            padding: 0.5rem 0;
-            min-width: 200px;
-            display: none;
-            z-index: 100;
-            border: 1px solid rgba(0,0,0,0.06);
-        }
-        
-        .dropdown:hover .dropdown-menu,
-        .dropdown:focus-within .dropdown-menu {
-            display: block;
-        }
-        
-        .dropdown-item {
-            display: block;
-            padding: 0.6rem 1rem;
-            color: var(--primary-color);
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        
-        .dropdown-item:hover {
-            background: rgba(52, 152, 219, 0.08);
-            color: var(--secondary-color);
-        }
-        
-        /* 主内容区域 */
-        .main-container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 20px;
-            display: flex;
-        }
-        
-        .article-container {
-            flex: 1;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-            overflow: hidden;
-        }
-        
-        .article-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 2rem;
-            text-align: center;
-        }
-        
-        .article-header h1 {
-            margin: 0 0 0.5rem;
-            font-size: 2rem;
-        }
-        
-        .article-meta {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-        
-        .article-content {
-            padding: 2rem;
-        }
-        
-        /* 文章内容样式 */
-        .article-content h1, .article-content h2, .article-content h3 {
-            color: var(--primary-color);
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.3em;
-        }
-        
-        .article-content h2 {
-            font-size: 1.75rem;
-        }
-        
-        .article-content h3 {
-            font-size: 1.4rem;
-        }
-        
-        .article-content p {
-            margin: 1em 0;
-            line-height: 1.8;
-        }
-        
-        .article-content ul, .article-content ol {
-            padding-left: 2em;
-        }
-        
-        .article-content blockquote {
-            border-left: 4px solid var(--secondary-color);
-            padding-left: 1em;
-            margin-left: 0;
-            color: #555;
-            font-style: italic;
-        }
-        
-        .article-content code {
-            background-color: #f5f5f5;
-            padding: 0.2em 0.4em;
-            border-radius: 3px;
-            font-family: Consolas, Monaco, 'Andale Mono', monospace;
-            font-size: 0.9em;
-        }
-        
-        .article-content pre {
-            background-color: #f5f5f5;
-            padding: 1em;
-            border-radius: 5px;
-            overflow-x: auto;
-            max-width: 100%;
-            white-space: pre;
-            word-wrap: normal;
-        }
-        
-        .article-content pre code {
-            background-color: transparent;
-            padding: 0;
-            white-space: pre;
-            word-break: keep-all;
-            overflow-wrap: normal;
-            display: inline-block;
-            min-width: 100%;
-        }
-        
-        /* 公式样式 */
-        .katex-display {
-            margin: 1.5em 0;
-            overflow-x: auto;
-            overflow-y: hidden;
-        }
-        
-        /* 页脚样式 */
-        footer {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
-        
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        
-        .footer-section {
-            flex: 1;
-            min-width: 250px;
-            margin-bottom: 1.5rem;
-        }
-        
-        .footer-section h3 {
-            font-size: 1.2rem;
-            margin-top: 0;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding-bottom: 0.5rem;
-        }
-        
-        .footer-section ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .footer-section li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .footer-section a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-section a:hover {
-            color: white;
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 1.5rem;
-            margin-top: 1.5rem;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.7);
-        }
-        
-        /* 返回顶部按钮 */
-        .back-to-top {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background-color: var(--secondary-color);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-decoration: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transition: background-color 0.3s;
-            z-index: 1000;
-        }
-        
-        .back-to-top:hover {
-            background-color: var(--primary-color);
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            nav ul {
-                margin-top: 1rem;
-                justify-content: center;
-            }
-            
-            nav li {
-                margin: 0 0.75rem;
-            }
-            
-            .main-container {
-                flex-direction: column;
-            }
-            
-            .article-header {
-                padding: 1.5rem;
-            }
-            
-            .article-content {
-                padding: 1.5rem;
-            }
-        }
-    </style>
-
-    <!-- 引入 MathJax -->
+    <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
     <script>
       window.MathJax = {
         tex: {
@@ -365,7 +26,6 @@
         options: {
           skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
           renderActions: {
-            /* 添加一个自定义的渲染动作，即使有错误也尝试渲染 */
             findScript: [10, function (doc) {
               for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
                 const display = !!node.type.match(/; *mode=display/);
@@ -382,110 +42,109 @@
       };
     </script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async
-            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-    <!-- 页眉 -->
-    <header>
-        <div class="header-container">
-            <h1 class="site-title"><a href="../../">{{ site.title }}</a></h1>
-            <nav>
-                <ul>
-                    <li><a href="../../">首页</a></li>
-                    <li><a href="../">文章</a></li>
-                    <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub</a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" href="../../#column-receiver-tech" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-compass"></i> 专栏导航 <i class="fas fa-chevron-down"></i>
-                        </a>
-                        <div class="dropdown-menu" role="menu">
-                            <a class="dropdown-item" href="../../#column-receiver-tech"><i class="fas fa-satellite-dish"></i> GNSS接收机技术</a>
-                            <a class="dropdown-item" href="../../#column-positioning-algorithms"><i class="fas fa-calculator"></i> GNSS定位算法</a>
-                            <a class="dropdown-item" href="../../#column-test-tools"><i class="fas fa-flask"></i> 测试开发工具</a>
-                        </div>
-                    </li>
-                </ul>
+    {% assign related_articles = site.articles | where: "category", page.category | sort: "date" | reverse %}
+    <div class="page-shell article-page">
+        <header class="site-header">
+            <div>
+                <a class="brand" href="{{ '/' | relative_url }}">
+                    <div class="brand-mark"><i class="fas fa-satellite"></i>{{ site.title }}</div>
+                </a>
+                <p class="brand-subtitle">统一后的正文页保留阅读沉浸感，同时和首页、归档页使用同一套视觉语言。</p>
+            </div>
+            <nav class="nav-links" aria-label="站点导航">
+                <a class="nav-link" href="{{ '/' | relative_url }}"><i class="fas fa-house"></i>首页</a>
+                <a class="nav-link" href="{{ '/articles/' | relative_url }}"><i class="fas fa-list"></i>文章列表</a>
+                <a class="nav-link" href="{{ '/articles/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>Atom</a>
             </nav>
-        </div>
-    </header>
+        </header>
 
-    <!-- 主内容区域 -->
-    <div class="main-container">
-        <article class="article-container">
-            <div class="article-header">
-                <h1>{{ page.title }}</h1>
+        <div class="breadcrumbs">
+            <a href="{{ '/' | relative_url }}">首页</a>
+            <span>/</span>
+            <a href="{{ '/articles/' | relative_url }}">文章</a>
+            {% if page.category %}
+            <span>/</span>
+            <a href="{{ '/articles/' | relative_url }}">{{ page.category }}</a>
+            {% endif %}
+        </div>
+
+        <article class="article-shell">
+            <header class="article-hero">
+                {% if page.category %}
+                <span class="article-tag"><i class="fas fa-folder-open"></i>{{ page.category }}</span>
+                {% endif %}
+                <h1 class="article-title">{{ page.title }}</h1>
+                {% if page.summary %}
+                <p class="article-summary">{{ page.summary }}</p>
+                {% endif %}
                 <div class="article-meta">
                     {% if page.date %}
-                        <span><i class="far fa-calendar-alt"></i> {{ page.date | date: "%Y-%m-%d" }}</span>
+                    <span><i class="far fa-calendar-alt"></i>{{ page.date | date: "%Y-%m-%d" }}</span>
                     {% endif %}
-                    <span><i class="fas fa-user"></i> Andy</span>
+                    <span><i class="fas fa-user"></i>{{ page.author | default: "Andy" }}</span>
                 </div>
-            </div>
-            
-            <div class="article-content">
+            </header>
+
+            <div class="article-prose">
                 {{ content }}
-                
-                <div style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
-                    <a href="../../" style="display: inline-flex; align-items: center; color: var(--secondary-color); text-decoration: none;">
-                        <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i> 返回首页
-                    </a>
+                <div class="article-actions">
+                    <a class="button button-secondary" href="{{ '/articles/' | relative_url }}"><i class="fas fa-arrow-left"></i>返回文章列表</a>
+                    <a class="button button-accent" href="{{ '/' | relative_url }}"><i class="fas fa-house"></i>返回首页</a>
                 </div>
             </div>
         </article>
+
+        {% assign has_related = false %}
+        {% for article in related_articles %}
+            {% if article.url != page.url %}
+                {% assign has_related = true %}
+            {% endif %}
+        {% endfor %}
+        {% if has_related %}
+        <section class="section">
+            <div class="section-header">
+                <div>
+                    <span class="section-kicker"><i class="fas fa-link"></i>Related</span>
+                    <h2 class="section-title">同主题继续阅读</h2>
+                </div>
+            </div>
+            <div class="card-grid">
+                {% for article in related_articles %}
+                    {% if article.url != page.url %}
+                    <article class="content-card">
+                        <h3 class="info-title"><a href="{{ article.url | relative_url }}">{{ article.title }}</a></h3>
+                        <p class="info-copy">{% if article.summary %}{{ article.summary }}{% else %}{{ article.excerpt | strip_html | strip_newlines | truncate: 92 }}{% endif %}</p>
+                    </article>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <footer class="footer">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="footer-title">继续关注</h3>
+                    <div class="footer-links">
+                        <a href="{{ '/articles/feed.xml' | relative_url }}">订阅 Atom</a>
+                        <a href="https://github.com/shenqislx" target="_blank" rel="noopener noreferrer">访问 GitHub</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="footer-title">本站定位</h3>
+                    <p class="footer-copy">尽量把复杂的 GNSS 工程问题拆成可理解、可验证、可继续扩展的技术文章。</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 {{ site.title }}</span>
+                <div class="footer-meta">
+                    <a href="{{ '/articles/' | relative_url }}">全部文章</a>
+                </div>
+            </div>
+        </footer>
     </div>
-
-    <!-- 页脚 -->
-    <footer>
-        <div class="footer-container">
-            <div class="footer-section">
-                <h3>关于本站</h3>
-                <p>{{ site.description }}</p>
-                <p>多年嵌入式实战经验，知识分享，拒绝重复造轮子！</p>
-            </div>
-            
-            <div class="footer-section">
-                <h3>快速链接</h3>
-                <ul>
-                    <li><a href="../../">首页</a></li>
-                    <li><a href="../">文章列表</a></li>
-                    <li><a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank">GitHub 仓库</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h3>联系方式</h3>
-                <ul>
-                    <li><a href="https://github.com/shenqislx" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="copyright">
-            &copy; {{ 'now' | date: "%Y" }} {{ site.title }} | 保留所有权利
-        </div>
-    </footer>
-
-    <!-- 返回顶部按钮 -->
-    <a href="#" class="back-to-top" title="返回顶部">
-        <i class="fas fa-arrow-up"></i>
-    </a>
-
-    <!-- 返回顶部脚本 -->
-    <script>
-        // 当页面滚动超过300px时显示返回顶部按钮
-        window.onscroll = function() {
-            var backToTop = document.querySelector('.back-to-top');
-            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                backToTop.style.display = "flex";
-            } else {
-                backToTop.style.display = "none";
-            }
-        };
-        
-        // 初始状态隐藏
-        document.querySelector('.back-to-top').style.display = "none";
-    </script>
 </body>
 </html>

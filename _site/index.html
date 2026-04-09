@@ -4,265 +4,184 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Andy的GNSS工坊</title>
+    <meta name="description" content="面向GNSS接收机、定位算法与测试开发工程师的个人技术博客，分享可落地的解码、定位与工程实践。">
+    <link rel="alternate" type="application/atom+xml" title="Andy的GNSS工坊 Atom Feed" href="/articles/feed.xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
-        }
-        
-        body {
-            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            color: var(--dark);
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        /* 头部样式 */
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 3rem 2rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--secondary), var(--accent));
-        }
-        
-        h1 {
-            color: var(--primary);
-            font-size: 2.8rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-        
-        .subtitle {
-            color: var(--gray);
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        /* 专栏布局 */
-        .columns {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        .column {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .column:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        
-        .column-title {
-            color: var(--primary);
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 3px solid var(--secondary);
-            display: flex;
-            align-items: center;
-        }
-        
-        .column-title i {
-            margin-right: 0.8rem;
-            color: var(--secondary);
-        }
-        
-        /* 文章卡片 */
-        .article-card {
-            background: rgba(52, 152, 219, 0.08);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid var(--secondary);
-            transition: all 0.3s;
-        }
-        
-        .article-card:hover {
-            background: rgba(52, 152, 219, 0.15);
-            transform: translateX(5px);
-        }
-        
-        .article-card h3 {
-            color: var(--primary);
-            margin: 0 0 0.8rem 0;
-            font-size: 1.3rem;
-        }
-        
-        .article-card h3 a {
-            color: inherit;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .article-card h3 a:hover {
-            color: var(--secondary);
-        }
-        
-        .article-card p {
-            color: var(--gray);
-            margin: 0 0 1rem 0;
-        }
-        
-        .article-meta {
-            display: flex;
-            align-items: center;
-            font-size: 0.9rem;
-            color: var(--gray);
-        }
-        
-        .article-meta i {
-            margin-right: 0.5rem;
-            color: var(--secondary);
-        }
-        
-        .article-date {
-            margin-right: 1.5rem;
-        }
-        
-        /* 即将发布样式 */
-        .coming-soon {
-            text-align: center;
-            color: var(--accent);
-            font-size: 1.1rem;
-            margin: 1.5rem 0;
-            padding: 1.2rem;
-            background: rgba(231, 76, 60, 0.08);
-            border-radius: 8px;
-            border: 2px dashed var(--accent);
-        }
-        
-        /* 页脚样式 */
-        .footer {
-            margin-top: 3rem;
-            text-align: center;
-            padding: 2rem 0;
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-        
-        .social-links {
-            margin: 1rem 0;
-        }
-        
-        .social-links a {
-            color: var(--gray);
-            margin: 0 0.5rem;
-            font-size: 1.2rem;
-            transition: color 0.3s;
-        }
-        
-        .social-links a:hover {
-            color: var(--secondary);
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .subtitle {
-                font-size: 1.1rem;
-            }
-            
-            .columns {
-                grid-template-columns: 1fr;
-            }
-            
-            .column {
-                padding: 1.5rem;
-            }
-            
-            .column-title {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Andy的GNSS工坊</h1>
-            <div class="subtitle">多年嵌入式实战经验，知识分享，拒绝重复造轮子！</div>
-        </div>
-        
-        <div class="columns">
-            <!-- GNSS接收机技术专栏 -->
-            <div class="column">
-                <h2 class="column-title"><i class="fas fa-satellite-dish"></i>GNSS接收机技术</h2>
-                
-                <div class="article-card">
-                    <h3><a href="articles/coarse-time-five-state-equation/">粗时导航五状态方程理论与应用</a></h3>
-                    <p>粗时导航技术是一种在全球导航卫星系统（GNSS）接收机初始时间信息存在较大偏差（数量级为秒或分钟）时，仍能实现有效定位的算法。</p>
-                    <div class="article-meta">
-                        <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-14</span>
-                        <span><i class="fas fa-user"></i>Andy</span>
+    
+    
+    
+    
+    <div class="page-shell">
+        <header class="site-header">
+            <div>
+                <a class="brand" href="/">
+                    <div class="brand-mark"><i class="fas fa-satellite"></i>Andy的GNSS工坊</div>
+                </a>
+                <p class="brand-subtitle">面向GNSS工程师的个人技术博客，记录接收机、定位算法与工具实践。</p>
+            </div>
+            <nav class="nav-links" aria-label="站点导航">
+                <a class="nav-link" href="/articles/"><i class="fas fa-list"></i>全部文章</a>
+                <a class="nav-link" href="#latest-posts"><i class="fas fa-clock"></i>最新更新</a>
+                <a class="nav-link" href="#recent-archive"><i class="fas fa-stream"></i>标题归档</a>
+                <a class="nav-link" href="/articles/feed.xml"><i class="fas fa-rss"></i>Atom</a>
+            </nav>
+        </header>
+
+        <section class="hero-card">
+            <div class="hero-body">
+                <span class="hero-eyebrow"><i class="fas fa-wave-square"></i>GNSS Personal Weblog</span>
+                <h1 class="hero-title">把接收机实现、定位算法和工程细节，写成工程师真正能用上的文章。</h1>
+                <p class="hero-lead">围绕 GNSS 接收机、PVT/粗时定位和工程工具的长期写作主站。这里优先展示最近更新，再把旧文收进归档。</p>
+                <p class="hero-copy">如果你更关心“最近写了什么”，现在往下看就可以了。</p>
+
+                <div class="chip-row">
+                    <span class="chip"><i class="fas fa-satellite-dish"></i>GNSS接收机技术</span>
+                    <span class="chip"><i class="fas fa-crosshairs"></i>GNSS定位算法</span>
+                    <span class="chip"><i class="fas fa-wrench"></i>测试开发工具</span>
+                </div>
+
+                <div class="button-row">
+                    <a class="button button-primary" href="/articles/"><i class="fas fa-book-open"></i>从最新文章开始</a>
+                    <a class="button button-accent" href="/articles/feed.xml"><i class="fas fa-rss"></i>订阅更新</a>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">当前文章数</div>
+                        <div class="stat-value">4</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">更新形态</div>
+                        <div class="stat-value">Blog</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">最近更新</div>
+                        <div class="stat-value">09.28</div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <section class="section" id="latest-posts">
+            <div class="section-header">
+                <div>
+                    <span class="section-kicker"><i class="fas fa-bolt"></i>Latest</span>
+                    <h2 class="section-title">最近更新</h2>
+                    <p class="section-copy">这里直接按日期展示最近更新，首页的主任务就是让回访读者快速扫到你最近写了什么。</p>
+                </div>
+                <a class="text-link" href="/articles/">查看全部文章 <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="stream-list">
                 
-                <div class="coming-soon">
-                    <i class="fas fa-hourglass-half"></i> 更多文章即将发布...
+                <article class="stream-item">
+                    <div class="stream-date">2025-09-28</div>
+                    <div>
+                        <h3 class="stream-title"><a href="/articles/calculate-dop/">GNSS DOP计算与Sherman–Morrison快速更新</a></h3>
+                        <p class="stream-summary">介绍 GNSS DOP 的计算原理，以及如何利用 Sherman–Morrison 公式对矩阵逆进行快速更新，提升工程实现效率。</p>
+                        <div class="stream-meta">GNSS定位算法 · Andy</div>
+                    </div>
+                </article>
+                
+                <article class="stream-item">
+                    <div class="stream-date">2025-09-24</div>
+                    <div>
+                        <h3 class="stream-title"><a href="/articles/cursor-extension-market-cfg/">Cursor扩展商店无法正常下载插件</a></h3>
+                        <p class="stream-summary">记录 Cursor 扩展商店异常时的排查与替代方案，通过调整 marketplace 配置直接接入 VS Code 插件源。</p>
+                        <div class="stream-meta">测试开发工具 · Andy</div>
+                    </div>
+                </article>
+                
+                <article class="stream-item">
+                    <div class="stream-date">2025-09-18</div>
+                    <div>
+                        <h3 class="stream-title"><a href="/articles/navigation-data-decode/">GNSS导航电文比特解码</a></h3>
+                        <p class="stream-summary">从工程角度梳理 GNSS 导航电文比特解码的目标、帧结构与核心流程，帮助接收机入门者把原始比特流变成可用的定位输入。</p>
+                        <div class="stream-meta">GNSS接收机技术 · Andy</div>
+                    </div>
+                </article>
+                
+                <article class="stream-item">
+                    <div class="stream-date">2025-09-14</div>
+                    <div>
+                        <h3 class="stream-title"><a href="/articles/coarse-time-five-state-equation/">粗时导航五状态方程理论与应用</a></h3>
+                        <p class="stream-summary">解释粗时导航为什么需要从传统四参数扩展到五状态模型，以及粗时间误差如何影响卫星位置计算与定位收敛。</p>
+                        <div class="stream-meta">GNSS定位算法 · Andy</div>
+                    </div>
+                </article>
+                
+            </div>
+        </section>
+
+        <section class="section" id="recent-archive">
+            <div class="section-header">
+                <div>
+                    <span class="section-kicker"><i class="fas fa-stream"></i>Archive</span>
+                    <h2 class="section-title">标题归档</h2>
+                    <p class="section-copy">如果你已经看过最近更新，这里继续按标题和日期向下扫。它比“专题导航”更适合长期写博客的节奏。</p>
+                </div>
+                <a class="text-link" href="/articles/">进入完整归档 <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="headline-list">
+                
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="info-grid">
+                <article class="now-card">
+                    <h3 class="now-title">Now</h3>
+                    <ul class="now-list">
+                        <li>持续整理 GNSS 接收机实现和定位算法中的工程细节。</li>
+                        <li>把零散的技术问题写成更容易复用的博客条目，而不是只做专题堆叠。</li>
+                        <li>让首页优先服务“最近写了什么”，而不是“有哪些栏目”。</li>
+                    </ul>
+                </article>
+                <article class="info-card">
+                    <h3 class="info-title">这个首页现在在做什么</h3>
+                    <p class="info-copy">它已经很接近典型个人技术博客：首页上方是品牌与定位，中间是一列最近更新，下面接标题归档，分类只留作弱提示。</p>
+                </article>
+                <article class="info-card">
+                    <h3 class="info-title">适合你的更新方式</h3>
+                    <p class="info-copy">后面即使专题更新变少、普通博客更新变多，这套结构也不会失衡，因为主入口一直都是日期流和归档页。</p>
+                </article>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="footer-title">关于本站</h3>
+                    <p class="footer-copy">Andy 的 GNSS 工程笔记。尽量写可复用、可验证、可继续扩展的技术文章，而不是只给答案不讲过程。</p>
+                </div>
+                <div>
+                    <h3 class="footer-title">快速入口</h3>
+                    <div class="footer-links">
+                        <a href="/articles/">全部文章</a>
+                        <a href="/articles/feed.xml">Atom 订阅</a>
+                        <a href="#recent-archive">标题归档</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="footer-title">外部链接</h3>
+                    <div class="footer-links">
+                        <a href="https://github.com/shenqislx" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank" rel="noopener noreferrer">站点源码</a>
+                    </div>
                 </div>
             </div>
-            
-            <!-- GNSS定位算法专栏 -->
-            <div class="column">
-                <h2 class="column-title"><i class="fas fa-calculator"></i>GNSS定位算法</h2>
-                
-                <div class="coming-soon">
-                    <i class="fas fa-hourglass-half"></i> 更多文章即将发布...
+            <div class="footer-bottom">
+                <span>&copy; 2026 Andy的GNSS工坊</span>
+                <div class="footer-meta">
+                    <span>Built with Jekyll</span>
+                    <a href="/articles/feed.xml">RSS / Atom</a>
                 </div>
             </div>
-        </div>
-        
-        <div class="footer">
-            <div class="social-links">
-                <a href="https://github.com/shenqislx" target="_blank"><i class="fab fa-github"></i></a>
-            </div>
-            © 2025 Andy的GNSS工坊 | 使用 Creative Commons CC0 许可证
-        </div>
+        </footer>
     </div>
 </body>
 </html>

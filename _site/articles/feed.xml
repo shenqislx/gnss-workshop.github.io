@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hqz.is-a.dev/articles/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hqz.is-a.dev/" rel="alternate" type="text/html" /><updated>2026-04-09T16:53:16+08:00</updated><id>https://hqz.is-a.dev/articles/feed.xml</id><title type="html">Andy的GNSS工坊 | Articles</title><subtitle>多年嵌入式实战经验，知识分享，拒绝重复造轮子！</subtitle><entry><title type="html">GNSS DOP计算与Sherman–Morrison快速更新</title><link href="https://hqz.is-a.dev/articles/calculate-dop/" rel="alternate" type="text/html" title="GNSS DOP计算与Sherman–Morrison快速更新" /><published>2025-09-28T00:00:00+08:00</published><updated>2025-09-28T00:00:00+08:00</updated><id>https://hqz.is-a.dev/articles/calculate-dop</id><content type="html" xml:base="https://hqz.is-a.dev/articles/calculate-dop/"><![CDATA[<h1 id="gnss-dop计算与shermanmorrison快速更新">GNSS DOP计算与Sherman–Morrison快速更新</h1>
+
+<h2 id="1-什么是dop精度衰减因子">1. 什么是DOP（精度衰减因子）？</h2>
+
+<p><strong>DOP（Dilution of Precision）</strong> 是GNSS定位中衡量卫星几何分布对定位精度影响的指标。</p>
+
+<p>GNSS定位本质上是在求解一个把接收机位置作为未知参数的超定方程组，不存在唯一解，而是存在多个解，这些解的精度不同，且跟卫星分布构型相关，而DOP就是用来衡量这些解的精度，DOP越小，精度越高。因此，DOP实际反映了<strong>卫星空间分布对定位误差的放大效应</strong>。</p>
+
+<h3 id="11-dop的计算公式">1.1 DOP的计算公式</h3>
+
+<p>在GNSS定位中，观测方程为：
+\(\Delta \rho = G \cdot \Delta x\)
+其中：</p>
+<ul>
+  <li>$\Delta \rho$ 是伪距残差向量</li>
+  <li>$G$ 是几何矩阵（设计矩阵）</li>
+  <li>$\Delta x$ 是状态向量修正量</li>
+</ul>
+
+<p><strong>协方差矩阵</strong>为：
+\(Q = (G^T G)^{-1}\)</p>
+
+<p><strong>各种DOP的定义</strong>：
+\(\begin{aligned}
+PDOP &amp;= \sqrt{Q_{11} + Q_{22} + Q_{33}} \\
+HDOP &amp;= \sqrt{Q_{11} + Q_{22}} \\
+VDOP &amp;= \sqrt{Q_{33}} \\
+TDOP &amp;= \sqrt{Q_{44}} \\
+GDOP &amp;= \sqrt{Q_{11} + Q_{22} + Q_{33} + Q_{44}}
+\end{aligned}\)</p>
+
+<h3 id="12-dop的物理意义">1.2 DOP的物理意义</h3>
+<ul>
+  <li><strong>PDOP &lt; 2</strong>：优秀（卫星分布很好）</li>
+  <li><strong>PDOP 2-4</strong>：良好</li>
+  <li><strong>PDOP 4-6</strong>：一般</li>
+  <li><strong>PDOP &gt; 6</strong>：较差（定位精度会显著下降）</li>
+</ul>
+
+<hr />
+
+<h2 id="2-常规矩阵求逆做法">2. 常规矩阵求逆做法</h2>
+
+<h3 id="21-标准dop计算流程">2.1 标准DOP计算流程</h3>
+
+<p>2.1.1 <strong>构建几何矩阵</strong> $G$：
+   \(G = \begin{bmatrix}
+   \frac{x_1 - x_u}{\rho_1} &amp; \frac{y_1 - y_u}{\rho_1} &amp; \frac{z_1 - z_u}{\rho_1} &amp; 1 \\
+   \frac{x_2 - x_u}{\rho_2} &amp; \frac{y_2 - y_u}{\rho_2} &amp; \frac{z_2 - z_u}{\rho_2} &amp; 1 \\
+   \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+   \frac{x_n - x_u}{\rho_n} &amp; \frac{y_n - y_u}{\rho_n} &amp; \frac{z_n - z_u}{\rho_n} &amp; 1
+   \end{bmatrix}\)</p>
+
+<p>2.1.2 <strong>计算协方差矩阵</strong>：
+   \(A = G^T G\)</p>
+
+<p>2.1.3 <strong>矩阵求逆</strong>：
+   \(Q = A^{-1}\)</p>
+
+<p>2.1.4 <strong>提取DOP值</strong>：
+   \(PDOP = \sqrt{Q_{11} + Q_{22} + Q_{33}}\)</p>
+
+<h3 id="22-常规方法的局限性">2.2 常规方法的局限性</h3>
+
+<p><strong>时间复杂度</strong>：矩阵求逆的时间复杂度为 $O(n^3)$，其中 $n$ 是状态向量维度（通常为4）。</p>
+
+<p><strong>实时性问题</strong>：当卫星构型发生变化时，需要重新计算整个矩阵的逆，这在实时系统中效率较低。</p>
+
+<hr />
+
+<h2 id="3-为什么需要快速更新">3. 为什么需要快速更新？</h2>
+
+<p>Sherman–Morrison 公式是一个<strong>在线性代数中非常有用的秩-1矩阵逆更新公式</strong>，
+在GNSS、滤波、机器学习和信号处理等场景中都频繁使用。</p>
+
+<hr />
+
+<h2 id="4-shermanmorrison快速更新">4. Sherman–Morrison快速更新</h2>
+
+<p>在GNSS定位或其他实时系统中，经常有这样的情况：</p>
+
+<p>\(A = G^T G\)
+我们已经计算好了 $A^{-1}$（记作 $Q$）。</p>
+
+<p>如果系统只<strong>新增或删除一颗卫星</strong>，
+意味着 $A$ 只变化了一个秩-1的修正：</p>
+
+\[A' = A + u v^T\]
+
+<p>比如在DOP计算中，
+新增一颗卫星的观测行向量 $g$，则
+\(A' = G'^T G' = G^T G + g^T g = A + g^T g\)
+这里 $u = g^T$，$v = g$。</p>
+
+<p>此时我们希望快速算出 $A’^{-1}$，而不是重算整个矩阵求逆。</p>
+
+<hr />
+
+<h2 id="5-shermanmorrison-公式">5. Sherman–Morrison 公式</h2>
+
+<p>对于一个可逆矩阵 $A$ 和两个列向量 $u, v$，
+若 $1 + v^T A^{-1} u \neq 0$，则：</p>
+
+\[(A + u v^T)^{-1}
+= A^{-1} - \frac{A^{-1} u v^T A^{-1}}{1 + v^T A^{-1} u}\]
+
+<hr />
+
+<h2 id="6-直观理解">6. 直观理解</h2>
+
+<h3 id="61-矩阵加秩1的效果">6.1 矩阵“加秩1”的效果</h3>
+
+<p>$A + u v^T$ 表示在原矩阵 $A$ 上，
+增加了一个“方向为 $u$、强度为 $v^T$”的微小扰动。</p>
+
+<p>而 $A^{-1}$ 是一个非常昂贵的操作，
+但如果这个扰动只有秩1（即只影响一个方向），
+我们可以用一次外积修正 $A^{-1}$。</p>
+
+<hr />
+
+<h3 id="62-修正项意义">6.2 修正项意义</h3>
+
+<p>修正项：
+\(\frac{A^{-1} u v^T A^{-1}}{1 + v^T A^{-1} u}\)
+可以看作：</p>
+
+<ul>
+  <li>分子：扰动的传播（通过 $A^{-1}$ 左右传播）</li>
+  <li>分母：扰动对整体系统的放大因子（标量）</li>
+</ul>
+
+<p>因此，这一项是对原逆矩阵的<strong>低秩补偿修正</strong>。</p>
+
+<hr />
+
+<h3 id="63-推导思路">6.3 推导思路</h3>
+
+<p>我们要找一个矩阵 $X$，使得：
+\((A + u v^T) X = I\)</p>
+
+<p>假设 $X = A^{-1} + \Delta$，代入上式：
+\((A + u v^T)(A^{-1} + \Delta) = I\)
+展开：
+\(I + A\Delta + u v^T A^{-1} + u v^T \Delta = I\)
+化简：
+\(A\Delta + u v^T A^{-1} + u v^T \Delta = 0\)
+左乘 (A^{-1})：
+\(\Delta + A^{-1} u v^T A^{-1} + A^{-1} u v^T \Delta = 0\)</p>
+
+<p>令 $y = A^{-1} u$，得：
+\(\Delta + y v^T A^{-1} + y v^T \Delta = 0\)</p>
+
+<p>将 $\Delta$ 移项：
+\(\Delta = - y v^T (A^{-1} + \Delta)\)</p>
+
+<p>代入自身：
+\(\Delta = - y v^T A^{-1} - y v^T \Delta\)
+\(\Rightarrow (I + y v^T)\Delta = - y v^T A^{-1}\)
+两边右乘 $(I + y v^T)^{-1}$，
+根据矩阵逆的<strong>Woodbury恒等式</strong>的秩1特例：
+\((I + y v^T)^{-1} = I - \frac{y v^T}{1 + v^T y}\)
+代入得到：
+\(\Delta = -\frac{y v^T A^{-1}}{1 + v^T y}\)
+\(\Rightarrow X = A^{-1} + \Delta = A^{-1} - \frac{A^{-1} u v^T A^{-1}}{1 + v^T A^{-1} u}\)
+即原公式。</p>
+
+<hr />
+
+<h3 id="64-删除元素的逆公式减秩">6.4 删除元素的逆公式（减秩）</h3>
+
+<p>如果是删除一颗卫星（矩阵减少秩1），则：
+\(A' = A - u v^T\)
+只需把公式中的 “+” 改成 “−”：
+\((A - u v^T)^{-1}
+= A^{-1} + \frac{A^{-1} u v^T A^{-1}}{1 - v^T A^{-1} u}\)</p>
+
+<hr />
+
+<h2 id="7-与woodbury矩阵恒等式的关系">7. 与Woodbury矩阵恒等式的关系</h2>
+
+<p>Sherman–Morrison 是更一般公式——Woodbury恒等式的特例（当秩为1时）：</p>
+
+<p>\((A + UCV^T)^{-1} = A^{-1} - A^{-1}U(C^{-1} + V^T A^{-1}U)^{-1}V^T A^{-1}\)
+当 $U=u, V=v, C=1$，就变成 Sherman–Morrison。</p>
+
+<hr />
+
+<h2 id="8-数值稳定性提示">8. 数值稳定性提示</h2>
+
+<ul>
+  <li>需要确保分母 $1 + v^T A^{-1} u$ 不接近0，否则不稳定；</li>
+  <li>在GNSS应用中，$g Q g^T$ 通常很小，数值稳定；</li>
+  <li>可以用双精度浮点$<code class="language-plaintext highlighter-rouge">double</code>$计算避免舍入误差。</li>
+</ul>]]></content><author><name>Andy</name></author><category term="GNSS定位算法" /><summary type="html"><![CDATA[GNSS DOP计算与Sherman–Morrison快速更新]]></summary></entry><entry><title type="html">Cursor扩展商店无法正常下载插件</title><link href="https://hqz.is-a.dev/articles/cursor-extension-market-cfg/" rel="alternate" type="text/html" title="Cursor扩展商店无法正常下载插件" /><published>2025-09-24T00:00:00+08:00</published><updated>2025-09-24T00:00:00+08:00</updated><id>https://hqz.is-a.dev/articles/cursor-extension-market-cfg</id><content type="html" xml:base="https://hqz.is-a.dev/articles/cursor-extension-market-cfg/"><![CDATA[<h1 id="cursor扩展商店无法正常下载插件">Cursor扩展商店无法正常下载插件</h1>
+
+<p>有时候我们可能会遇到Cursor IDE的扩展商店（Extensions Marketplace）无法正常下载插件的情况，比如搜索不到插件、比如无法下载安装插件，这时候我们需要检查一下配置文件是否正确。</p>
+
+<h2 id="原因">原因</h2>
+
+<p>这个问题的原因大概率是网络不通畅，与Cursor的扩展商店的通讯出了问题。
+不过我们可以通过修改扩展商店的来源，绕过Cursor的扩展商店，直接从VS Code上下载插件。</p>
+
+<h2 id="解决方法">解决方法</h2>
+
+<h3 id="1-找到配置文件">1. 找到配置文件</h3>
+
+<p>修改Cursor安装目录下的JSON配置文件：<code class="language-plaintext highlighter-rouge">./resources/app/product.json</code></p>
+
+<h3 id="2-修改扩展商店配置">2. 修改扩展商店配置</h3>
+
+<p>关注配置文件中的”extensionsGallery”配置项，它的作用是定义扩展商店相关的 URL 地址，Cursor就是通过这些URL去拉取插件列表、安装插件、获取推荐等。</p>
+
+<p>一言以蔽之，”extensionsGallery” 就是Cursor告诉自己”去哪里找插件商店”的配置。</p>
+
+<p>缺省配置可能如下：</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"extensionsGallery"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"galleryId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cursor"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"serviceUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://marketplace.cursorapi.com/_apis/public/gallery"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"itemUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://marketplace.cursorapi.com/items"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"resourceUrlTemplate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://marketplace.cursorapi.com/{publisher}/{name}/{version}/{path}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"controlUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api2.cursor.sh/extensions-control"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"recommendationsUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"nlsBaseUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"publisherUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>我们需要修改 serviceUrl 和 recommendationsUrl 两个参数：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"extensionsGallery"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+    </span><span class="nl">"serviceUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://marketplace.visualstudio.com/_apis/public/gallery"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"recommendationsUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://{publisher}.vscode-unpkg.net/{publisher}/{name}/{version}/{path}"</span><span class="p">,</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="3-重启应用">3. 重启应用</h3>
+
+<p>重启IDE，就可以正常下载插件了。</p>
+
+<p><strong>注意</strong>：如果你要在内网搭建自己的扩展商店，就可以把 “extensionsGallery” 改成自己的服务地址。这样开发者就可以在内网安装/搜索插件，而不依赖公网Marketplace。</p>]]></content><author><name>Andy</name></author><category term="测试开发工具" /><category term="Cursor" /><category term="IDE" /><category term="工具配置" /><summary type="html"><![CDATA[Cursor扩展商店无法正常下载插件]]></summary></entry><entry><title type="html">GNSS导航电文比特解码</title><link href="https://hqz.is-a.dev/articles/navigation-data-decode/" rel="alternate" type="text/html" title="GNSS导航电文比特解码" /><published>2025-09-18T00:00:00+08:00</published><updated>2025-09-18T00:00:00+08:00</updated><id>https://hqz.is-a.dev/articles/navigation-data-decode</id><content type="html" xml:base="https://hqz.is-a.dev/articles/navigation-data-decode/"><![CDATA[<h1 id="gnss导航电文比特解码">GNSS导航电文比特解码</h1>
+
+<p>导航电文解码是GNSS接收机软件的关键环节之一，也是很多从业者入门时领取到的“新手村任务”之一。首先，让我们给它下个定义：</p>
+
+<p><strong>导航电文（Navigation Message）</strong> 是调制在GNSS射频载波上的0-1数据流，其本质是包含卫星轨道、时钟、系统状态等关键参数的二进制比特流。</p>
+
+<p><strong>比特解码（Bit Decoding）</strong> 是指将从卫星信号中剥离出的原始数据比特流，按照特定帧格式和编码规则，解析并重构为可供定位算法使用的、有实际意义的工程参数的过程。</p>
+
+<h2 id="电文解码的目的"><strong>电文解码的目的</strong></h2>
+
+<p>电文解码的目的很明确，主要有如下两方面，分别对应定位解算的两个必要条件：接收机观测数据和卫星轨道钟数据。以GPS L-NAV为例：</p>
+
+<p><strong>补全发射时间</strong> ：在帧同步之前，跟踪环路提取到的码相位和电文比特没有时间基准，无法直接拼接伪距观测。通过帧同步找到电文数据帧的边界，可以建立比特数与电文数据帧的对应关系。此外，导航电文中提供了信号播发对应到系统时的周计数（WN, Week Number）和周内秒（TOW, Time Of Week）,两者结合可以计算出电文比特对应的绝对时间，从而拼接完整伪距观测。</p>
+
+<p>$PR = T_{rx} - T_{tx}$</p>
+
+<p>$T_{tx} = WN + TOW + Bit_ms + \frac{Code_phase}{Code_length}$</p>
+
+<p><strong>获取星历历书</strong> ：导航电文包含了卫星的轨道、钟差、健康状况等关键参数，有了发射时刻和卫星轨道钟数据，就能够计算卫星的位置速度，作为PVT解算的输入。</p>
+
+<h2 id="电文解码的常规流程"><strong>电文解码的常规流程</strong></h2>
+
+<p>尽管各GNSS系统的电文格式存在差异，但其核心结构和解码逻辑相似。通常采用<strong>分层帧结构</strong>，以GPS L-NAV为例，其结构如下：</p>
+
+<ul>
+  <li><strong>比特（Bit）</strong>: 电文的基本单位，值为0或1。</li>
+  <li><strong>字（Word）</strong>: 固定数量的比特组合（如GPS为30比特）。
+    <ul>
+      <li>通常包含<strong>数据位</strong>和<strong>校验位</strong>（如奇偶校验）。</li>
+    </ul>
+  </li>
+  <li><strong>子帧（Subframe）</strong>: 由固定数量的字组成（如GPS每个子帧含10个字，共300比特）。</li>
+  <li><strong>帧（Frame）</strong>: 由固定数量的子帧组成（如GPS一帧含5个子帧，共1500比特，其中子帧1~3是一套完整的星历信息，子帧4~5是历书数据）。</li>
+  <li><strong>超帧（Superframe）</strong>: 由多个帧组成的完整数据集合，包含一套完整的卫星历书信息。</li>
+</ul>
+
+<p><strong>解码的核心任务</strong>就是逆向上溯这个过程：<code class="language-plaintext highlighter-rouge">比特流 -&gt; 校验与纠错 -&gt; 组成字 -&gt; 解析子帧 -&gt; 得到星历/历书等参数</code>。</p>
+
+<h3 id="帧同步frame-synchronism"><strong>帧同步（Frame Synchronism）</strong></h3>
+
+<ul>
+  <li><strong>目的</strong>：在比特流中找到子帧和帧的起始位置。</li>
+  <li><strong>原理</strong>：利用电文中固定的<strong>前导码（Preamble）</strong> 或<strong>同步字（Sync Word）</strong>。例如，GPS每个子帧的第一个字的前8比特是一个固定的模式<code class="language-plaintext highlighter-rouge">0b10001011</code>（八进制表示为0x8B）。接收机通过在比特流中滑动搜索这个固定模式来实现同步。</li>
+  <li><strong>要点</strong>：一旦成功检测到同步头，即可将后续的比特流按子帧和帧的结构进行划分。</li>
+</ul>
+
+<h3 id="奇偶校验与纠错parity-check--error-correction"><strong>奇偶校验与纠错（Parity Check &amp; Error Correction）</strong></h3>
+
+<ul>
+  <li><strong>目的</strong>：验证数据的完整性，检测并可能纠正传输中产生的比特错误。</li>
+  <li><strong>原理</strong>：
+    <ul>
+      <li><strong>GPS（汉明码）</strong>：每个30比特的字的最后6比特是奇偶校验位。接收机使用规定的校验算法（涉及上一字的最后两位作为“奇偶性基准”）重新计算校验和，并与接收到的校验和对比。若不匹配，则表明该字存在错误。</li>
+      <li><strong>现代GNSS（BDS, Galileo）</strong>：通常采用更强大的前向纠错（FEC）编码，如卷积码或LDPC码，能有效纠正连续比特错误，提升数据解码的鲁棒性。</li>
+    </ul>
+  </li>
+  <li><strong>要点</strong>：校验是确保数据可靠性的关键。对于关键数据（如星历），通常需要无错误地接收完整子帧。</li>
+</ul>
+
+<h3 id="数据解析data-parsing">数据解析（Data Parsing）**</h3>
+
+<ul>
+  <li><strong>目的</strong>：从已同步且通过校验的二进制数据中，根据协议规定提取出各个参数。</li>
+  <li><strong>原理</strong>：根据GNSS接口控制文件（ICD）中定义的<strong>电文结构、参数位置、数据格式（如二进制补码、浮点数、比例因子）</strong> 进行解析。
+    <ul>
+      <li>例如，GPS子帧1的第3-10字包含了卫星精度、健康状况、星期数（WN）等信息；子帧2和3则包含了详细的星历参数（开普勒轨道参数、摄动项等）。</li>
+    </ul>
+  </li>
+  <li><strong>要点</strong>：必须严格遵循官方ICD文档。参数通常分散在不同的字、甚至不同的子帧中，需要先完成整个帧的接收和存储，再进行统一解析。</li>
+</ul>
+
+<h3 id="参数转换与工程单位化"><strong>参数转换与工程单位化</strong></h3>
+
+<ul>
+  <li><strong>目的</strong>：将解析出的二进制数转换为有物理意义的工程值。</li>
+  <li><strong>原理</strong>：应用ICD中提供的<strong>比例因子（Scale Factor）</strong>、<strong>偏移量（Bias）</strong> 和<strong>单位</strong>。
+    <ul>
+      <li>例如，一个16比特的参数<code class="language-plaintext highlighter-rouge">N</code>，ICD规定其表示的时间参数 <code class="language-plaintext highlighter-rouge">T = N * 2^(-10)</code> 秒。接收机软件需进行此计算。</li>
+    </ul>
+  </li>
+  <li><strong>要点</strong>：忽略比例因子或符号位处理错误是常见的编程错误来源。</li>
+</ul>
+
+<h2 id="工程实践"><strong>工程实践</strong></h2>
+
+<h3 id="帧同步还可以做什么"><strong>帧同步，还可以做什么</strong></h3>
+
+<h4 id="9比特同步头"><strong>9比特同步头</strong></h4>
+
+<p>前面提到，GPS的前导码是一个8位的数据<code class="language-plaintext highlighter-rouge">0b10001011</code>，虚警概率较高 $2^{-8}=3.91E-3$ 。受益于LNAV电文字的独特设计，TLM字的前一个字的最后一个比特D30也是可以确认的。</p>
+
+<p>因此一般工程实践中会将D30-连带TLM字的D1~D8一起作为同步头，即9比特同步头。虚警概率为 $2^{-9}=1.95E-3$ ，降低了一半。</p>
+
+<h4 id="同步前字回收word-restore"><strong>同步前字回收（Word Restore）</strong></h4>
+
+<p>成功检测到同步头之后，就可以开始按字和子帧的格式收集后续的比特流。</p>
+
+<p>提示一下，同步头不仅仅是一个子帧的开始，它也是一个子帧的结束。为了充分利用帧同步之前收集的数据，同步头之前的比特不能浪费掉。</p>
+
+<p>于是，在检测到同步头后，可以将同步头之前的比特同样按照字和子帧的格式收集，最多可以回收1个子帧的数据。这就是<strong>字回收（Word Restore）</strong>的工作原理。</p>
+
+<p>刚找到帧头时的比特缓存器：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|Bit0-Bit31|Bit32-Bit63|... |Bit(n*32)-(Bit_cnt_restored-1)               |
+                            |&lt;-----------TLM LSB---------&gt;|&lt;--EmptyBits--&gt;|
+                            |&lt;----------------- 32 bits -----------------&gt;|
+|uint32[0] |uint32[1]  |... |uint32[n]                                    |
+|WordX     |WordX+1    |... |TLM Word                                     |
+|SubframeY                  |SubframeY+1
+</code></pre></div></div>
+
+<p>其中，Bit_cnt_restored是同步头之前收集的比特数，n是对应的字数（向上取整）。Bit_cnt_restored-1是同步头之前的最后一个比特的位置。
+由于找同步头的过程是滑动窗口，因此Bit_cnt_restored-1往前数30个比特是TLM字，即比特缓存器中的比特并没有按照字对齐。
+为了方便后续的解析，需要将比特缓存器中的比特按照字对齐(到UINT32边界)，并移除未收集完整的字。</p>
+
+<p>按字对齐后的比特缓存器：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|Bit0-Bit31|Bit32-Bit63|... |Bit((n-1)*32)-Bit((n-1)*32+31)|
+                            |&lt;---------- 32 bits ---------&gt;|
+|uint32[0] |uint32[1]  |... |uint32[n-1]                   |
+|Word9     |Word8      |... |WordX+1                       |
+</code></pre></div></div>
+
+<p>如果你是从右（TLM）至左一个一个收集字，那要小心，字的顺序可能跟子帧中的顺序是反向的，也就是说，缓冲器中的第一个字是子帧中的最后一个字（Word9）。</p>
+
+<h3 id="按字收集星历"><strong>按字收集星历</strong></h3>
+
+<p>一套完整的GPS LNAV星历播发占用30秒，如果按照顺序等3个子帧都收集齐后再解码星历，中间有一个字出现问题，就得重新等待30秒。</p>
+
+<p>为了提升解码鲁棒性，一般工程上采用按字收集星历，即不管你是哪个子帧，只要这个字奇偶校验通过就可以被收集。等收集齐30个字就可以解码星历，这样就不需要保证连续的校验通过。</p>
+
+<p>需要注意，为了避免跨星历更新边界收集星历，导致把两套不同龄期的星历拼接在一起，需要在子帧收集时检校星历标识符IOD，当发现IOD更新时及时清空缓存。
+这一点非常重要，对于<strong>字回收</strong>逻辑同样适用。</p>
+
+<h3 id="良好的设计有限状态机finite-state-machine"><strong>良好的设计：有限状态机（Finite State Machine）</strong></h3>
+
+<p>GPS帧同步不是一个简单的“一次比较，立马确认”的过程。接收机最初并不知道帧的起始位置，它需要在比特流中进行搜索。这个搜索和确认过程天然地包含多个阶段和状态，包括搜索、验证、以及成功或失败后的处理。因此，用状态机来建模是最自然、最直接的。</p>
+
+<p>良好的状态机设计，最首要、最关键的好处，就是大幅提升了可靠性。通过多级验证机制，指数级地降低虚警概率。</p>
+
+<p>其次，它能让接收机解码具备容错和从失步中自动恢复的能力。比如，在同步状态下，信道可能突然恶化（如车辆进入隧道），导致连续几个帧的同步头都无法正确检测。因此，可以这样设计：如果在连续M个帧周期内都没有在预期位置检测到同步头，状态机不会立即崩溃，而是认为同步可能已经丢失，优雅地退回到“搜索状态”，重新开始捕获过程。</p>
+
+<p>此外，状态机可以优化资源效率：仅在需要时进行密集搜索，同步后计算开销极小。</p>
+
+<p>最后，也是工程代码中很重要的一点，状态机可以优化代码结构，做到逻辑清晰，模块化，易于开发和维护。可维护性对于大型的工程代码至关重要，相信在大厂工作过的朋友们一定深有体会。</p>
+
+<p>由于不同厂商对于帧同步的实现细节可能不同，这里给出一个状态机的设计原则，仅供参考:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                  +---------------------------+
+                  |                           |
+                  |       搜索状态             |&lt;-----------------+
+                  |     (Search State)        |                  |
+                  |                           |                  |
+                  +------------+--------------+                  |
+                               |                                 |
+            触发值 &gt; 阈值_TH1  |                                 |
+                               v                                 |
+                  +---------------------------+                  |
+                  |                           |                  |
+                  |       验证状态            |                  |
+                  |     (Verify State)        |                  |
+                  |                           |                  |
+                  +------------+--------------+                  |
+                               |                                 |
+            连续N次验证成功     | 验证失败 / 超时                  |
+                               v                                 |
+                  +---------------------------+                  |
+                  |                           |                  |
+                  |       同步状态            |                  |
+                  |      (Sync State)         |                  |
+                  |                           |                  |
+                  +------------+--------------+                  |
+                               |                                 |
+            连续M次同步失败     |                                 |
+                               v                                 |
+                  +---------------------------+                  |
+                  |                           |                  |
+                  |     失步状态               |------------------+
+                  | (Loss-of-Sync State)      |
+                  |                           |
+                  +---------------------------+
+</code></pre></div></div>
+
+<h2 id="主要gnss系统的电文"><strong>主要GNSS系统的电文</strong></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">系统</th>
+      <th style="text-align: left">电文类型</th>
+      <th style="text-align: left">显著特点与解码要点</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>GPS L1 C/A</strong></td>
+      <td style="text-align: left">LNAV</td>
+      <td style="text-align: left">传统结构，30比特/字，6比特奇偶校验，采用汉明码。需注意奇偶校验算法中的“奇偶性基准”位。</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>GPS L2C/L5</strong></td>
+      <td style="text-align: left">CNAV, CNAV-2</td>
+      <td style="text-align: left">消息结构更灵活（类似于数据包），采用FEC（卷积码），性能更优，数据内容更丰富。</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>BDS-3 B1C</strong></td>
+      <td style="text-align: left">B-CNAV1</td>
+      <td style="text-align: left">采用LDPC编码，抗误码能力极强。电文结构为可变长度的消息，包含导频序列和CRC校验。</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Galileo</strong></td>
+      <td style="text-align: left">F/NAV, I/NAV</td>
+      <td style="text-align: left">使用卷积码和CRC校验。页面结构，含同步模式、数据段和尾比特。完整性信息更丰富。</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="要点总结顺口溜"><strong>要点总结（顺口溜）</strong></h2>
+
+<ol>
+  <li><strong>同步是基石</strong>：<strong>帧同步</strong>是解码的前提，同步失败将导致整个解码链失效。</li>
+  <li><strong>校验保可靠</strong>：<strong>奇偶校验</strong>或<strong>FEC解码</strong>是确保数据在低信噪比环境下仍能正确解码的核心手段，不可或缺。</li>
+  <li><strong>ICD是圣经</strong>：任何解析工作都必须以官方发布的<strong>接口控制文件（ICD）</strong> 为绝对依据，不可臆测参数的位置和格式。</li>
+  <li><strong>注意数据格式</strong>：正确处理<strong>二进制补码、符号位、比例因子和偏移量</strong>是获得正确参数值的关键。</li>
+  <li><strong>考虑比特顺序</strong>：需注意传输的比特顺序是<strong>MSB（最高有效位优先）</strong> 还是<strong>LSB（最低有效位优先）</strong>。</li>
+  <li><strong>系统有差异</strong>：不同GNSS系统及其不同信号的电文结构、编码方式和校验算法存在显著差异，实现解码器时需分别处理。</li>
+  <li><strong>鲁棒性设计</strong>：在实际应用中，应设计状态机来处理同步丢失、校验失败、数据不完整等异常情况，保证解码过程的鲁棒性。</li>
+  <li><strong>效率与实时性</strong>：解码算法通常嵌入在嵌入式系统中，需考虑<strong>计算复杂度和内存占用</strong>的平衡，优化查找和计算过程。</li>
+</ol>]]></content><author><name>Andy</name></author><category term="GNSS接收机技术" /><summary type="html"><![CDATA[GNSS导航电文比特解码]]></summary></entry><entry><title type="html">粗时导航五状态方程理论与应用</title><link href="https://hqz.is-a.dev/articles/coarse-time-five-state-equation/" rel="alternate" type="text/html" title="粗时导航五状态方程理论与应用" /><published>2025-09-14T00:00:00+08:00</published><updated>2025-09-14T00:00:00+08:00</updated><id>https://hqz.is-a.dev/articles/coarse-time-five-state-equation</id><content type="html" xml:base="https://hqz.is-a.dev/articles/coarse-time-five-state-equation/"><![CDATA[<h1 id="粗时导航定位技术">粗时导航定位技术</h1>
+
+<p>粗时导航技术是一种在全球导航卫星系统（GNSS）接收机初始时间信息存在较大偏差（数量级为秒或分钟）时，仍能实现有效定位的算法。它通过扩展状态参数，将传统的四参数模型（三维位置与接收机钟差）增强为五参数模型，新增参数为接收机粗时间误差。</p>
+
+<h2 id="核心问题"><strong>核心问题</strong></h2>
+
+<p>在标准单点定位中，我们假设接收机钟差$\delta t$是一个小量（通常在毫秒级），可以通过伪距观测方程与三维坐标一起解算。然而，当接收机没有精确的初始时间信息时，其内部时钟可能与系统时间存在数秒、数分钟甚至更大的偏差。这个巨大的钟差（记为$\Delta T$）如果被当作$\delta t$来处理，会引入巨大的误差，导致定位失败。这是因为良好的最小二乘估计依赖于对卫星视线方向（Line-Of-Sight,
+LOS）的良好的线性化近似，而粗时间误差可能引入较大的卫星位置误差，从而破坏线性化（使LOS投影矢量失真）。</p>
+
+<p>设接收机内部记录的测量时刻为$t_{m}$，其与真实GNSS系统时$t_{u}$之间的关系：</p>
+
+\[t_{u} = t_{m} + \Delta T - \delta t\]
+
+<p>其中，$\Delta T$
+即为待估计的<strong>粗时间误差</strong>。（后面会解释$\Delta T$与$\delta t$符号相反的原因）。</p>
+
+<p>该误差$\Delta T$会导致卫星位置计算错误。卫星位置是信号发射时刻的函数$X^{s}(t)$，使用错误的接收时间$t_{m}$来计算信号发射时刻和卫星位置，会引入显著误差，从而使传统模型失效。粗时导航通过将$\Delta T$作为一个待估状态量，在迭代计算中同时修正接收机位置、钟差和用于计算卫星位置的时间基准。</p>
+
+<p>参数辨析：</p>
+
+<ul>
+  <li>
+    <p>$\delta t$：接收机钟差。表示接收机晶体抖动导致的相对于GNSS系统时的精密偏差，是一个小量（微秒级到毫秒级），直接影响伪距观测值。</p>
+  </li>
+  <li>
+    <p>$\Delta T$：粗时间误差。表示接收机初始时间与系统时之间的巨大偏差（秒级到分钟级），它不直接体现在伪距观测值中，而是通过影响卫星位置的计算间接影响定位。</p>
+  </li>
+</ul>
+
+<p>五状态模型即同时估计三维位置坐标、精密接收机钟差$\delta t$和粗时间误差$\Delta T$。</p>
+
+<h2 id="观测模型"><strong>观测模型</strong></h2>
+
+<p>对于第$i$颗卫星，其伪距观测方程可表述为：</p>
+
+\[P_{r}^{i} = \rho_{r}^{i} + c(\delta t_{r} - \delta t^{i}) + I_{r}^{i} + T_{r}^{i} + \epsilon_{P}^{i}\]
+
+<p>其中：</p>
+
+<ul>
+  <li>
+    <p>$P_{r}^{i}$ 为接收机测得的伪距观测值。</p>
+  </li>
+  <li>
+    <p>\(\rho_{r}^{i} = \left\|\mathbf{X}_{r} - \mathbf{X}^{i}(t_{u} - \tau^{i})\right\|\) 为接收机与卫星之间的几何距离。\(\mathbf{X}_{r}\)为接收机位置矢量，\(\mathbf{X}^{i}\)为卫星位置矢量，\(\tau^{i}\)为信号传播时间。</p>
+  </li>
+  <li>
+    <p>$c$为光速。</p>
+  </li>
+  <li>
+    <p>$\delta t_{r}$为待估的接收机钟差。</p>
+  </li>
+  <li>
+    <p>$\delta t^{i}$为卫星钟差（由广播星历修正）。</p>
+  </li>
+  <li>
+    <p>$I_{r}^{i}, T_{r}^{i}$分别为电离层和对流层延迟（可通过模型修正或忽略）。</p>
+  </li>
+  <li>
+    <p>$\epsilon_{P}^{i}$为包含多路径效应、测量噪声等未建模误差。</p>
+  </li>
+</ul>
+
+<p>关键点在于几何距离$\rho_{r}^{i}$的计算。卫星位置$\mathbf{X}^{i}$必须在正确的信号发射时刻$t^{i}$计算。因此，观测模型隐式地依赖于待估参数$\Delta T$。</p>
+
+<h2 id="线性化方程"><strong>线性化方程</strong></h2>
+
+<p>基于泰勒级数展开，在近似点\(\mathbf{X}_{r,0},\delta t_{r,0},\Delta T_{0}\)处对观测方程进行线性化。</p>
+
+<h3 id="状态向量">状态向量</h3>
+
+<p>定义状态向量$\mathbf{x}$及其改正数向量$\delta\mathbf{x}$：</p>
+
+\[\mathbf{x} = \begin{bmatrix}
+\mathbf{X}_{r} \\
+c\delta t_{r} \\
+\Delta T
+\end{bmatrix},\quad\delta\mathbf{x} = \begin{bmatrix}
+\delta\mathbf{X}_{r} \\
+\delta(c\delta t_{r}) \\
+\delta(\Delta T)
+\end{bmatrix} = \begin{bmatrix}
+\Delta x \\
+\Delta y \\
+\Delta z \\
+\Delta b \\
+\Delta t
+\end{bmatrix}\]
+
+<p>接收机钟差参数的单位是米，粗时间误差参数的单位是秒。</p>
+
+<h3 id="线性化观测方程">线性化观测方程</h3>
+
+<p>对于每颗卫星$i$，伪距残差$P^{i}$为：（假设大气延迟已经用模型修正，同时忽略多路径效应的影响）</p>
+
+\[l_{P}^{i} = P_{r}^{i} - (P_{r}^{i})_{0} = P_{r}^{i} - [\rho_{r,0}^{i} + c(\delta t_{r,0} - \delta t^{i})]\]
+
+<p>线性化后的方程为：</p>
+
+\[l_{P}^{i} = - \mathbf{e}_{r}^{i} \cdot \delta\mathbf{X}_{r} + \delta(c\delta t_{r}) + \dot{\rho}^{i} \cdot \delta(c\Delta T)/c\]
+
+<p>其中：</p>
+
+<ul>
+  <li>
+    <p>$\mathbf{e}_{r}^{i}$为接收机至卫星$i$的视线方向（LOS）单位矢量。</p>
+  </li>
+  <li>
+    <p>$\dot{\rho}^{i}$为接收机与卫星$i$之间的几何距离变化率（即径向速度），其计算涉及卫星速度矢量$\mathbf{v}^{i}$:</p>
+
+\[\dot{\rho}^{i} = \mathbf{e}_{r}^{i} \cdot (\mathbf{v}^{i} - \mathbf{v}_{r}) \approx \mathbf{e}_{r}^{i} \cdot \mathbf{v}^{i}\]
+  </li>
+</ul>
+
+<p>（通常忽略接收机速度$\mathbf{v}_{r}$，认为其静止）。</p>
+
+<h3 id="设计矩阵与参数估计">设计矩阵与参数估计</h3>
+
+<p>将所有$m$颗卫星的方程组成法方程系统：</p>
+
+\[\mathbf{l} = \mathbf{H}\delta\mathbf{x} + \epsilon\]
+
+<p>其中，设计矩阵$\mathbf{H}$的每一行对应一颗卫星：</p>
+
+\[\mathbf{H}^{i} = \begin{bmatrix}
+ - e_{x}^{i} &amp; - e_{y}^{i} &amp; - e_{z}^{i} &amp; 1 &amp; \frac{\dot{\rho}^{i}}{c}
+\end{bmatrix}\]
+
+<p>或等价于：</p>
+
+\[\mathbf{H}^{i} = \begin{bmatrix}
+ - \mathbf{e}_{r}^{i} &amp; 1 &amp; s^{i}
+\end{bmatrix},\quad 其中\quad s^{i} = \frac{\dot{\rho}^{i}}{c} = \mathbf{e}_{r}^{i} \cdot \frac{\mathbf{v}^{i}}{c}\]
+
+<p>参数改正数$\delta\mathbf{x}$的最小二乘解为：</p>
+
+\[\delta\mathbf{x} = (\mathbf{H}^{T}\mathbf{H})^{-1}\mathbf{H}^{T}\mathbf{l}\]
+
+<p>通过迭代计算\(\delta\mathbf{x} \rightarrow \mathbf{x}_{k + 1} = \mathbf{x}_{k} + \delta\mathbf{x}\)，直至收敛，即可求解出所有五个状态参数。</p>
+
+<h2 id="工程实践"><strong>工程实践</strong></h2>
+
+<h3 id="agnss技术">AGNSS技术</h3>
+
+<p>粗时导航在实际工程中主要的一个场景，是在AGNSS场景下的快速冷启动定位。独立GNSS冷启动在首次定位前通常要经过捕获、跟踪、位同步、帧同步、收集星历等过程，以至于首次定位时间（Time-To-First-Fix,
+TTFF）通常会消耗30秒以上。AGNSS技术通过从网络下发辅助时间、位置和星历，能够大大缩短TTFF。仅就粗时导航而言，在AGNSS场景下，能够帮助接收机跳过位同步、帧同步、收集星历的过程，在理想的卫星环境下实现1~3秒TTFF的冷启动定位。</p>
+
+<p>举个例子，接收机在跟踪到某颗卫星的信号后以及位同步之前，通常能够从跟踪环路中拿到亚毫秒信息（即1毫秒以下部分的精确发射时刻）。此时毫秒以上部分的信息未知，无法进行经典四参数单点定位。然而，在辅助时间和辅助位置的帮助下，通过五参数粗时导航定位解算，能够快速拿到准确的接收机时间。此时的接收机时间精度一般在微秒级（或更优），足够用来反推观测数据的整数毫秒部分，因而相当于跳过了位同步、帧同步的过程，直接获取完整的伪距观测。</p>
+
+<p>需要注意，线性化方程中，所有观测对应同一个粗时间误差。类似于接收机钟差是公共量，这意味着所有观测中整数毫秒$N$的误差（不是$N$本身）也是公共量。因此，假如初始位置或者初始时间引入的误差太大破坏了这个假设，那么五状态方程也无法正确收敛。</p>
+
+<p>幸运的是，AGNSS服务引入的先验误差一般不会太大，大多数情况下不会出现这个问题。如果一定要考虑这种情况下的粗时导航，可以用格网搜索的方式尝试去找到合理的先验位置和时间，或者可以尝试使用RTK技术中常用的LAMBDA最小二乘降相关整数搜索算法。</p>
+
+<h3 id="几何不变性约束">几何不变性约束</h3>
+
+<p>由此延伸，五状态方程本身默认了所有观测中的整数毫秒误差是相同的，那么如果我们主动为这些整数之间的关系添加一个强约束，理论上是否能够增强模型的鲁棒性？</p>
+
+<p>事实正是如此，这个约束来自卫星星座的几何构型本身，可以称之为几何不变性约束。我们假设某颗卫星的整数毫秒是准确的，将其作为参考星，固定其他卫星相对于参考星整数毫秒基准的相对值，从而实现对整数毫秒的约束。即使参考星的初始整数毫秒设置错误也没有关系，因为这个误差会传播到每个观测上，在最小二乘解算时被粗时间误差参数$\Delta T$吸收。</p>
+
+<p>由初始位置计算的先验LOS几何距离$\rho_{r,0}^{i}$：</p>
+
+\[\begin{matrix}
+\rho_{r,0}^{i} = \rho_{r}^{i} - c\Delta T
+\end{matrix}\]
+
+<p>卫星跟踪后拿到的亚毫秒时间$T_{TX,0}$：</p>
+
+\[T_{TX,0} = T_{TX} - N \cdot 1ms\]
+
+<p>伪距观测的计算：</p>
+
+\[P_{r}^{i} = (T_{RX} - T_{TX}) \cdot c = \rho_{r}^{i} + c(\delta t_{r} - \delta t^{i})\]
+
+<p>分别将前两个公式带入最后一个公式：</p>
+
+\[(T_{RX} - T_{TX,0} - N \cdot 1ms) \cdot c = \rho_{r,0}^{i} + c\Delta T + c(\delta t_{r} - \delta t^{i})\]
+
+<p>将已知量移至等式左侧：</p>
+
+\[\rho_{r,0}^{i} + T_{TX,0} - c \cdot \delta t^{i} = （T_{RX} - \Delta T - \delta t_{r} - N \cdot 1ms) \cdot c\]
+
+<p>不难发现，等式右侧中$T_{RX} - \Delta T - \delta t_{r}$仅与接收机时间有关，在与参考星做差后被完全消除，仅剩下该观测的整数毫秒参数。因此，通过计算（所有观测的）等式左侧的数值，可以固定其他卫星相对于参考星整数毫秒的相对值。</p>
+
+<p>至于选择参考星的方法有很多，比如根据卫星观测质量（CN0、高度角等），或者通过”几何残差中位数法”。无论哪种方法，参考星一定不能包含较大的误差（比如以多路径效应为首的非模型化误差），否则同样会导致最小二乘无法正确收敛。</p>
+
+<p>所谓的”整数毫秒误差是相同的”，指的是当接收机粗时间误差$\Delta T$是1毫秒的整数倍（$N \cdot 1ms$）时，由这个误差引起的各卫星伪距误差（$\delta\rho^{i} = \dot{\rho}^{i} \cdot \Delta T$）之间的差值，不足以使任何一颗卫星的伪距测量值跨越1毫秒的整数边界。更准确的表述是，<strong>对所有卫星对</strong>$\mathbf{（i,j)}$<strong>，由时间</strong>$\mathbf{\Delta T}$<strong>引入的伪距误差之差</strong>$\mathbf{\delta}\mathbf{\rho}^{\mathbf{i}}\mathbf{- \delta}\mathbf{\rho}^{\mathbf{j}}$<strong>，必须小于1毫秒</strong>。</p>
+
+<p>当然，这也同样是该约束的失效条件，考虑到卫星LOS速度一般在 ±1000
+m/s以内，满足几何不变性约束的初始接收机时间误差范围通常在150秒~600秒（分别对应卫星对相对速度2000m/s和500m/s）。当然，不能孤立的考虑初始时间的误差，太大的初始位置误差也会破坏该约束。当初始位置误差过大时，甚至会破坏模型的线性化假设，导致整个最小二乘失效。为了保证约束可靠性，一般会对初始位置的不确定度做一个比较保守的限制，比如100Km以内（近似1/3个ms）。</p>
+
+<h2 id="qa">Q&amp;A</h2>
+
+<p><strong>Q1：同样是表征接收机时间的误差，为什么粗时间参数</strong>$\mathbf{\Delta T}$<strong>和钟差参数的</strong>$\mathbf{\delta}\mathbf{t}_{\mathbf{r}}$<strong>线性化系数不同？</strong></p>
+
+<p>如果两者系数完全相同的话，线性化矩阵对应的两列完全相关，法方程会有秩亏问题，导致最小二乘不可解（参数不可估计）。</p>
+
+<p>虽然两者都表示的是接收机时间的误差，但在实际解算中，进行了不同的参数化处理。$\delta t_{r}$因为数值上非常小，直接将其反映在伪距误差中。$\Delta T$数值较大，能够对站星间的几何距离产生影响，因此对其进行了重新参数化，建模为粗时导致的卫星轨道误差。如此以来，就能保证两者的线性化系数独立不相关（$\delta t_{r}$对各卫星的影响相同，$\Delta T$则由于LOS单位矢量的原因，对各卫星影响不同）：</p>
+
+\[\mathbf{e}_{r}^{i} = \frac{\partial\rho}{\partial_{xyz}}\]
+
+\[\dot{\rho}^{i} = \frac{\partial\rho}{\partial_{\Delta T}} = \frac{\partial\rho}{\partial_{xyz}}\frac{\partial_{xyz}}{\partial_{\Delta}T} = \mathbf{e}_{r}^{i} \cdot \mathbf{v}^{i}\]
+
+<p>换句话说，正是因为$\delta t_{r}$足够小，以至于无法对卫星位置产生明显影响，才保证了其与$\Delta T$能够同时被有效估计。</p>
+
+<p>这也是为什么，有两类观测不受粗时导航的欢迎：极高仰角的卫星（$\Delta T$与$\delta\mathbf{X}_{r}$的系数相关）和近地同步轨道GEO卫星（$\Delta T$的系数接近0）的观测。</p>
+
+<p><strong>Q2：同样是LOS单位矢量，为什么粗时间参数</strong>$\mathbf{\Delta T}$<strong>和几何位置</strong>$\mathbf{\delta}\mathbf{X}_{\mathbf{r}}$<strong>的线性化参数符号相反？</strong></p>
+
+<p>这与两者表征的物理含义有关。$\delta X_{r}$反映的是伪距观测量对接收机几何位置的影响，而$\Delta T$则主要反映的是卫星发射时刻的误差（Q1提到了虽然$\Delta T$是接收机时间误差，但是对其重新参数化为卫星位置的误差，卫星位置的计算只与发射时刻有关）。</p>
+
+<p>因为发射时刻与伪距的符号相反：</p>
+
+\[P_{r} = (T_{RX} - T_{TX}) \ast c\]
+
+<p>因此$\Delta T$和$\delta X_{r}$的参数符号相反。</p>]]></content><author><name>Andy</name></author><category term="GNSS定位算法" /><summary type="html"><![CDATA[粗时导航定位技术]]></summary></entry></feed>

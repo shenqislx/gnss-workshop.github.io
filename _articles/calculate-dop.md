@@ -3,6 +3,8 @@ title: "GNSS DOP计算与Sherman–Morrison快速更新"
 layout: article
 date: 2025-09-28
 category: "GNSS定位算法"
+author: "Andy"
+summary: "介绍 GNSS DOP 的计算原理，以及如何利用 Sherman–Morrison 公式对矩阵逆进行快速更新，提升工程实现效率。"
 ---
 
 # GNSS DOP计算与Sherman–Morrison快速更新

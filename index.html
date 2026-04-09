@@ -5,405 +5,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Andy的GNSS工坊</title>
-    <link rel="alternate" type="application/atom+xml" title="Andy的GNSS工坊 Atom Feed" href="{{ '/feed.xml' | relative_url }}">
+    <title>{{ site.title }}</title>
+    <meta name="description" content="面向GNSS接收机、定位算法与测试开发工程师的个人技术博客，分享可落地的解码、定位与工程实践。">
+    <link rel="alternate" type="application/atom+xml" title="{{ site.title }} Atom Feed" href="{{ '/articles/feed.xml' | relative_url }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --bg: #f4f1e8;
-            --bg-soft: #faf8f2;
-            --surface: #ffffff;
-            --text: #1f1f1b;
-            --muted: #5e5a52;
-            --line: rgba(31, 31, 27, 0.12);
-            --primary: #171716;
-            --accent: #ad6b35;
-            --shadow: 0 12px 36px rgba(35, 31, 24, 0.08);
-            --radius-lg: 20px;
-            --radius-md: 14px;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            color: var(--text);
-            background:
-                radial-gradient(circle at 15% -10%, #e7ddca 0%, transparent 45%),
-                radial-gradient(circle at 95% 5%, #e7dfce 0%, transparent 30%),
-                var(--bg);
-            font-family: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
-            line-height: 1.7;
-        }
-
-        .container {
-            max-width: 1120px;
-            margin: 0 auto;
-            padding: 2.5rem 1.25rem 3rem;
-        }
-
-        .header {
-            position: relative;
-            overflow: hidden;
-            padding: 3rem 2rem;
-            border-radius: var(--radius-lg);
-            background: linear-gradient(165deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 246, 236, 0.92) 100%);
-            border: 1px solid var(--line);
-            box-shadow: var(--shadow);
-            margin-bottom: 1.8rem;
-            text-align: center;
-        }
-
-        .header::after {
-            content: "";
-            position: absolute;
-            inset: auto -40% -65% auto;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(173, 107, 53, 0.16) 0%, rgba(173, 107, 53, 0) 70%);
-            pointer-events: none;
-        }
-
-        h1 {
-            margin: 0;
-            font-family: "Source Han Serif SC", "Noto Serif SC", "Songti SC", serif;
-            font-size: clamp(2rem, 4.2vw, 3.4rem);
-            line-height: 1.2;
-            color: var(--primary);
-            letter-spacing: 0.015em;
-        }
-
-        .subtitle {
-            max-width: 760px;
-            margin: 1rem auto 0;
-            color: var(--muted);
-            font-size: clamp(1rem, 2.1vw, 1.25rem);
-        }
-
-        .cta-buttons {
-            margin-top: 1.5rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            border-radius: 999px;
-            text-decoration: none;
-            padding: 0.62rem 1.2rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border: 1px solid transparent;
-            transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .btn-primary {
-            color: #fff;
-            background: var(--primary);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
-        }
-
-        .btn-primary:hover {
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
-        }
-
-        .btn-outline {
-            color: var(--primary);
-            background: rgba(255, 255, 255, 0.85);
-            border-color: var(--line);
-        }
-
-        .btn-outline:hover {
-            background: #fff;
-            border-color: rgba(31, 31, 27, 0.25);
-        }
-
-        .btn-feed {
-            color: var(--accent);
-            background: rgba(173, 107, 53, 0.1);
-            border-color: rgba(173, 107, 53, 0.18);
-        }
-
-        .btn-feed:hover {
-            background: rgba(173, 107, 53, 0.14);
-            border-color: rgba(173, 107, 53, 0.3);
-        }
-
-        .dropdown {
-            position: relative;
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            top: 112%;
-            left: 0;
-            min-width: 230px;
-            display: none;
-            padding: 0.45rem;
-            border-radius: 12px;
-            border: 1px solid var(--line);
-            background: #fff;
-            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
-            text-align: left;
-            z-index: 30;
-        }
-
-        .dropdown:hover .dropdown-menu,
-        .dropdown:focus-within .dropdown-menu {
-            display: block;
-        }
-
-        .dropdown-item {
-            display: block;
-            text-decoration: none;
-            color: var(--text);
-            border-radius: 8px;
-            padding: 0.55rem 0.75rem;
-            font-size: 0.92rem;
-        }
-
-        .dropdown-item:hover {
-            background: var(--bg-soft);
-            color: var(--accent);
-        }
-
-        .columns {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1rem;
-        }
-
-        .column {
-            border: 1px solid var(--line);
-            border-radius: var(--radius-md);
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(3px);
-            box-shadow: 0 8px 24px rgba(36, 30, 19, 0.05);
-            padding: 1.25rem;
-        }
-
-        .column-title {
-            margin: 0 0 1rem;
-            font-size: 1.2rem;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.55rem;
-        }
-
-        .column-title i {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            background: var(--accent);
-            font-size: 0.85rem;
-        }
-
-        .article-card {
-            background: #fff;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 0.9rem;
-            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-        }
-
-        .article-card:hover {
-            transform: translateY(-2px);
-            border-color: rgba(173, 107, 53, 0.35);
-            box-shadow: 0 10px 22px rgba(27, 25, 22, 0.09);
-        }
-
-        .article-card h3 {
-            margin: 0;
-            font-size: 1.06rem;
-            line-height: 1.45;
-        }
-
-        .article-card h3 a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .article-card h3 a:hover {
-            color: var(--accent);
-        }
-
-        .article-card p {
-            margin: 0.65rem 0 0.85rem;
-            color: var(--muted);
-            font-size: 0.94rem;
-        }
-
-        .article-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.9rem;
-            font-size: 0.84rem;
-            color: var(--muted);
-        }
-
-        .coming-soon {
-            border: 1px dashed rgba(173, 107, 53, 0.45);
-            color: var(--accent);
-            border-radius: 10px;
-            padding: 0.8rem;
-            text-align: center;
-            background: rgba(173, 107, 53, 0.08);
-            font-size: 0.92rem;
-            margin-top: 0.2rem;
-        }
-
-        .footer {
-            margin-top: 2.4rem;
-            text-align: center;
-            color: var(--muted);
-            font-size: 0.86rem;
-        }
-
-        .social-links {
-            margin: 0.4rem 0 0.7rem;
-        }
-
-        .social-links a {
-            color: var(--muted);
-            margin: 0 0.35rem;
-            font-size: 1.2rem;
-        }
-
-        .social-links a:hover {
-            color: var(--accent);
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding-top: 1.2rem;
-            }
-
-            .header {
-                padding: 2rem 1rem;
-            }
-
-            .columns {
-                gap: 0.8rem;
-            }
-
-            .column {
-                padding: 1rem;
-            }
-
-            .dropdown-menu {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Andy的GNSS工坊</h1>
-            <div class="subtitle">多年嵌入式实战经验，知识分享，拒绝重复造轮子！</div>
-            <div class="cta-buttons">
-                <a class="btn btn-primary" href="articles"><i class="fas fa-list"></i>文章列表</a>
-                <a class="btn btn-feed" href="{{ '/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>Atom订阅</a>
-                <div class="dropdown">
-                    <a class="btn btn-outline" href="#column-receiver-tech" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-compass"></i>专栏导航 <i class="fas fa-chevron-down"></i>
-                    </a>
-                    <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" href="#column-receiver-tech"><i class="fas fa-satellite-dish"></i> GNSS接收机技术</a>
-                        <a class="dropdown-item" href="#column-positioning-algorithms"><i class="fas fa-calculator"></i> GNSS定位算法</a>
-                        <a class="dropdown-item" href="#column-test-tools"><i class="fas fa-flask"></i> 测试开发工具</a>
+    {% assign sorted_articles = site.articles | sort: "date" | reverse %}
+    {% assign receiver_articles = sorted_articles | where: "category", "GNSS接收机技术" %}
+    {% assign positioning_articles = sorted_articles | where: "category", "GNSS定位算法" %}
+    {% assign tooling_articles = sorted_articles | where: "category", "测试开发工具" %}
+    <div class="page-shell">
+        <header class="site-header">
+            <div>
+                <a class="brand" href="{{ '/' | relative_url }}">
+                    <div class="brand-mark"><i class="fas fa-satellite"></i>{{ site.title }}</div>
+                </a>
+                <p class="brand-subtitle">面向GNSS工程师的个人技术博客，记录接收机、定位算法与工具实践。</p>
+            </div>
+            <nav class="nav-links" aria-label="站点导航">
+                <a class="nav-link" href="{{ '/articles/' | relative_url }}"><i class="fas fa-list"></i>全部文章</a>
+                <a class="nav-link" href="#latest-posts"><i class="fas fa-clock"></i>最新更新</a>
+                <a class="nav-link" href="#recent-archive"><i class="fas fa-stream"></i>标题归档</a>
+                <a class="nav-link" href="{{ '/articles/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>Atom</a>
+            </nav>
+        </header>
+
+        <section class="hero-card">
+            <div class="hero-body">
+                <span class="hero-eyebrow"><i class="fas fa-wave-square"></i>GNSS Personal Weblog</span>
+                <h1 class="hero-title">把接收机实现、定位算法和工程细节，写成工程师真正能用上的文章。</h1>
+                <p class="hero-lead">围绕 GNSS 接收机、PVT/粗时定位和工程工具的长期写作主站。这里优先展示最近更新，再把旧文收进归档。</p>
+                <p class="hero-copy">如果你更关心“最近写了什么”，现在往下看就可以了。</p>
+
+                <div class="chip-row">
+                    <span class="chip"><i class="fas fa-satellite-dish"></i>GNSS接收机技术</span>
+                    <span class="chip"><i class="fas fa-crosshairs"></i>GNSS定位算法</span>
+                    <span class="chip"><i class="fas fa-wrench"></i>测试开发工具</span>
+                </div>
+
+                <div class="button-row">
+                    <a class="button button-primary" href="{{ '/articles/' | relative_url }}"><i class="fas fa-book-open"></i>从最新文章开始</a>
+                    <a class="button button-accent" href="{{ '/articles/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>订阅更新</a>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">当前文章数</div>
+                        <div class="stat-value">{{ sorted_articles | size }}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">更新形态</div>
+                        <div class="stat-value">Blog</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">最近更新</div>
+                        <div class="stat-value">{% if sorted_articles.first %}{{ sorted_articles.first.date | date: "%m.%d" }}{% else %}N/A{% endif %}</div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="columns">
-            <div class="column" id="column-receiver-tech">
-                <h2 class="column-title"><i class="fas fa-satellite-dish"></i>GNSS接收机技术</h2>
-
-                <div class="article-card">
-                    <h3><a href="articles/navigation-data-decode/">GNSS导航电文比特解码</a></h3>
-                    <p>导航电文解码是GNSS接收机软件的关键环节之一，也是很多从业者入门时领取到的“新手村任务”之一。本文详细介绍了电文解码的原理与工程实践。</p>
-                    <div class="article-meta">
-                        <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-18</span>
-                        <span><i class="fas fa-user"></i>Andy</span>
-                    </div>
+        <section class="section" id="latest-posts">
+            <div class="section-header">
+                <div>
+                    <span class="section-kicker"><i class="fas fa-bolt"></i>Latest</span>
+                    <h2 class="section-title">最近更新</h2>
+                    <p class="section-copy">这里直接按日期展示最近更新，首页的主任务就是让回访读者快速扫到你最近写了什么。</p>
                 </div>
-
-                <div class="article-card">
-                    <h3><a href="articles/coarse-time-five-state-equation/">粗时导航五状态方程理论与应用</a></h3>
-                    <p>粗时导航技术是一种在全球导航卫星系统（GNSS）接收机初始时间信息存在较大偏差（数量级为秒或分钟）时，仍能实现有效定位的算法。</p>
-                    <div class="article-meta">
-                        <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-14</span>
-                        <span><i class="fas fa-user"></i>Andy</span>
-                    </div>
-                </div>
-
-                <div class="coming-soon">
-                    <i class="fas fa-hourglass-half"></i> 更多文章即将发布...
-                </div>
+                <a class="text-link" href="{{ '/articles/' | relative_url }}">查看全部文章 <i class="fas fa-arrow-right"></i></a>
             </div>
 
-            <div class="column" id="column-positioning-algorithms">
-                <h2 class="column-title"><i class="fas fa-calculator"></i>GNSS定位算法</h2>
+            <div class="stream-list">
+                {% for article in sorted_articles limit: 6 %}
+                <article class="stream-item">
+                    <div class="stream-date">{{ article.date | date: "%Y-%m-%d" }}</div>
+                    <div>
+                        <h3 class="stream-title"><a href="{{ article.url | relative_url }}">{{ article.title }}</a></h3>
+                        <p class="stream-summary">{% if article.summary %}{{ article.summary }}{% else %}{{ article.excerpt | strip_html | strip_newlines | truncate: 100 }}{% endif %}</p>
+                        <div class="stream-meta">{{ article.category | default: "未分类" }} · {{ article.author | default: "Andy" }}</div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
 
-                <div class="article-card">
-                    <h3><a href="articles/calculate-dop/">GNSS DOP计算与Sherman–Morrison快速更新</a></h3>
-                    <p>详细介绍GNSS定位中DOP（精度衰减因子）的计算方法，以及使用Sherman–Morrison公式进行矩阵逆快速更新的技术原理和应用。</p>
-                    <div class="article-meta">
-                        <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-28</span>
-                        <span><i class="fas fa-user"></i>Andy</span>
+        <section class="section" id="recent-archive">
+            <div class="section-header">
+                <div>
+                    <span class="section-kicker"><i class="fas fa-stream"></i>Archive</span>
+                    <h2 class="section-title">标题归档</h2>
+                    <p class="section-copy">如果你已经看过最近更新，这里继续按标题和日期向下扫。它比“专题导航”更适合长期写博客的节奏。</p>
+                </div>
+                <a class="text-link" href="{{ '/articles/' | relative_url }}">进入完整归档 <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="headline-list">
+                {% for article in sorted_articles offset: 6 limit: 10 %}
+                <article class="headline-item">
+                    <div class="headline-main">
+                        <h3 class="headline-title"><a href="{{ article.url | relative_url }}">{{ article.title }}</a></h3>
+                        <div class="headline-meta">{{ article.category | default: "未分类" }}</div>
+                    </div>
+                    <div class="headline-date">{{ article.date | date: "%Y-%m-%d" }}</div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="info-grid">
+                <article class="now-card">
+                    <h3 class="now-title">Now</h3>
+                    <ul class="now-list">
+                        <li>持续整理 GNSS 接收机实现和定位算法中的工程细节。</li>
+                        <li>把零散的技术问题写成更容易复用的博客条目，而不是只做专题堆叠。</li>
+                        <li>让首页优先服务“最近写了什么”，而不是“有哪些栏目”。</li>
+                    </ul>
+                </article>
+                <article class="info-card">
+                    <h3 class="info-title">这个首页现在在做什么</h3>
+                    <p class="info-copy">它已经很接近典型个人技术博客：首页上方是品牌与定位，中间是一列最近更新，下面接标题归档，分类只留作弱提示。</p>
+                </article>
+                <article class="info-card">
+                    <h3 class="info-title">适合你的更新方式</h3>
+                    <p class="info-copy">后面即使专题更新变少、普通博客更新变多，这套结构也不会失衡，因为主入口一直都是日期流和归档页。</p>
+                </article>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="footer-title">关于本站</h3>
+                    <p class="footer-copy">Andy 的 GNSS 工程笔记。尽量写可复用、可验证、可继续扩展的技术文章，而不是只给答案不讲过程。</p>
+                </div>
+                <div>
+                    <h3 class="footer-title">快速入口</h3>
+                    <div class="footer-links">
+                        <a href="{{ '/articles/' | relative_url }}">全部文章</a>
+                        <a href="{{ '/articles/feed.xml' | relative_url }}">Atom 订阅</a>
+                        <a href="#recent-archive">标题归档</a>
                     </div>
                 </div>
-
-                <div class="coming-soon">
-                    <i class="fas fa-hourglass-half"></i> 更多文章即将发布...
-                </div>
-            </div>
-
-            <div class="column" id="column-test-tools">
-                <h2 class="column-title"><i class="fas fa-flask"></i>测试开发工具</h2>
-
-                <div class="article-card">
-                    <h3><a href="articles/cursor-extension-market-cfg/">Cursor扩展商店无法正常下载插件</a></h3>
-                    <p>解决Cursor IDE扩展商店无法正常下载插件的问题，通过修改配置文件直接从VS Code上下载插件。</p>
-                    <div class="article-meta">
-                        <span class="article-date"><i class="far fa-calendar-alt"></i>2025-09-24</span>
-                        <span><i class="fas fa-user"></i>Andy</span>
+                <div>
+                    <h3 class="footer-title">外部链接</h3>
+                    <div class="footer-links">
+                        <a href="https://github.com/shenqislx" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank" rel="noopener noreferrer">站点源码</a>
                     </div>
                 </div>
-
-                <div class="coming-soon">
-                    <i class="fas fa-hourglass-half"></i> 更多文章即将发布...
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 {{ site.title }}</span>
+                <div class="footer-meta">
+                    <span>Built with Jekyll</span>
+                    <a href="{{ '/articles/feed.xml' | relative_url }}">RSS / Atom</a>
                 </div>
             </div>
-        </div>
-
-        <div class="footer">
-            <div class="social-links">
-                <a href="https://github.com/shenqislx" target="_blank"><i class="fab fa-github"></i></a>
-            </div>
-            © 2025 Andy的GNSS工坊 | 使用 Creative Commons CC0 许可证
-        </div>
+        </footer>
     </div>
 </body>
 </html>

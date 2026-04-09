@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursor扩展商店无法正常下载插件 - Andy的GNSS工坊</title>
+    <meta name="description" content="记录 Cursor 扩展商店异常时的排查与替代方案，通过调整 marketplace 配置直接接入 VS Code 插件源。">
+    <link rel="alternate" type="application/atom+xml" title="Andy的GNSS工坊 Atom Feed" href="/articles/feed.xml">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/site.css">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          processEscapes: true,
+          processEnvironments: true,
+          packages: ['base', 'ams', 'noerrors', 'noundefined']
+        },
+        loader: {
+          load: ['[tex]/noerrors', '[tex]/noundefined']
+        },
+        svg: {
+          fontCache: 'global'
+        },
+        options: {
+          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+          renderActions: {
+            findScript: [10, function (doc) {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = {node: text, delim: '', n: 0};
+                math.end = {node: text, delim: '', n: 0};
+                doc.math.push(math);
+              }
+            }, '']
+          }
+        }
+      };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    
+    <div class="page-shell article-page">
+        <header class="site-header">
+            <div>
+                <a class="brand" href="/">
+                    <div class="brand-mark"><i class="fas fa-satellite"></i>Andy的GNSS工坊</div>
+                </a>
+                <p class="brand-subtitle">统一后的正文页保留阅读沉浸感，同时和首页、归档页使用同一套视觉语言。</p>
+            </div>
+            <nav class="nav-links" aria-label="站点导航">
+                <a class="nav-link" href="/"><i class="fas fa-house"></i>首页</a>
+                <a class="nav-link" href="/articles/"><i class="fas fa-list"></i>文章列表</a>
+                <a class="nav-link" href="/articles/feed.xml"><i class="fas fa-rss"></i>Atom</a>
+            </nav>
+        </header>
+
+        <div class="breadcrumbs">
+            <a href="/">首页</a>
+            <span>/</span>
+            <a href="/articles/">文章</a>
+            
+            <span>/</span>
+            <a href="/articles/">测试开发工具</a>
+            
+        </div>
+
+        <article class="article-shell">
+            <header class="article-hero">
+                
+                <span class="article-tag"><i class="fas fa-folder-open"></i>测试开发工具</span>
+                
+                <h1 class="article-title">Cursor扩展商店无法正常下载插件</h1>
+                
+                <p class="article-summary">记录 Cursor 扩展商店异常时的排查与替代方案，通过调整 marketplace 配置直接接入 VS Code 插件源。</p>
+                
+                <div class="article-meta">
+                    
+                    <span><i class="far fa-calendar-alt"></i>2025-09-24</span>
+                    
+                    <span><i class="fas fa-user"></i>Andy</span>
+                </div>
+            </header>
+
+            <div class="article-prose">
+                <h1 id="cursor扩展商店无法正常下载插件">Cursor扩展商店无法正常下载插件</h1>
+
+<p>有时候我们可能会遇到Cursor IDE的扩展商店（Extensions Marketplace）无法正常下载插件的情况，比如搜索不到插件、比如无法下载安装插件，这时候我们需要检查一下配置文件是否正确。</p>
+
+<h2 id="原因">原因</h2>
+
+<p>这个问题的原因大概率是网络不通畅，与Cursor的扩展商店的通讯出了问题。
+不过我们可以通过修改扩展商店的来源，绕过Cursor的扩展商店，直接从VS Code上下载插件。</p>
+
+<h2 id="解决方法">解决方法</h2>
+
+<h3 id="1-找到配置文件">1. 找到配置文件</h3>
+
+<p>修改Cursor安装目录下的JSON配置文件：<code class="language-plaintext highlighter-rouge">./resources/app/product.json</code></p>
+
+<h3 id="2-修改扩展商店配置">2. 修改扩展商店配置</h3>
+
+<p>关注配置文件中的”extensionsGallery”配置项，它的作用是定义扩展商店相关的 URL 地址，Cursor就是通过这些URL去拉取插件列表、安装插件、获取推荐等。</p>
+
+<p>一言以蔽之，”extensionsGallery” 就是Cursor告诉自己”去哪里找插件商店”的配置。</p>
+
+<p>缺省配置可能如下：</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"extensionsGallery"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"galleryId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cursor"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"serviceUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://marketplace.cursorapi.com/_apis/public/gallery"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"itemUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://marketplace.cursorapi.com/items"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"resourceUrlTemplate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://marketplace.cursorapi.com/{publisher}/{name}/{version}/{path}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"controlUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api2.cursor.sh/extensions-control"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"recommendationsUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"nlsBaseUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"publisherUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>我们需要修改 serviceUrl 和 recommendationsUrl 两个参数：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"extensionsGallery"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+    </span><span class="nl">"serviceUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://marketplace.visualstudio.com/_apis/public/gallery"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"recommendationsUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://{publisher}.vscode-unpkg.net/{publisher}/{name}/{version}/{path}"</span><span class="p">,</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="3-重启应用">3. 重启应用</h3>
+
+<p>重启IDE，就可以正常下载插件了。</p>
+
+<p><strong>注意</strong>：如果你要在内网搭建自己的扩展商店，就可以把 “extensionsGallery” 改成自己的服务地址。这样开发者就可以在内网安装/搜索插件，而不依赖公网Marketplace。</p>
+
+                <div class="article-actions">
+                    <a class="button button-secondary" href="/articles/"><i class="fas fa-arrow-left"></i>返回文章列表</a>
+                    <a class="button button-accent" href="/"><i class="fas fa-house"></i>返回首页</a>
+                </div>
+            </div>
+        </article>
+
+        
+        
+        
+
+        <footer class="footer">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="footer-title">继续关注</h3>
+                    <div class="footer-links">
+                        <a href="/articles/feed.xml">订阅 Atom</a>
+                        <a href="https://github.com/shenqislx" target="_blank" rel="noopener noreferrer">访问 GitHub</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="footer-title">本站定位</h3>
+                    <p class="footer-copy">尽量把复杂的 GNSS 工程问题拆成可理解、可验证、可继续扩展的技术文章。</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 Andy的GNSS工坊</span>
+                <div class="footer-meta">
+                    <a href="/articles/">全部文章</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

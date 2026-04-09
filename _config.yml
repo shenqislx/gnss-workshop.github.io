@@ -14,7 +14,7 @@ feed:
   path: feed.xml
   collections:
     articles:
-      path: /feed.xml
+      path: /articles/feed.xml
 
 # 排除文件
 exclude:

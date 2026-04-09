@@ -1,34 +1,30 @@
----
-title: 文章列表 - Andy的GNSS工坊
----
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title }}</title>
+    <title>文章列表 - Andy的GNSS工坊</title>
     <meta name="description" content="Andy 的 GNSS 工坊文章列表，按时间查看接收机技术、定位算法与测试开发工具相关内容。">
-    <link rel="alternate" type="application/atom+xml" title="{{ site.title }} Atom Feed" href="{{ '/articles/feed.xml' | relative_url }}">
+    <link rel="alternate" type="application/atom+xml" title="Andy的GNSS工坊 Atom Feed" href="/articles/feed.xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+    <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body>
-    {% assign sorted_articles = site.articles | sort: "date" | reverse %}
-    {% assign receiver_articles = sorted_articles | where: "category", "GNSS接收机技术" %}
-    {% assign positioning_articles = sorted_articles | where: "category", "GNSS定位算法" %}
-    {% assign tooling_articles = sorted_articles | where: "category", "测试开发工具" %}
+    
+    
+    
+    
     <div class="page-shell">
         <header class="site-header">
             <div>
-                <a class="brand" href="{{ '/' | relative_url }}">
-                    <div class="brand-mark"><i class="fas fa-satellite"></i>{{ site.title }}</div>
+                <a class="brand" href="/">
+                    <div class="brand-mark"><i class="fas fa-satellite"></i>Andy的GNSS工坊</div>
                 </a>
                 <p class="brand-subtitle">这里现在更明确地作为归档页使用，优先按时间和标题浏览全部技术博客。</p>
             </div>
             <nav class="nav-links" aria-label="站点导航">
-                <a class="nav-link" href="{{ '/' | relative_url }}"><i class="fas fa-house"></i>首页</a>
-                <a class="nav-link" href="{{ '/articles/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>Atom</a>
+                <a class="nav-link" href="/"><i class="fas fa-house"></i>首页</a>
+                <a class="nav-link" href="/articles/feed.xml"><i class="fas fa-rss"></i>Atom</a>
                 <a class="nav-link" href="https://github.com/shenqislx" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i>GitHub</a>
             </nav>
         </header>
@@ -41,19 +37,19 @@ title: 文章列表 - Andy的GNSS工坊
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">全部文章</div>
-                        <div class="stat-value">{{ sorted_articles | size }}</div>
+                        <div class="stat-value">4</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">接收机技术</div>
-                        <div class="stat-value">{{ receiver_articles | size }}</div>
+                        <div class="stat-value">1</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">定位算法</div>
-                        <div class="stat-value">{{ positioning_articles | size }}</div>
+                        <div class="stat-value">2</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">工具实践</div>
-                        <div class="stat-value">{{ tooling_articles | size }}</div>
+                        <div class="stat-value">1</div>
                     </div>
                 </div>
             </div>
@@ -68,9 +64,9 @@ title: 文章列表 - Andy的GNSS工坊
                 </div>
             </div>
             <div class="topic-grid">
-                <div class="direction-card">GNSS接收机技术 {{ receiver_articles | size }} 篇</div>
-                <div class="direction-card">GNSS定位算法 {{ positioning_articles | size }} 篇</div>
-                <div class="direction-card">测试开发工具 {{ tooling_articles | size }} 篇</div>
+                <div class="direction-card">GNSS接收机技术 1 篇</div>
+                <div class="direction-card">GNSS定位算法 2 篇</div>
+                <div class="direction-card">测试开发工具 1 篇</div>
             </div>
         </section>
 
@@ -82,28 +78,61 @@ title: 文章列表 - Andy的GNSS工坊
                     <p class="section-copy">进一步弱化分类感，直接按年份和标题浏览全部文章。这更贴近长期更新型个人技术博客的归档习惯。</p>
                 </div>
             </div>
-            {% assign current_year = "" %}
-            {% for article in sorted_articles %}
-                {% assign article_year = article.date | date: "%Y" %}
-                {% if article_year != current_year %}
-                    {% unless forloop.first %}</div></details>{% endunless %}
+            
+            
+                
+                
+                    
                     <details class="year-block" open>
                         <summary class="year-toggle">
-                            <h3 class="year-heading">{{ article_year }}</h3>
+                            <h3 class="year-heading">2025</h3>
                             <span class="year-count">展开 / 收起</span>
                         </summary>
                         <div class="headline-list year-content">
-                    {% assign current_year = article_year %}
-                {% endif %}
+                    
+                
                 <article class="headline-item">
                     <div class="headline-main">
-                        <h3 class="headline-title"><a href="{{ article.url | relative_url }}">{{ article.title }}</a></h3>
-                        <div class="headline-meta">{{ article.category | default: "未分类" }}{% if article.summary %} · {{ article.summary | truncate: 56 }}{% endif %}</div>
+                        <h3 class="headline-title"><a href="/articles/calculate-dop/">GNSS DOP计算与Sherman–Morrison快速更新</a></h3>
+                        <div class="headline-meta">GNSS定位算法 · 介绍 GNSS DOP 的计算原理，以及如何利用 Sherman–Morrison 公式对矩阵逆进行快速更...</div>
                     </div>
-                    <div class="headline-date">{{ article.date | date: "%Y-%m-%d" }}</div>
+                    <div class="headline-date">2025-09-28</div>
                 </article>
-                {% if forloop.last %}</div></details>{% endif %}
-            {% endfor %}
+                
+            
+                
+                
+                <article class="headline-item">
+                    <div class="headline-main">
+                        <h3 class="headline-title"><a href="/articles/cursor-extension-market-cfg/">Cursor扩展商店无法正常下载插件</a></h3>
+                        <div class="headline-meta">测试开发工具 · 记录 Cursor 扩展商店异常时的排查与替代方案，通过调整 marketplace 配置直接接入 VS ...</div>
+                    </div>
+                    <div class="headline-date">2025-09-24</div>
+                </article>
+                
+            
+                
+                
+                <article class="headline-item">
+                    <div class="headline-main">
+                        <h3 class="headline-title"><a href="/articles/navigation-data-decode/">GNSS导航电文比特解码</a></h3>
+                        <div class="headline-meta">GNSS接收机技术 · 从工程角度梳理 GNSS 导航电文比特解码的目标、帧结构与核心流程，帮助接收机入门者把原始比特流变成可用的...</div>
+                    </div>
+                    <div class="headline-date">2025-09-18</div>
+                </article>
+                
+            
+                
+                
+                <article class="headline-item">
+                    <div class="headline-main">
+                        <h3 class="headline-title"><a href="/articles/coarse-time-five-state-equation/">粗时导航五状态方程理论与应用</a></h3>
+                        <div class="headline-meta">GNSS定位算法 · 解释粗时导航为什么需要从传统四参数扩展到五状态模型，以及粗时间误差如何影响卫星位置计算与定位收敛。</div>
+                    </div>
+                    <div class="headline-date">2025-09-14</div>
+                </article>
+                </div></details>
+            
         </section>
 
         <footer class="footer">
@@ -111,8 +140,8 @@ title: 文章列表 - Andy的GNSS工坊
                 <div>
                     <h3 class="footer-title">继续浏览</h3>
                     <div class="footer-links">
-                        <a href="{{ '/' | relative_url }}">返回首页</a>
-                        <a href="{{ '/articles/feed.xml' | relative_url }}">订阅 Atom</a>
+                        <a href="/">返回首页</a>
+                        <a href="/articles/feed.xml">订阅 Atom</a>
                     </div>
                 </div>
                 <div>
@@ -128,9 +157,9 @@ title: 文章列表 - Andy的GNSS工坊
                 </div>
             </div>
             <div class="footer-bottom">
-                <span>&copy; 2026 {{ site.title }}</span>
+                <span>&copy; 2026 Andy的GNSS工坊</span>
                 <div class="footer-meta">
-                    <span>{{ sorted_articles | size }} 篇文章</span>
+                    <span>4 篇文章</span>
                 </div>
             </div>
         </footer>
