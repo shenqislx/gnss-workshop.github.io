@@ -6,23 +6,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ site.title }}</title>
-    <meta name="description" content="面向GNSS接收机、定位算法与测试开发工程师的个人技术博客，分享可落地的解码、定位与工程实践。">
+    <meta name="description" content="个人技术博客，聚焦工程问题拆解、AI 应用思考、软件实践，以及思维方式与哲学。">
     <link rel="alternate" type="application/atom+xml" title="{{ site.title }} Atom Feed" href="{{ '/articles/feed.xml' | relative_url }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
 </head>
 <body>
     {% assign sorted_articles = site.articles | sort: "date" | reverse %}
-    {% assign receiver_articles = sorted_articles | where: "category", "GNSS接收机技术" %}
-    {% assign positioning_articles = sorted_articles | where: "category", "GNSS定位算法" %}
-    {% assign tooling_articles = sorted_articles | where: "category", "测试开发工具" %}
     <div class="page-shell">
         <header class="site-header">
             <div>
                 <a class="brand" href="{{ '/' | relative_url }}">
                     <div class="brand-mark"><i class="fas fa-satellite"></i>{{ site.title }}</div>
                 </a>
-                <p class="brand-subtitle">面向GNSS工程师的个人技术博客，记录接收机、定位算法与工具实践。</p>
+                <p class="brand-subtitle">GNSS 领域资深工程师的个人博客，长期分享工程拆解、AI 应用、软件实践与思维方式。</p>
             </div>
             <nav class="nav-links" aria-label="站点导航">
                 <a class="nav-link" href="{{ '/articles/' | relative_url }}"><i class="fas fa-list"></i>全部文章</a>
@@ -34,15 +31,15 @@
 
         <section class="hero-card">
             <div class="hero-body">
-                <span class="hero-eyebrow"><i class="fas fa-wave-square"></i>GNSS Personal Weblog</span>
-                <h1 class="hero-title">把接收机实现、定位算法和工程细节，写成工程师真正能用上的文章。</h1>
-                <p class="hero-lead">围绕 GNSS 接收机、PVT/粗时定位和工程工具的长期写作主站。这里优先展示最近更新，再把旧文收进归档。</p>
+                <span class="hero-eyebrow"><i class="fas fa-wave-square"></i>Personal Tech Weblog</span>
+                <h1 class="hero-title">把复杂问题拆开讲清楚，写成工程师真正能用上的技术文章。</h1>
+                <p class="hero-lead">这是一个以技术分享为主的长期写作站点：关注工程问题拆解、AI 应用思考、软件工具实践，以及方法论与哲学反思。</p>
                 <p class="hero-copy">如果你更关心“最近写了什么”，现在往下看就可以了。</p>
 
                 <div class="chip-row">
-                    <span class="chip"><i class="fas fa-satellite-dish"></i>GNSS接收机技术</span>
-                    <span class="chip"><i class="fas fa-crosshairs"></i>GNSS定位算法</span>
-                    <span class="chip"><i class="fas fa-wrench"></i>测试开发工具</span>
+                    <span class="chip"><i class="fas fa-sitemap"></i>工程问题拆解</span>
+                    <span class="chip"><i class="fas fa-robot"></i>AI 应用思考</span>
+                    <span class="chip"><i class="fas fa-code"></i>软件实践与哲学</span>
                 </div>
 
                 <div class="button-row">
@@ -119,18 +116,18 @@
                 <article class="now-card">
                     <h3 class="now-title">Now</h3>
                     <ul class="now-list">
-                        <li>持续整理 GNSS 接收机实现和定位算法中的工程细节。</li>
-                        <li>把零散的技术问题写成更容易复用的博客条目，而不是只做专题堆叠。</li>
+                        <li>持续拆解真实工程问题，记录从定位到落地的关键判断。</li>
+                        <li>把零散经验沉淀为可复用的技术条目，帮助后续快速复盘。</li>
                         <li>让首页优先服务“最近写了什么”，而不是“有哪些栏目”。</li>
                     </ul>
                 </article>
                 <article class="info-card">
-                    <h3 class="info-title">这个首页现在在做什么</h3>
-                    <p class="info-copy">它已经很接近典型个人技术博客：首页上方是品牌与定位，中间是一列最近更新，下面接标题归档，分类只留作弱提示。</p>
+                    <h3 class="info-title">这个首页的定位</h3>
+                    <p class="info-copy">它采用典型个人技术博客结构：首页上方给出定位，中间优先展示最近更新，下面接标题归档，主题标签仅作轻提示。</p>
                 </article>
                 <article class="info-card">
                     <h3 class="info-title">适合你的更新方式</h3>
-                    <p class="info-copy">后面即使专题更新变少、普通博客更新变多，这套结构也不会失衡，因为主入口一直都是日期流和归档页。</p>
+                    <p class="info-copy">后续无论主题如何变化，这套结构都能稳定承载，因为主入口始终是日期流与归档列表。</p>
                 </article>
             </div>
         </section>
@@ -139,7 +136,7 @@
             <div class="footer-grid">
                 <div>
                     <h3 class="footer-title">关于本站</h3>
-                    <p class="footer-copy">Andy 的 GNSS 工程笔记。尽量写可复用、可验证、可继续扩展的技术文章，而不是只给答案不讲过程。</p>
+                    <p class="footer-copy">Andy 的工程与技术笔记。尽量写可复用、可验证、可继续扩展的文章，不只给答案，也讲清推理过程。</p>
                 </div>
                 <div>
                     <h3 class="footer-title">快速入口</h3>
