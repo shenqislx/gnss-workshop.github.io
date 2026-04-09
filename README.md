@@ -1,40 +1,11 @@
-# Andy的GNSS工坊
+# Andy's Tech Blog
 
-这是一个专注于全球导航卫星系统(GNSS)技术研究与开发的专栏网站，包含GNSS接收机技术等专栏。
+This repo powers Andy's main personal tech blog.
 
-## 🛰️ 项目简介
+It's where I write about things I've learned, technical notes from real work, and practical stuff worth keeping around and sharing.
 
-本工坊致力于GNSS接收机的信号处理、定位算法等方面的研究与开发工作。通过开源项目和教程分享，推动GNSS技术的发展和应用。
+You’ll mostly find posts around engineering, problem-solving, and hands-on build notes, from GNSS to everything.
 
-## 🚀 技术领域
+Site: https://hqz.is-a.dev
 
-- **信号处理**: 卫星导航信号捕获与跟踪
-- **定位算法**: 高精度定位算法研究与优化
-- **软件开发**: 测试工具与开发经验
-- **技术分享**: 教程、文章和项目经验
-
-## 📁 项目结构
-
-```
-gnss-workshop/
-├── index.html          # 主页面
-├── README.md           # 项目说明
-└── LICENSE             # 开源许可证
-```
-
-## 🌐 访问方式
-
-本项目通过GitHub Pages部署，访问地址：
-https://shenqislx.github.io/
-
-## 📄 许可证
-
-本项目采用Creative Commons CC0 1.0 Universal许可证，详见LICENSE文件。
-
-## 🤝 参与贡献
-
-欢迎对GNSS技术感兴趣的朋友一起交流学习！
-
----
-
-*更多内容即将更新，敬请期待！*
+If you're into this kind of stuff, feel free to reach out and exchange ideas.
