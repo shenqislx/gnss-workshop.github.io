@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Andy的GNSS工坊</title>
+    <link rel="alternate" type="application/atom+xml" title="Andy的GNSS工坊 Atom Feed" href="{{ '/feed.xml' | relative_url }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -127,6 +128,17 @@
         .btn-outline:hover {
             background: #fff;
             border-color: rgba(31, 31, 27, 0.25);
+        }
+
+        .btn-feed {
+            color: var(--accent);
+            background: rgba(173, 107, 53, 0.1);
+            border-color: rgba(173, 107, 53, 0.18);
+        }
+
+        .btn-feed:hover {
+            background: rgba(173, 107, 53, 0.14);
+            border-color: rgba(173, 107, 53, 0.3);
         }
 
         .dropdown {
@@ -310,6 +322,7 @@
             <div class="subtitle">多年嵌入式实战经验，知识分享，拒绝重复造轮子！</div>
             <div class="cta-buttons">
                 <a class="btn btn-primary" href="articles"><i class="fas fa-list"></i>文章列表</a>
+                <a class="btn btn-feed" href="{{ '/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>Atom订阅</a>
                 <div class="dropdown">
                     <a class="btn btn-outline" href="#column-receiver-tech" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-compass"></i>专栏导航 <i class="fas fa-chevron-down"></i>
