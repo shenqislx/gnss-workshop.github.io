@@ -1,4 +1,4 @@
-# Andy's Tech Blog
+# Andy's Blog
 
 This repo powers Andy's main personal tech blog.
 
