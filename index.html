@@ -29,36 +29,33 @@
             </nav>
         </header>
 
-        <section class="hero-card">
-            <div class="hero-body">
-                <span class="hero-eyebrow"><i class="fas fa-wave-square"></i>Personal Workshop</span>
-                <h1 class="hero-title">把复杂问题拆开讲清楚，写成工程师真正能用上的技术文章。</h1>
-                <p class="hero-lead">这是一个以技术分享为主的长期写作站点：关注工程问题拆解、AI 应用思考、软件工具实践，以及方法论与哲学反思。</p>
-                <p class="hero-copy">如果你更关心“最近写了什么”，现在往下看就可以了。</p>
-
-                <div class="chip-row">
-                    <span class="chip"><i class="fas fa-sitemap"></i>工程问题拆解</span>
-                    <span class="chip"><i class="fas fa-robot"></i>AI 应用思考</span>
-                    <span class="chip"><i class="fas fa-code"></i>软件实践与哲学</span>
+        <section class="hero-card home-hero" aria-labelledby="daily-quote-heading">
+            <div class="home-hero-copy">
+                <div class="home-hero-meta">
+                    <span class="hero-eyebrow"><i class="fas fa-skull-crossbones"></i>Daily Dose</span>
+                    <span class="home-hero-date" id="daily-quote-date">--</span>
                 </div>
-
-                <div class="button-row">
-                    <a class="button button-primary" href="{{ '/articles/' | relative_url }}"><i class="fas fa-book-open"></i>从最新文章开始</a>
-                    <a class="button button-accent" href="{{ '/articles/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>订阅更新</a>
+                <p class="home-hero-kicker" id="daily-quote-heading">今日毒鸡汤</p>
+                <blockquote class="home-hero-quote" id="daily-quote-text">今天的现实校准正在加载。</blockquote>
+                <div class="home-hero-actions">
+                    <a class="button button-primary" href="{{ '/articles/' | relative_url }}"><i class="fas fa-book-open"></i>最新文章</a>
+                    <a class="hero-sub-link" href="{{ '/articles/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>Atom 订阅</a>
                 </div>
+            </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">当前文章数</div>
-                        <div class="stat-value">{{ sorted_articles | size }}</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">更新形态</div>
-                        <div class="stat-value">Blog</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">最近更新</div>
-                        <div class="stat-value">{% if sorted_articles.first %}{{ sorted_articles.first.date | date: "%m.%d" }}{% else %}N/A{% endif %}</div>
+            <div class="home-hero-visual" aria-hidden="true">
+                <div class="hero-book">
+                    <div class="hero-book-shadow"></div>
+                    <div class="hero-book-body">
+                        <span class="hero-book-cover hero-book-cover-back"></span>
+                        <span class="hero-book-page hero-book-page-a"></span>
+                        <span class="hero-book-page hero-book-page-b"></span>
+                        <span class="hero-book-page hero-book-page-c">
+                            <span class="hero-book-page-face hero-book-page-face-front"></span>
+                            <span class="hero-book-page-face hero-book-page-face-back"></span>
+                        </span>
+                        <span class="hero-book-cover hero-book-cover-front"></span>
+                        <span class="hero-book-spine"></span>
                     </div>
                 </div>
             </div>
@@ -142,5 +139,209 @@
             </div>
         </footer>
     </div>
+    <script>
+        (() => {
+            const curatedSoups = [
+                "你以为在打磨质量，其实项目没动。",
+                "你以为在等时机，其实只是没开始。",
+                "大多数焦虑，不是想太多，是做太少。",
+                "拖延最擅长的，是把小坑养成大坑。",
+                "完美主义最会做的，是把开始拖没。",
+                "你熬的不是夜，是白天欠下的账。",
+                "你收藏的不是资料，是没做完的愧疚。",
+                "很多准备工作，只是在拖延开工。",
+                "你以为自己稳，其实只是慢。",
+                "很多复盘，本质上是在拖下一次开始。",
+                "你以为在长期主义，其实交付太慢。",
+                "越想显得从容，越容易拖到失控。",
+                "不是方向不清，是不肯删掉杂念。",
+                "你缺的不是灵感，是第一版。",
+                "很多卡住，只是还不肯做丑版本。",
+                "真正的稳定，是你会收烂摊子。",
+                "你不是没能力，你是不想先难看。",
+                "很多压力，不是任务多，是逃太久。",
+                "你以为差一点，其实差了一个开始。",
+                "有些效率工具，只让拖延更专业。",
+                "不是没时间，是没把它排到前面。",
+                "很多崩溃，是长期硬撑后的结算。",
+                "你绕开的难题，明天会带利息回来。",
+                "不是状态不好，是任务堆到不敢看。",
+                "成长最明显的迹象，是废话变少。",
+                "想太久的方案，通常活不到上线。",
+                "你不是信息不够，是动作不够。",
+                "很多计划高级，只是因为没落地。",
+                "最贵的成本，往往叫再等等看。",
+                "你以为在修细节，其实没碰主线。",
+                "很多谨慎，只是拖延换了名字。",
+                "晚一点开始，通常不会更轻松。"
+            ];
+            const setupParts = [
+                "你以为在等时机",
+                "你以为在做准备",
+                "你以为在控风险",
+                "你以为在磨细节",
+                "你以为在深度思考",
+                "你以为在补短板",
+                "你以为在找状态",
+                "你以为在优化路径",
+                "你以为在稳妥推进",
+                "你以为在认真规划"
+            ];
+            const turnParts = [
+                "其实只是没开工",
+                "其实只是怕交第一版",
+                "其实只是拖得更体面",
+                "其实只是舍不得丢幻想",
+                "其实只是怕被人看见",
+                "其实只是想晚点返工",
+                "其实只是还没认账",
+                "其实只是回避反馈",
+                "其实只是拖延换皮",
+                "其实只是继续装稳"
+            ];
+            const actorParts = [
+                "拖延",
+                "焦虑",
+                "准备",
+                "完美主义",
+                "收藏夹",
+                "熬夜",
+                "返工",
+                "截止时间",
+                "硬撑",
+                "复盘"
+            ];
+            const effectParts = [
+                "把小坑养成大坑",
+                "把今天拖进下周",
+                "把开工拖成仪式",
+                "把返工拖成事故",
+                "把小错拖成大伤",
+                "把主线拖成支线",
+                "把简单事做复杂",
+                "把行动腌成计划",
+                "把问题留给明天",
+                "把迟疑装成谨慎"
+            ];
+            const subjectParts = [
+                "稳定",
+                "成长",
+                "效率",
+                "执行力",
+                "经验",
+                "认知",
+                "准备好",
+                "项目节奏",
+                "安全感",
+                "长期主义"
+            ];
+            const truthParts = [
+                "没代价",
+                "没风险",
+                "不取舍",
+                "自动发生",
+                "想清楚就会来",
+                "靠运气兜底",
+                "只靠热情维持",
+                "只靠工具解决",
+                "等别人理解再开始",
+                "晚点做也一样"
+            ];
+            const realityParts = [
+                "会收烂摊子的能力",
+                "删掉借口后的样子",
+                "先做再改的纪律",
+                "一次次返工的手感",
+                "不躲反馈的收益",
+                "先交卷的底气",
+                "动手之后的回报",
+                "接受普通后的节奏",
+                "真正开工后的结果",
+                "不逃避后的稳定"
+            ];
+            const quoteEl = document.getElementById("daily-quote-text");
+            const dateEl = document.getElementById("daily-quote-date");
+
+            if (!quoteEl || !dateEl || curatedSoups.length === 0) {
+                return;
+            }
+
+            const splitSoupIntoLines = (text) => {
+                const punctuationMatches = [...text.matchAll(/[，。！？；：]/g)];
+                if (punctuationMatches.length === 0) {
+                    return { line1: text, line2: "" };
+                }
+
+                const midpoint = text.length / 2;
+                const preferredMatch = punctuationMatches.reduce((best, current) => {
+                    if (!best) {
+                        return current;
+                    }
+
+                    return Math.abs(current.index - midpoint) < Math.abs(best.index - midpoint) ? current : best;
+                }, null);
+                const splitIndex = preferredMatch.index + 1;
+                const line1 = text.slice(0, splitIndex).trim();
+                const line2 = text.slice(splitIndex).trim();
+
+                return { line1, line2 };
+            };
+
+            const renderSoup = (text) => {
+                const { line1, line2 } = splitSoupIntoLines(text);
+
+                if (!line2) {
+                    quoteEl.textContent = `“${text}”`;
+                    return;
+                }
+
+                quoteEl.innerHTML = `<span class="home-hero-quote-line">“${line1}</span><span class="home-hero-quote-line home-hero-quote-line-indent">${line2}”</span>`;
+            };
+
+            const fitQuoteToTwoLines = () => {
+                quoteEl.style.fontSize = "";
+
+                const computed = window.getComputedStyle(quoteEl);
+                const lineHeight = parseFloat(computed.lineHeight);
+                let fontSize = parseFloat(computed.fontSize);
+                const maxHeight = lineHeight * 2 + 1;
+                const minFontSize = 18;
+
+                while (quoteEl.scrollHeight > maxHeight && fontSize > minFontSize) {
+                    fontSize -= 1;
+                    quoteEl.style.fontSize = `${fontSize}px`;
+                }
+            };
+
+            const pick = (seed, salt, pool) => pool[Math.abs((seed * (salt * 29 + 7) + salt * 97 + 13) % pool.length)];
+            const buildGeneratedSoup = (seed) => {
+                const patternIndex = Math.abs((seed * 11 + 5) % 3);
+
+                if (patternIndex === 0) {
+                    return `${pick(seed, 1, setupParts)}，${pick(seed, 2, turnParts)}。`;
+                }
+
+                if (patternIndex === 1) {
+                    return `${pick(seed, 3, actorParts)}最擅长的事，是${pick(seed, 4, effectParts)}。`;
+                }
+
+                return `${pick(seed, 5, subjectParts)}不是${pick(seed, 6, truthParts)}，是${pick(seed, 7, realityParts)}。`;
+            };
+
+            const now = new Date();
+            const localDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const daySeed = Math.floor(localDay.getTime() / 86400000);
+            const curatedIndex = Math.abs((daySeed * 17 + 23) % curatedSoups.length);
+            const generatedSoup = buildGeneratedSoup(daySeed);
+            const dailySoup = daySeed % 4 === 0 ? curatedSoups[curatedIndex] : generatedSoup;
+            const month = String(now.getMonth() + 1).padStart(2, "0");
+            const day = String(now.getDate()).padStart(2, "0");
+
+            renderSoup(dailySoup);
+            dateEl.textContent = `${now.getFullYear()}.${month}.${day}`;
+            fitQuoteToTwoLines();
+            window.addEventListener("resize", fitQuoteToTwoLines);
+        })();
+    </script>
 </body>
 </html>
