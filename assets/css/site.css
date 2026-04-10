@@ -856,11 +856,115 @@ a {
     margin-top: 1.4rem;
 }
 
+.timeline-shell {
+    position: relative;
+}
+
+.articles-archive-page .page-shell {
+    max-width: 980px;
+}
+
+.articles-archive-page .site-header {
+    padding-bottom: 1rem;
+}
+
+.articles-archive-page .section,
+.articles-archive-page .footer {
+    padding: 1rem 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+}
+
+.articles-archive-page .section + .section,
+.articles-archive-page .footer {
+    border-top: 1px solid var(--line);
+}
+
+.articles-archive-page .section-header {
+    margin-bottom: 0.9rem;
+}
+
+.articles-archive-page .section-title {
+    margin-top: 0.35rem;
+    font-size: 1.5rem;
+}
+
+.articles-archive-page .topic-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.8rem;
+}
+
+.articles-archive-page .topic-card {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.58);
+    box-shadow: none;
+}
+
+.articles-archive-page .headline-item {
+    padding: 0.85rem 0;
+    border: 0;
+    border-bottom: 1px solid rgba(31, 31, 27, 0.08);
+    border-radius: 0;
+    background: transparent;
+}
+
+.articles-archive-page .headline-item + .headline-item {
+    margin-top: 0;
+}
+
+.articles-archive-page .headline-item:last-child {
+    border-bottom: 0;
+}
+
+.articles-archive-page .footer-grid {
+    gap: 1.2rem;
+}
+
 .year-heading {
-    margin: 0 0 0.85rem;
+    margin: 0;
     font-size: 1.35rem;
     font-weight: 800;
     color: var(--primary);
+}
+
+.year-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.year-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 4.4rem;
+    padding: 0.42rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(173, 107, 53, 0.14);
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+.year-block {
+    position: relative;
+    margin-left: 0.3rem;
+    padding-left: 1.6rem;
+}
+
+.year-block::before {
+    content: "";
+    position: absolute;
+    left: 0.22rem;
+    top: 1rem;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, rgba(173, 107, 53, 0.34) 0%, rgba(173, 107, 53, 0.08) 100%);
 }
 
 .year-toggle {
@@ -868,6 +972,7 @@ a {
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    padding: 0.1rem 0 0.25rem;
     cursor: pointer;
     list-style: none;
 }
@@ -883,7 +988,21 @@ a {
 }
 
 .year-content {
-    margin-top: 0.85rem;
+    position: relative;
+    margin-top: 0.95rem;
+}
+
+.year-content::before {
+    content: "";
+    position: absolute;
+    left: -1.48rem;
+    top: 0.9rem;
+    width: 0.82rem;
+    height: 0.82rem;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid rgba(173, 107, 53, 0.6);
+    box-shadow: 0 0 0 6px rgba(173, 107, 53, 0.08);
 }
 
 .footer-links {
@@ -1170,5 +1289,29 @@ a {
     .stream-item {
         grid-template-columns: 1fr;
         gap: 0.45rem;
+    }
+
+    .articles-archive-page .section,
+    .articles-archive-page .footer {
+        padding: 0.85rem 0;
+    }
+
+    .year-block {
+        margin-left: 0;
+        padding-left: 1.35rem;
+    }
+
+    .year-summary {
+        align-items: start;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .headline-item {
+        flex-direction: column;
+    }
+
+    .headline-date {
+        white-space: normal;
     }
 }

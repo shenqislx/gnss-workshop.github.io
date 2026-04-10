@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文章列表 - Andy的GNSS工坊</title>
-    <meta name="description" content="Andy 的 GNSS 工坊文章列表，按时间查看接收机技术、定位算法与测试开发工具相关内容。">
+    <title>文章 - Andy的GNSS工坊</title>
+    <meta name="description" content="按时间线查看全部文章">
     <link rel="alternate" type="application/atom+xml" title="Andy的GNSS工坊 Atom Feed" href="/articles/feed.xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/site.css">
 </head>
-<body>
+<body class="articles-archive-page">
     
     
     
@@ -20,7 +20,6 @@
                 <a class="brand" href="/">
                     <div class="brand-mark"><i class="fas fa-satellite"></i>Andy的GNSS工坊</div>
                 </a>
-                <p class="brand-subtitle">这里现在更明确地作为归档页使用，优先按时间和标题浏览全部技术博客。</p>
             </div>
             <nav class="nav-links" aria-label="站点导航">
                 <a class="nav-link" href="/"><i class="fas fa-house"></i>首页</a>
@@ -29,110 +28,113 @@
             </nav>
         </header>
 
-        <section class="hero-card">
-            <div class="hero-body list-hero">
-                <span class="hero-eyebrow"><i class="fas fa-book"></i>Archive</span>
-                <h1 class="hero-title">文章列表</h1>
-                <p class="hero-lead">这里收录了站内全部文章，默认按发布时间倒序排列。它更像传统技术博客的归档页，方便快速扫标题、按日期回看更新。</p>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">全部文章</div>
-                        <div class="stat-value">4</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">接收机技术</div>
-                        <div class="stat-value">1</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">定位算法</div>
-                        <div class="stat-value">2</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">工具实践</div>
-                        <div class="stat-value">1</div>
-                    </div>
+        <section class="section timeline-section">
+            <div class="section-header">
+                <div>
+                    <span class="section-kicker"><i class="fas fa-wave-square"></i>Timeline</span>
+                    <h2 class="section-title">时间线</h2>
                 </div>
             </div>
+            
+                <div class="timeline-shell">
+                    
+                    
+                        
+                        
+                            
+                            <details class="year-block" open>
+                                <summary class="year-toggle">
+                                    <div class="year-summary">
+                                        <span class="year-badge">2025</span>
+                                        <h3 class="year-heading">2025 年</h3>
+                                    </div>
+                                    <span class="year-count">展开 / 收起</span>
+                                </summary>
+                                <div class="headline-list year-content">
+                            
+                        
+                        <article class="headline-item">
+                            <div class="headline-main">
+                                <h3 class="headline-title"><a href="/articles/calculate-dop/">GNSS DOP计算与Sherman–Morrison快速更新</a></h3>
+                                <div class="headline-meta">GNSS定位算法 · 介绍 GNSS DOP 的计算原理，以及如何利用 Sherman–Morrison 公式对矩阵逆进行快速更新，提升工程实现效率。</div>
+                            </div>
+                            <div class="headline-date">2025-09-28</div>
+                        </article>
+                        
+                    
+                        
+                        
+                        <article class="headline-item">
+                            <div class="headline-main">
+                                <h3 class="headline-title"><a href="/articles/cursor-extension-market-cfg/">Cursor扩展商店无法正常下载插件</a></h3>
+                                <div class="headline-meta">测试开发工具 · 记录 Cursor 扩展商店异常时的排查与替代方案，通过调整 marketplace 配置直接接入 VS Code 插件源。</div>
+                            </div>
+                            <div class="headline-date">2025-09-24</div>
+                        </article>
+                        
+                    
+                        
+                        
+                        <article class="headline-item">
+                            <div class="headline-main">
+                                <h3 class="headline-title"><a href="/articles/navigation-data-decode/">GNSS导航电文比特解码</a></h3>
+                                <div class="headline-meta">GNSS接收机技术 · 从工程角度梳理 GNSS 导航电文比特解码的目标、帧结构与核心流程，帮助接收机入门者把原始比特流变成可用的定位输入。</div>
+                            </div>
+                            <div class="headline-date">2025-09-18</div>
+                        </article>
+                        
+                    
+                        
+                        
+                        <article class="headline-item">
+                            <div class="headline-main">
+                                <h3 class="headline-title"><a href="/articles/coarse-time-five-state-equation/">粗时导航五状态方程理论与应用</a></h3>
+                                <div class="headline-meta">GNSS定位算法 · 解释粗时导航为什么需要从传统四参数扩展到五状态模型，以及粗时间误差如何影响卫星位置计算与定位收敛。</div>
+                            </div>
+                            <div class="headline-date">2025-09-14</div>
+                        </article>
+                        </div></details>
+                    
+                </div>
+            
         </section>
 
         <section class="section">
             <div class="section-header">
                 <div>
-                    <span class="section-kicker"><i class="fas fa-layer-group"></i>Topics</span>
-                    <h2 class="section-title">分类提示</h2>
-                    <p class="section-copy">只保留轻量统计，真正的主线仍然是下面的年份归档。</p>
+                    <span class="section-kicker"><i class="fas fa-layer-group"></i>Columns</span>
+                    <h2 class="section-title">专栏分类</h2>
                 </div>
             </div>
             <div class="topic-grid">
-                <div class="direction-card">GNSS接收机技术 1 篇</div>
-                <div class="direction-card">GNSS定位算法 2 篇</div>
-                <div class="direction-card">测试开发工具 1 篇</div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="section-header">
-                <div>
-                    <span class="section-kicker"><i class="fas fa-clock"></i>Timeline</span>
-                    <h2 class="section-title">按年份归档</h2>
-                    <p class="section-copy">进一步弱化分类感，直接按年份和标题浏览全部文章。这更贴近长期更新型个人技术博客的归档习惯。</p>
-                </div>
-            </div>
-            
-            
-                
-                
+                <article class="topic-card">
+                    <div class="topic-head">
+                        <h3 class="topic-title">GNSS 接收机技术</h3>
+                        <span class="topic-count">1 篇</span>
+                    </div>
                     
-                    <details class="year-block" open>
-                        <summary class="year-toggle">
-                            <h3 class="year-heading">2025</h3>
-                            <span class="year-count">展开 / 收起</span>
-                        </summary>
-                        <div class="headline-list year-content">
+                        <div class="topic-copy">最近更新：<a class="text-link" href="/articles/navigation-data-decode/">GNSS导航电文比特解码</a></div>
                     
-                
-                <article class="headline-item">
-                    <div class="headline-main">
-                        <h3 class="headline-title"><a href="/articles/calculate-dop/">GNSS DOP计算与Sherman–Morrison快速更新</a></h3>
-                        <div class="headline-meta">GNSS定位算法 · 介绍 GNSS DOP 的计算原理，以及如何利用 Sherman–Morrison 公式对矩阵逆进行快速更...</div>
-                    </div>
-                    <div class="headline-date">2025-09-28</div>
                 </article>
-                
-            
-                
-                
-                <article class="headline-item">
-                    <div class="headline-main">
-                        <h3 class="headline-title"><a href="/articles/cursor-extension-market-cfg/">Cursor扩展商店无法正常下载插件</a></h3>
-                        <div class="headline-meta">测试开发工具 · 记录 Cursor 扩展商店异常时的排查与替代方案，通过调整 marketplace 配置直接接入 VS ...</div>
+                <article class="topic-card">
+                    <div class="topic-head">
+                        <h3 class="topic-title">GNSS 定位算法</h3>
+                        <span class="topic-count">2 篇</span>
                     </div>
-                    <div class="headline-date">2025-09-24</div>
+                    
+                        <div class="topic-copy">最近更新：<a class="text-link" href="/articles/calculate-dop/">GNSS DOP计算与Sherman–Morrison快速更新</a></div>
+                    
                 </article>
-                
-            
-                
-                
-                <article class="headline-item">
-                    <div class="headline-main">
-                        <h3 class="headline-title"><a href="/articles/navigation-data-decode/">GNSS导航电文比特解码</a></h3>
-                        <div class="headline-meta">GNSS接收机技术 · 从工程角度梳理 GNSS 导航电文比特解码的目标、帧结构与核心流程，帮助接收机入门者把原始比特流变成可用的...</div>
+                <article class="topic-card">
+                    <div class="topic-head">
+                        <h3 class="topic-title">测试开发工具</h3>
+                        <span class="topic-count">1 篇</span>
                     </div>
-                    <div class="headline-date">2025-09-18</div>
+                    
+                        <div class="topic-copy">最近更新：<a class="text-link" href="/articles/cursor-extension-market-cfg/">Cursor扩展商店无法正常下载插件</a></div>
+                    
                 </article>
-                
-            
-                
-                
-                <article class="headline-item">
-                    <div class="headline-main">
-                        <h3 class="headline-title"><a href="/articles/coarse-time-five-state-equation/">粗时导航五状态方程理论与应用</a></h3>
-                        <div class="headline-meta">GNSS定位算法 · 解释粗时导航为什么需要从传统四参数扩展到五状态模型，以及粗时间误差如何影响卫星位置计算与定位收敛。</div>
-                    </div>
-                    <div class="headline-date">2025-09-14</div>
-                </article>
-                </div></details>
-            
+            </div>
         </section>
 
         <footer class="footer">
@@ -143,10 +145,6 @@
                         <a href="/">返回首页</a>
                         <a href="/articles/feed.xml">订阅 Atom</a>
                     </div>
-                </div>
-                <div>
-                    <h3 class="footer-title">站点信息</h3>
-                    <p class="footer-copy">这个归档页和首页现在共享同一套视觉系统，阅读体验会更连贯。</p>
                 </div>
                 <div>
                     <h3 class="footer-title">外部链接</h3>
