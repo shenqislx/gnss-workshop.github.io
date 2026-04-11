@@ -156,8 +156,8 @@ a {
 
 .home-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(124px, 156px);
-    gap: 0.8rem;
+    grid-template-columns: minmax(0, 1.72fr) minmax(104px, 132px);
+    gap: 0.55rem;
     align-items: center;
     padding: 1rem 1.15rem;
     min-height: 184px;
@@ -208,7 +208,7 @@ a {
 
 .home-hero-quote {
     margin: 0.3rem 0 0;
-    max-width: min(100%, 24ch);
+    max-width: min(100%, 32ch);
     font-family: "Source Han Serif SC", "Noto Serif SC", "Songti SC", serif;
     font-size: clamp(1.3rem, 2.7vw, 2.35rem);
     line-height: 1.08;
@@ -219,6 +219,7 @@ a {
 
 .home-hero-quote-line {
     display: block;
+    white-space: nowrap;
 }
 
 .home-hero-quote-line-indent {
@@ -410,7 +411,7 @@ a {
 }
 
 .home-hero-quote {
-    max-width: min(100%, 28ch);
+    max-width: min(100%, 32ch);
     font-size: clamp(1.45rem, 2.9vw, 2.55rem);
 }
 
@@ -1228,7 +1229,7 @@ a {
     }
 
     .home-hero-quote {
-        max-width: min(100%, 20ch);
+        max-width: min(100%, 24ch);
     }
 
     .home-hero-visual {

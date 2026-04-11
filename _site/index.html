@@ -323,8 +323,10 @@
                 let fontSize = parseFloat(computed.fontSize);
                 const maxHeight = lineHeight * 2 + 1;
                 const minFontSize = 18;
+                const linesOverflow = () => [...quoteEl.querySelectorAll(".home-hero-quote-line")]
+                    .some((line) => line.scrollWidth > quoteEl.clientWidth + 1);
 
-                while (quoteEl.scrollHeight > maxHeight && fontSize > minFontSize) {
+                while ((quoteEl.scrollHeight > maxHeight || linesOverflow()) && fontSize > minFontSize) {
                     fontSize -= 1;
                     quoteEl.style.fontSize = `${fontSize}px`;
                 }
