@@ -24,7 +24,6 @@
             <nav class="nav-links" aria-label="站点导航">
                 <a class="nav-link" href="{{ '/articles/' | relative_url }}"><i class="fas fa-list"></i>全部文章</a>
                 <a class="nav-link" href="#latest-posts"><i class="fas fa-clock"></i>最新更新</a>
-                <a class="nav-link" href="#recent-archive"><i class="fas fa-stream"></i>标题归档</a>
                 <a class="nav-link" href="{{ '/articles/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>Atom</a>
             </nav>
         </header>
@@ -85,29 +84,6 @@
             </div>
         </section>
 
-        <section class="section" id="recent-archive">
-            <div class="section-header">
-                <div>
-                    <span class="section-kicker"><i class="fas fa-stream"></i>Archive</span>
-                    <h2 class="section-title">标题归档</h2>
-                    <p class="section-copy">如果你已经看过最近更新，这里继续按标题和日期向下扫。</p>
-                </div>
-                <a class="text-link" href="{{ '/articles/' | relative_url }}">进入完整归档 <i class="fas fa-arrow-right"></i></a>
-            </div>
-
-            <div class="headline-list">
-                {% for article in sorted_articles offset: 6 limit: 10 %}
-                <article class="headline-item">
-                    <div class="headline-main">
-                        <h3 class="headline-title"><a href="{{ article.url | relative_url }}">{{ article.title }}</a></h3>
-                        <div class="headline-meta">{{ article.category | default: "未分类" }}</div>
-                    </div>
-                    <div class="headline-date">{{ article.date | date: "%Y-%m-%d" }}</div>
-                </article>
-                {% endfor %}
-            </div>
-        </section>
-
         <footer class="footer">
             <div class="footer-grid">
                 <div>
@@ -119,7 +95,6 @@
                     <div class="footer-links">
                         <a href="{{ '/articles/' | relative_url }}">全部文章</a>
                         <a href="{{ '/articles/feed.xml' | relative_url }}">Atom 订阅</a>
-                        <a href="#recent-archive">标题归档</a>
                     </div>
                 </div>
                 <div>
