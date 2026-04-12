@@ -4,7 +4,7 @@ layout: article
 date: 2026-04-11
 category: "AI"
 author: "Andy"
-summary: "建立简单无环的agent工作流"
+summary: "简单、单向、无环的工作流，通常比复杂、有环、持续自我回写的工作流更稳定。"
 ---
 
 > 太长不看：
