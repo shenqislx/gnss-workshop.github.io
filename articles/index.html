@@ -18,6 +18,7 @@ title: 文章 - Andy的GNSS工坊
     {% assign receiver_articles = sorted_articles | where: "category", "GNSS接收机技术" %}
     {% assign positioning_articles = sorted_articles | where: "category", "GNSS定位算法" %}
     {% assign tooling_articles = sorted_articles | where: "category", "测试开发工具" %}
+    {% assign ai_articles = sorted_articles | where: "category", "AI" %}
     <div class="page-shell">
         <header class="site-header">
             <div>
@@ -105,6 +106,15 @@ title: 文章 - Andy的GNSS工坊
                     </div>
                     {% if tooling_articles.size > 0 %}
                         <div class="topic-copy">最近更新：<a class="text-link" href="{{ tooling_articles.first.url | relative_url }}">{{ tooling_articles.first.title }}</a></div>
+                    {% endif %}
+                </article>
+                <article class="topic-card">
+                    <div class="topic-head">
+                        <h3 class="topic-title">AI</h3>
+                        <span class="topic-count">{{ ai_articles | size }} 篇</span>
+                    </div>
+                    {% if ai_articles.size > 0 %}
+                        <div class="topic-copy">最近更新：<a class="text-link" href="{{ ai_articles.first.url | relative_url }}">{{ ai_articles.first.title }}</a></div>
                     {% endif %}
                 </article>
             </div>
