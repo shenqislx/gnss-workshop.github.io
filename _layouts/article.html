@@ -129,12 +129,25 @@
                 </div>
             </header>
 
-            <div class="article-prose">
-                {{ content }}
-                <div class="article-actions">
-                    <a class="button button-secondary" href="{{ '/articles/' | relative_url }}"><i class="fas fa-arrow-left"></i>返回文章列表</a>
-                    <a class="button button-accent" href="{{ '/' | relative_url }}"><i class="fas fa-house"></i>返回首页</a>
+            <div class="article-body">
+                <div class="article-prose" data-article-prose>
+                    {{ content }}
+                    <div class="article-actions">
+                        <a class="button button-secondary" href="{{ '/articles/' | relative_url }}"><i class="fas fa-arrow-left"></i>返回文章列表</a>
+                        <a class="button button-accent" href="{{ '/' | relative_url }}"><i class="fas fa-house"></i>返回首页</a>
+                    </div>
                 </div>
+
+                <aside class="article-outline" data-article-outline hidden aria-labelledby="article-outline-title">
+                    <div class="article-outline-shell">
+                        <span class="article-outline-kicker"><i class="fas fa-diagram-project"></i>Guide</span>
+                        <h2 class="article-outline-title" id="article-outline-title">标题结构导览</h2>
+                        <p class="article-outline-copy">按正文标题层级快速跳转。</p>
+                        <nav class="article-outline-nav" aria-label="文章标题导览">
+                            <ol class="article-outline-list" data-article-outline-list></ol>
+                        </nav>
+                    </div>
+                </aside>
             </div>
         </article>
 
@@ -188,5 +201,101 @@
             </div>
         </footer>
     </div>
+    <script>
+      (function () {
+        const prose = document.querySelector('[data-article-prose]');
+        const outline = document.querySelector('[data-article-outline]');
+        const list = document.querySelector('[data-article-outline-list]');
+
+        if (!prose || !outline || !list) {
+          return;
+        }
+
+        const headings = Array.from(prose.querySelectorAll('h2, h3, h4'));
+
+        if (!headings.length) {
+          return;
+        }
+
+        const slugCounts = new Map();
+
+        const buildId = (text, index) => {
+          const base = text
+            .trim()
+            .toLowerCase()
+            .replace(/[^\w\u4e00-\u9fff\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '') || `section-${index + 1}`;
+          const nextCount = (slugCounts.get(base) || 0) + 1;
+          slugCounts.set(base, nextCount);
+          return nextCount === 1 ? base : `${base}-${nextCount}`;
+        };
+
+        const items = new Map();
+
+        headings.forEach((heading, index) => {
+          if (!heading.id) {
+            heading.id = buildId(heading.textContent, index);
+          }
+
+          const item = document.createElement('li');
+          item.className = `article-outline-item article-outline-item-level-${heading.tagName.toLowerCase()}`;
+
+          const link = document.createElement('a');
+          link.className = 'article-outline-link';
+          link.href = `#${heading.id}`;
+          link.textContent = heading.textContent.trim();
+
+          item.appendChild(link);
+          list.appendChild(item);
+          items.set(heading.id, { item, link });
+        });
+
+        outline.hidden = false;
+
+        const setActive = (id) => {
+          items.forEach(({ item, link }, key) => {
+            const isActive = key === id;
+            item.classList.toggle('is-active', isActive);
+            link.classList.toggle('is-active', isActive);
+          });
+        };
+
+        const updateActive = () => {
+          const threshold = 180;
+          let current = headings[0];
+
+          headings.forEach((heading) => {
+            if (heading.getBoundingClientRect().top - threshold <= 0) {
+              current = heading;
+            }
+          });
+
+          if (current) {
+            setActive(current.id);
+          }
+        };
+
+        const currentHash = decodeURIComponent(window.location.hash || '').slice(1);
+
+        if (currentHash && items.has(currentHash)) {
+          setActive(currentHash);
+        } else {
+          setActive(headings[0].id);
+        }
+
+        window.addEventListener('scroll', updateActive, { passive: true });
+        window.addEventListener('hashchange', updateActive);
+
+        items.forEach(({ link }, id) => {
+          link.addEventListener('click', () => {
+            setActive(id);
+          });
+        });
+
+        updateActive();
+      })();
+    </script>
 </body>
 </html>
