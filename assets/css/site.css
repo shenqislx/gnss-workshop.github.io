@@ -1141,6 +1141,22 @@ a {
     color: inherit;
 }
 
+.article-prose .mermaid {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-soft);
+    overflow-x: auto;
+}
+
+.article-prose .mermaid svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
 @keyframes hero-page-turn {
     0%,
     28%,
