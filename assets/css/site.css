@@ -1096,6 +1096,7 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    margin-bottom: 0.8rem;
     color: var(--accent);
     font-size: 0.78rem;
     font-weight: 800;
@@ -1103,21 +1104,9 @@ a {
     text-transform: uppercase;
 }
 
-.article-outline-title {
-    margin: 0.55rem 0 0;
-    font-size: 1rem;
-    line-height: 1.4;
-}
-
-.article-outline-copy {
-    margin: 0.35rem 0 0;
-    color: var(--muted);
-    font-size: 0.9rem;
-}
-
 .article-outline-list {
     position: relative;
-    margin: 1rem 0 0;
+    margin: 0;
     padding: 0 0 0 1rem;
     list-style: none;
 }
@@ -1148,6 +1137,10 @@ a {
     width: 0.6rem;
     height: 1px;
     background: rgba(173, 107, 53, 0.25);
+}
+
+.article-outline-item-level-h1 {
+    font-weight: 700;
 }
 
 .article-outline-item-level-h3 {

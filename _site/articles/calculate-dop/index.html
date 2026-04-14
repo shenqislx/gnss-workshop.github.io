@@ -295,9 +295,7 @@ GDOP &amp;= \sqrt{Q_{11} + Q_{22} + Q_{33} + Q_{44}}
 <aside class="article-outline" data-article-outline hidden aria-labelledby="article-outline-title">
     <div class="article-outline-shell">
         <span class="article-outline-kicker"><i class="fas fa-diagram-project"></i>Guide</span>
-        <h2 class="article-outline-title" id="article-outline-title">标题结构导览</h2>
-        <p class="article-outline-copy">按正文标题层级快速跳转。</p>
-        <nav class="article-outline-nav" aria-label="文章标题导览">
+        <nav class="article-outline-nav" aria-label="文章标题导览" id="article-outline-title">
             <ol class="article-outline-list" data-article-outline-list></ol>
         </nav>
     </div>
@@ -362,7 +360,7 @@ GDOP &amp;= \sqrt{Q_{11} + Q_{22} + Q_{33} + Q_{44}}
       return;
     }
 
-    const headings = Array.from(prose.querySelectorAll('h2, h3, h4'));
+    const headings = Array.from(prose.querySelectorAll('h1, h2, h3, h4'));
 
     if (!headings.length) {
       return;
