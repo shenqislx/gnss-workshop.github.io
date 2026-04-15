@@ -3,7 +3,6 @@ layout: article
 title: Cursor扩展商店无法正常下载插件
 date: 2025-09-24
 category: 测试开发工具
-tags: [Cursor, IDE, 工具配置]
 author: Andy
 summary: "记录 Cursor 扩展商店异常时的排查与替代方案，通过调整 marketplace 配置直接接入 VS Code 插件源。"
 ---
