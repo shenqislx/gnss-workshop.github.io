@@ -1,0 +1,26 @@
+{% assign nav_variant = include.nav_variant | default: "home" %}
+<header class="site-header">
+    <div>
+        <a class="brand" href="{{ '/' | relative_url }}">
+            <div class="brand-mark"><i class="fas fa-satellite"></i>{{ site.title }}</div>
+        </a>
+        {% if include.subtitle %}
+        <p class="brand-subtitle">{{ include.subtitle }}</p>
+        {% endif %}
+    </div>
+    <nav class="nav-links" aria-label="站点导航">
+        {% if nav_variant == "home" %}
+        <a class="nav-link" href="{{ '/articles/' | relative_url }}"><i class="fas fa-list"></i>全部文章</a>
+        <a class="nav-link" href="#latest-posts"><i class="fas fa-clock"></i>最新更新</a>
+        <a class="nav-link" href="{{ '/articles/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>Atom</a>
+        {% elsif nav_variant == "articles" %}
+        <a class="nav-link" href="{{ '/' | relative_url }}"><i class="fas fa-house"></i>首页</a>
+        <a class="nav-link" href="{{ '/articles/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>Atom</a>
+        <a class="nav-link" href="https://github.com/shenqislx" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i>GitHub</a>
+        {% elsif nav_variant == "article" %}
+        <a class="nav-link" href="{{ '/' | relative_url }}"><i class="fas fa-house"></i>首页</a>
+        <a class="nav-link" href="{{ '/articles/' | relative_url }}"><i class="fas fa-list"></i>文章列表</a>
+        <a class="nav-link" href="{{ '/articles/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>Atom</a>
+        {% endif %}
+    </nav>
+</header>

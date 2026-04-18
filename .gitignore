@@ -1,1 +1,18 @@
+# Codex artifacts
 .codex-artifacts/
+
+# Jekyll build and cache outputs
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# Ruby / Bundler artifacts
+.bundle/
+vendor/bundle/
+
+# Common OS/editor temp files
+.DS_Store
+Thumbs.db
+*.swp
+*~

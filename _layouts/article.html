@@ -7,6 +7,9 @@
     <meta name="description" content="{% if page.summary %}{{ page.summary }}{% else %}{{ page.excerpt | strip_html | strip_newlines | truncate: 110 }}{% endif %}">
     <link rel="alternate" type="application/atom+xml" title="{{ site.title }} Atom Feed" href="{{ '/articles/feed.xml' | relative_url }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
     <script>
       window.MathJax = {
@@ -41,7 +44,6 @@
         }
       };
     </script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script type="module">
       document.addEventListener('DOMContentLoaded', async function () {
@@ -89,18 +91,7 @@
 <body>
     {% assign related_articles = site.articles | where: "category", page.category | sort: "date" | reverse %}
     <div class="page-shell article-page">
-        <header class="site-header">
-            <div>
-                <a class="brand" href="{{ '/' | relative_url }}">
-                    <div class="brand-mark"><i class="fas fa-satellite"></i>{{ site.title }}</div>
-                </a>
-            </div>
-            <nav class="nav-links" aria-label="站点导航">
-                <a class="nav-link" href="{{ '/' | relative_url }}"><i class="fas fa-house"></i>首页</a>
-                <a class="nav-link" href="{{ '/articles/' | relative_url }}"><i class="fas fa-list"></i>文章列表</a>
-                <a class="nav-link" href="{{ '/articles/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>Atom</a>
-            </nav>
-        </header>
+        {% include site_header.html nav_variant="article" %}
 
         <div class="breadcrumbs">
             <a href="{{ '/' | relative_url }}">首页</a>
@@ -176,28 +167,7 @@
         </section>
         {% endif %}
 
-        <footer class="footer">
-            <div class="footer-grid">
-                <div>
-                    <h3 class="footer-title">继续关注</h3>
-                    <div class="footer-links">
-                        <a href="{{ '/articles/feed.xml' | relative_url }}">订阅 Atom</a>
-                        <a href="mailto:hao_qingzhi@foxmail.com">hao_qingzhi@foxmail.com</a>
-                        <a href="https://github.com/shenqislx" target="_blank" rel="noopener noreferrer">访问 GitHub</a>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="footer-title">关于本站</h3>
-                    <p class="footer-copy">Andy 的工程与技术笔记。弘扬开源精神与极客精神，拒绝闭门造车，拒绝“重复造轮子”，更拒绝低质量的 AI slop！</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <span>&copy; 2026 {{ site.title }}</span>
-                <div class="footer-meta">
-                    <a href="{{ '/articles/' | relative_url }}">全部文章</a>
-                </div>
-            </div>
-        </footer>
+        {% include site_footer.html footer_variant="article" %}
     </div>
     <script>
       (function () {

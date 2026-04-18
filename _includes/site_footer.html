@@ -1,0 +1,77 @@
+{% assign footer_variant = include.footer_variant | default: "home" %}
+<footer class="footer">
+    {% if footer_variant == "home" %}
+    <div class="footer-grid">
+        <div>
+            <h3 class="footer-title">关于本站</h3>
+            <p class="footer-copy">Andy 的工程与技术笔记。弘扬开源精神与极客精神，拒绝闭门造车，拒绝“重复造轮子”，更拒绝低质量的 AI slop！ </p>
+        </div>
+        <div>
+            <h3 class="footer-title">快速入口</h3>
+            <div class="footer-links">
+                <a href="{{ '/articles/' | relative_url }}">全部文章</a>
+                <a href="{{ '/articles/feed.xml' | relative_url }}">Atom 订阅</a>
+            </div>
+        </div>
+        <div>
+            <h3 class="footer-title">外部链接</h3>
+            <div class="footer-links">
+                <a href="mailto:hao_qingzhi@foxmail.com">hao_qingzhi@foxmail.com</a>
+                <a href="https://github.com/shenqislx" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank" rel="noopener noreferrer">站点源码</a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 {{ site.title }}</span>
+        <div class="footer-meta">
+            <span>Built with Jekyll</span>
+            <a href="{{ '/articles/feed.xml' | relative_url }}">RSS / Atom</a>
+        </div>
+    </div>
+    {% elsif footer_variant == "articles" %}
+    <div class="footer-grid">
+        <div>
+            <h3 class="footer-title">继续浏览</h3>
+            <div class="footer-links">
+                <a href="{{ '/' | relative_url }}">返回首页</a>
+                <a href="{{ '/articles/feed.xml' | relative_url }}">订阅 Atom</a>
+            </div>
+        </div>
+        <div>
+            <h3 class="footer-title">外部链接</h3>
+            <div class="footer-links">
+                <a href="https://github.com/shenqislx" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank" rel="noopener noreferrer">站点源码</a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 {{ site.title }}</span>
+        <div class="footer-meta">
+            <span>{{ include.article_count }} 篇文章</span>
+        </div>
+    </div>
+    {% elsif footer_variant == "article" %}
+    <div class="footer-grid">
+        <div>
+            <h3 class="footer-title">继续关注</h3>
+            <div class="footer-links">
+                <a href="{{ '/articles/feed.xml' | relative_url }}">订阅 Atom</a>
+                <a href="mailto:hao_qingzhi@foxmail.com">hao_qingzhi@foxmail.com</a>
+                <a href="https://github.com/shenqislx" target="_blank" rel="noopener noreferrer">访问 GitHub</a>
+            </div>
+        </div>
+        <div>
+            <h3 class="footer-title">关于本站</h3>
+            <p class="footer-copy">Andy 的工程与技术笔记。弘扬开源精神与极客精神，拒绝闭门造车，拒绝“重复造轮子”，更拒绝低质量的 AI slop！</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 {{ site.title }}</span>
+        <div class="footer-meta">
+            <a href="{{ '/articles/' | relative_url }}">全部文章</a>
+        </div>
+    </div>
+    {% endif %}
+</footer>

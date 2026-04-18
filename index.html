@@ -9,24 +9,15 @@
     <meta name="description" content="Andy的技术博客，分享多年工程经验，以及对 AI 时代的思考。 From GNSS to EVERYTHING">
     <link rel="alternate" type="application/atom+xml" title="{{ site.title }} Atom Feed" href="{{ '/articles/feed.xml' | relative_url }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
 </head>
 <body>
     {% assign sorted_articles = site.articles | sort: "date" | reverse %}
     <div class="page-shell">
-        <header class="site-header">
-            <div>
-                <a class="brand" href="{{ '/' | relative_url }}">
-                    <div class="brand-mark"><i class="fas fa-satellite"></i>{{ site.title }}</div>
-                </a>
-                <p class="brand-subtitle">欢迎来到 Andy 的个人工坊，这里长期分享与 GNSS、AI 相关的技术经验，以及对生活和工作的思考。</p>
-            </div>
-            <nav class="nav-links" aria-label="站点导航">
-                <a class="nav-link" href="{{ '/articles/' | relative_url }}"><i class="fas fa-list"></i>全部文章</a>
-                <a class="nav-link" href="#latest-posts"><i class="fas fa-clock"></i>最新更新</a>
-                <a class="nav-link" href="{{ '/articles/feed.xml' | relative_url }}"><i class="fas fa-rss"></i>Atom</a>
-            </nav>
-        </header>
+        {% include site_header.html nav_variant="home" subtitle="欢迎来到 Andy 的个人工坊，这里长期分享与 GNSS、AI 相关的技术经验，以及对生活和工作的思考。" %}
 
         <section class="hero-card home-hero" aria-labelledby="daily-quote-heading">
             <div class="home-hero-copy">
@@ -83,36 +74,7 @@
             </div>
         </section>
 
-        <footer class="footer">
-            <div class="footer-grid">
-                <div>
-                    <h3 class="footer-title">关于本站</h3>
-                    <p class="footer-copy">Andy 的工程与技术笔记。弘扬开源精神与极客精神，拒绝闭门造车，拒绝“重复造轮子”，更拒绝低质量的 AI slop！ </p>
-                </div>
-                <div>
-                    <h3 class="footer-title">快速入口</h3>
-                    <div class="footer-links">
-                        <a href="{{ '/articles/' | relative_url }}">全部文章</a>
-                        <a href="{{ '/articles/feed.xml' | relative_url }}">Atom 订阅</a>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="footer-title">外部链接</h3>
-                    <div class="footer-links">
-                        <a href="mailto:hao_qingzhi@foxmail.com">hao_qingzhi@foxmail.com</a>
-                        <a href="https://github.com/shenqislx" target="_blank" rel="noopener noreferrer">GitHub</a>
-                        <a href="https://github.com/shenqislx/gnss-workshop.github.io" target="_blank" rel="noopener noreferrer">站点源码</a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <span>&copy; 2026 {{ site.title }}</span>
-                <div class="footer-meta">
-                    <span>Built with Jekyll</span>
-                    <a href="{{ '/articles/feed.xml' | relative_url }}">RSS / Atom</a>
-                </div>
-            </div>
-        </footer>
+        {% include site_footer.html footer_variant="home" %}
     </div>
     <script>
         (() => {
