@@ -32,6 +32,8 @@ kramdown:
   parse_block_html: true
 
 # 其他配置
+future: true
+
 collections:
   articles:
     output: true
