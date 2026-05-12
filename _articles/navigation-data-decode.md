@@ -2,7 +2,7 @@
 title: "GNSS导航电文比特解码"
 layout: article
 date: 2025-09-18
-category: "GNSS接收机技术"
+category: "GNSS 定位算法"
 author: "Andy"
 summary: "从工程角度梳理 GNSS 导航电文比特解码的目标、帧结构与核心流程，帮助接收机入门者把原始比特流变成可用的定位输入。"
 ---

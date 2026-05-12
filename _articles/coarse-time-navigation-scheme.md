@@ -2,7 +2,7 @@
 title: "粗时导航实践与精时间过渡"
 layout: article
 date: 2026-04-14
-category: "GNSS定位算法"
+category: "GNSS 定位算法"
 author: "Andy"
 summary: "从工程实践出发梳理粗时导航与单点定位的差异、粗时间向精时间的过渡机制，以及整数毫秒误差的修复思路。"
 ---
