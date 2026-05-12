@@ -4,7 +4,7 @@ layout: article
 date: 2026-05-12
 category: "GNSS 定位算法"
 author: "Andy"
-summary: "从技术博客的角度梳理平方根信息滤波器 SRIF 在 GNSS 定位软件中的应用，重点比较 SRIF 与 SRKF、信息矩阵与协因数阵，以及稀疏矩阵和图连通性的关系。"
+summary: "梳理平方根信息滤波器 SRIF 在 GNSS 定位软件中的应用，重点比较 SRIF 与 SRKF、信息矩阵与协因数阵，以及稀疏矩阵和图连通性的关系。"
 ---
 
 > 最近在开发一套 PPP 精密单点定位软件，在设计滤波器的时候关注到了 SRIF。
