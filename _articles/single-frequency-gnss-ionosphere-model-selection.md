@@ -183,7 +183,7 @@ summary: "基于 24 小时实测数据，从广播 Klobuchar 类模型误差和 
 Klobuchar 数据来自 2026-05-23 UTC 24 小时，测站约 31.16°N / 121.55°E，每个模型 2,446,538 个样本，总计 9,786,152 个观测。DPS/SPS 数据来自 2026-06-02 到 2026-06-03 的 24 小时静态定位测试，SPS 有 86,373 个有效历元，DPS 有 60,510 个有效历元。
 
 <div class="data-note">
-  数据源：<code>tmp/Klobuchar/analysis/overall.csv</code>、<code>elevation.csv</code>、<code>best_model.csv</code>、<code>tmp/analysis/stats_overall.csv</code>、<code>stats_hourly.csv</code>。DPS/SPS 统计按各自有效历元计算，并非严格同历元配对。
+  数据源：<code>tmp/Klobuchar/analysis/overall.csv</code>、<code>hourly_rms.csv</code>、<code>elevation.csv</code>、<code>best_model.csv</code>、<code>tmp/analysis/stats_overall.csv</code>、<code>stats_hourly.csv</code>。DPS/SPS 统计按各自有效历元计算，并非严格同历元配对。
 </div>
 
 ## 2. Klobuchar 维度：BDS 无偏，QZS-Wide 低仰角更稳
@@ -263,12 +263,56 @@ $$
 
 总体统计显示：BDS 的 RMS 最低，且均值几乎为零；QZS-Wide 与 GPS 的 RMS 差距不大，但二者都明显欠改正；QZS-Japan 在这个经度范围下表现最差。由此可见，QZSS 针对日本区域优化的模型不宜直接外推为中国区域的通用改正源。
 
-## 3. 高度角比 CN0 更适合驱动模型选择
+## 3. UTC 时段：不同模型的误差峰值并不同步
+
+Klobuchar 类模型的误差具有明显日变化特征。单频接收机在进行模型选型和方差建模时，应考虑 UTC 时段和本地太阳时对电离层活动的影响。对华东测站而言，GPS、QZS-Wide、QZS-Japan 的 RMS 峰值集中在 UTC 07-08，对应北京时间 15-16 时；BDS 的峰值出现在 UTC 04，对应北京时间 12 时左右，较 GPS/QZS 系列提前约 3-4 小时。
+
+<div class="ion-chart" markdown="0">
+  <div class="ion-chart-title">图 2：不同 UTC 时段下的 Klobuchar RMS <span>GPS/QZS 下午峰值明显，BDS 峰值相位提前</span></div>
+  <svg viewBox="0 0 760 390" role="img" aria-label="Klobuchar RMS by UTC hour chart">
+    <rect x="0" y="0" width="760" height="390" rx="18" fill="#faf8f2"/>
+    <line x1="80" y1="310" x2="710" y2="310" stroke="rgba(31,31,27,.22)"/>
+    <line x1="80" y1="273" x2="710" y2="273" stroke="rgba(31,31,27,.08)"/>
+    <line x1="80" y1="236" x2="710" y2="236" stroke="rgba(31,31,27,.08)"/>
+    <line x1="80" y1="199" x2="710" y2="199" stroke="rgba(31,31,27,.08)"/>
+    <line x1="80" y1="162" x2="710" y2="162" stroke="rgba(31,31,27,.08)"/>
+    <line x1="80" y1="125" x2="710" y2="125" stroke="rgba(31,31,27,.08)"/>
+    <line x1="80" y1="88" x2="710" y2="88" stroke="rgba(31,31,27,.08)"/>
+    <text x="44" y="314" font-size="12" fill="#6d675d">0</text>
+    <text x="44" y="240" font-size="12" fill="#6d675d">2</text>
+    <text x="44" y="166" font-size="12" fill="#6d675d">4</text>
+    <text x="44" y="92" font-size="12" fill="#6d675d">6m</text>
+    <rect x="188" y="62" width="24" height="262" rx="12" fill="rgba(88,120,80,.08)"/>
+    <rect x="266" y="62" width="50" height="262" rx="12" fill="rgba(173,107,53,.09)"/>
+    <text x="200" y="52" text-anchor="middle" font-size="11" fill="#587850">BDS 峰值</text>
+    <text x="291" y="52" text-anchor="middle" font-size="11" fill="#ad6b35">GPS/QZS 峰值</text>
+    <polyline points="90,257.3 116,265.3 142,274.2 168,264.1 194,241.8 220,214.8 246,175.5 272,141.8 298,139.1 324,154.9 350,183.4 376,176.4 402,173.7 428,178.3 454,164.4 480,196.9 506,210.0 532,213.3 558,231.5 584,249.0 610,234.9 636,217.9 662,226.4 688,246.0" fill="none" stroke="#456f91" stroke-width="3"/>
+    <polyline points="90,234.8 116,195.7 142,178.7 168,165.5 194,164.0 220,184.2 246,232.4 272,226.0 298,221.1 324,233.0 350,226.1 376,226.0 402,218.0 428,202.1 454,169.9 480,199.1 506,210.2 532,212.9 558,230.7 584,249.2 610,237.9 636,235.1 662,256.8 688,259.9" fill="none" stroke="#587850" stroke-width="3"/>
+    <polyline points="90,259.2 116,273.0 142,269.0 168,276.5 194,249.9 220,211.2 246,165.1 272,140.1 298,146.0 324,178.2 350,202.7 376,194.0 402,189.7 428,188.7 454,166.3 480,197.3 506,210.0 532,213.3 558,231.5 584,249.2 610,236.0 636,223.8 662,235.8 688,259.3" fill="none" stroke="#ad6b35" stroke-width="3"/>
+    <polyline points="90,238.7 116,241.5 142,230.8 168,223.0 194,195.3 220,152.7 246,105.7 272,85.2 298,98.8 324,159.2 350,190.5 376,191.1 402,195.3 428,202.1 454,176.7 480,197.6 506,210.0 532,213.3 558,231.5 584,249.0 610,239.7 636,236.4 662,240.9 688,259.6" fill="none" stroke="#9a4d3d" stroke-width="3"/>
+    <text x="90" y="340" text-anchor="middle" font-size="11" fill="#6d675d">0</text>
+    <text x="194" y="340" text-anchor="middle" font-size="11" fill="#6d675d">4</text>
+    <text x="298" y="340" text-anchor="middle" font-size="11" fill="#6d675d">8</text>
+    <text x="402" y="340" text-anchor="middle" font-size="11" fill="#6d675d">12</text>
+    <text x="506" y="340" text-anchor="middle" font-size="11" fill="#6d675d">16</text>
+    <text x="610" y="340" text-anchor="middle" font-size="11" fill="#6d675d">20</text>
+    <text x="688" y="340" text-anchor="middle" font-size="11" fill="#6d675d">23 UTC</text>
+    <circle cx="82" cy="26" r="5" fill="#456f91"/><text x="94" y="30" font-size="12" fill="#6d675d">GPS</text>
+    <circle cx="148" cy="26" r="5" fill="#587850"/><text x="160" y="30" font-size="12" fill="#6d675d">BDS</text>
+    <circle cx="214" cy="26" r="5" fill="#ad6b35"/><text x="226" y="30" font-size="12" fill="#6d675d">QZS-Wide</text>
+    <circle cx="318" cy="26" r="5" fill="#9a4d3d"/><text x="330" y="30" font-size="12" fill="#6d675d">QZS-Japan</text>
+  </svg>
+  <p class="caption">GPS 与 QZS-Wide 在 UTC 07-08 达到约 4.4-4.6 m，QZS-Japan 同时段升至约 5.7-6.1 m；BDS 在 UTC 04 附近达到约 4.0 m，随后在 UTC 06-13 保持相对较低水平。</p>
+</div>
+
+逐小时统计对模型调度有两个直接含义。第一，UTC 06-09，即北京时间 14-17 时，GPS/QZS 系列 Klobuchar 的误差方差应适当放大，尤其需要限制 QZS-Japan 在中国区域的使用。第二，BDS 的峰值提前，单纯按“地方时下午统一放大所有模型方差”的策略会高估部分时段、低估部分时段，建议为 BDS 与 GPS/QZS 系列分别设置时间相关方差模型。
+
+## 4. 高度角比 CN0 更适合驱动模型选择
 
 电离层延迟进入接收机观测时，斜距投影会放大低高度角方向的误差。因此，高度角天然会成为模型误差的主导解释变量。数据也支持这一点：`r(|error|, elev)` 约为 -0.40 到 -0.52，而 `r(|error|, cn0)` 只有 -0.04 到 -0.12。
 
 <div class="ion-chart" markdown="0">
-  <div class="ion-chart-title">图 2：不同高度角分箱下的 Klobuchar RMS <span>低高度角差异最大，高高度角逐渐收敛</span></div>
+  <div class="ion-chart-title">图 3：不同高度角分箱下的 Klobuchar RMS <span>低高度角差异最大，高高度角逐渐收敛</span></div>
   <svg viewBox="0 0 760 390" role="img" aria-label="Klobuchar RMS by elevation bin chart">
     <rect x="0" y="0" width="760" height="390" rx="18" fill="#faf8f2"/>
     <line x1="86" y1="310" x2="704" y2="310" stroke="rgba(31,31,27,.22)"/>
@@ -316,12 +360,12 @@ $$
 
 因此，单频接收机进行电离层模型调度时，不宜直接使用 CN0 作为主判据。CN0 主要反映信号质量、遮挡和多径，和电离层模型误差没有直接物理关系。更可靠的调度变量包括高度角、地方时段、区域经纬度，以及不同模型改正量之间的一致性。
 
-## 4. 格网模型维度：DPS 的主体分布更好，但尾部要保护
+## 5. 格网模型维度：DPS 的主体分布更好，但尾部要保护
 
 第二组数据关注定位算法输出：SPS 使用 Klobuchar，DPS 使用 SBAS 播发的 IGP 格网模型。总体结果表明，DPS 的水平、垂直、3D 平均误差和 C95 都优于 SPS。
 
 <div class="ion-chart" markdown="0">
-  <div class="ion-chart-title">图 3：DPS 相对 SPS 的定位误差改善 <span>正值表示 DPS 更优</span></div>
+  <div class="ion-chart-title">图 4：DPS 相对 SPS 的定位误差改善 <span>正值表示 DPS 更优</span></div>
   <svg viewBox="0 0 760 360" role="img" aria-label="DPS improvement over SPS chart">
     <rect x="0" y="0" width="760" height="360" rx="18" fill="#faf8f2"/>
     <line x1="94" y1="286" x2="704" y2="286" stroke="rgba(31,31,27,.22)"/>
@@ -367,7 +411,7 @@ $$
 这说明 SBAS IGP 适合作为增强解使用，前提是接收机具备质量控制和回退机制。主体误差分布改善明显，同时尾部离群也需要被纳入完整性保护。
 
 <div class="ion-chart" markdown="0">
-  <div class="ion-chart-title">图 4：24 小时逐小时 3D 平均误差 <span>DPS 多数时段更低，但并非每小时都占优</span></div>
+  <div class="ion-chart-title">图 5：24 小时逐小时 3D 平均误差 <span>DPS 多数时段更低，但并非每小时都占优</span></div>
   <svg viewBox="0 0 760 390" role="img" aria-label="Hourly 3D mean error for SPS and DPS">
     <rect x="0" y="0" width="760" height="390" rx="18" fill="#faf8f2"/>
     <line x1="80" y1="310" x2="708" y2="310" stroke="rgba(31,31,27,.22)"/>
@@ -395,7 +439,7 @@ $$
   <p class="caption">DPS 在 15/24 个小时的 3D Mean 上优于 SPS；第 6、16、20 小时反而变差，说明还需要可用性和异常保护。</p>
 </div>
 
-## 5. 工程选型：基础改正与格网增强
+## 6. 工程选型：基础改正与格网增强
 
 综合两组证据，可以形成一套面向单频接收机的分层策略：Klobuchar 类模型提供连续可用的基础改正，SBAS IGP 在可用且质量通过时提供更高精度的区域增强，增强解进入定位前需要经过质量门限。
 
@@ -434,15 +478,15 @@ else:
 | DPS/SPS 残差差异 | 捕捉格网异常或模型突变 | 差异过大时冻结 DPS 或降权 |
 | BDS 与 QZS-Wide 改正差 | 低成本电离层异常探测 | 差值过大时膨胀电离层方差 |
 | 高度角 | 模型调度与权重设置 | 低高度角更保守，必要时降权 |
-| 地方时段 | 电离层日变化 | 下午峰值时段提高过程噪声或观测方差 |
+| UTC / 地方时段 | 电离层日变化及模型峰值相位差 | GPS/QZS 系列在 UTC 06-09 膨胀方差，BDS 单独建模 |
 
-## 6. 结论
+## 7. 结论
 
 对单频 GNSS 接收机来说，电离层模型选型应优先服务于伪距误差控制、连续可用性和异常保护。Klobuchar 类模型连续、低成本、易实现，适合作为基础改正来源，但不同广播源的区域适配性差异明显；SBAS IGP 格网模型能带来更大的定位收益，同时需要处理覆盖率、收敛和尾部风险。
 
 基于这两组数据，一个务实结论是：
 
-- Klobuchar 维度：在华东测站，BDS 是总体最优且几乎无偏的模型；低高度角时 QZS-Wide 更值得优先使用；QZS-Japan 不适合作为中国区域通用模型。
+- Klobuchar 维度：在华东测站，BDS 是总体最优且几乎无偏的模型；低高度角时 QZS-Wide 更值得优先使用；QZS-Japan 不适合作为中国区域通用模型。UTC 维度上，GPS/QZS 系列在 UTC 07-08 误差峰值明显，BDS 峰值提前到 UTC 04 左右。
 - 格网模型维度：DPS 相比 SPS 的水平 Mean 改善 23.8%，3D Mean 改善 15.7%，C95 也同步改善；但 DPS 覆盖率约 70%，最大误差更大，必须有质量控制。
 - 接收机策略：DPS 优先，SPS 保底；Klobuchar 内部再按高度角选择 QZS-Wide 或 BDS。
 
