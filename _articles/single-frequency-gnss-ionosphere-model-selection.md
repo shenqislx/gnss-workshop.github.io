@@ -1,10 +1,10 @@
 ---
-title: "单频 GNSS 接收机电离层模型选型：基于单站单日数据的复算分析"
+title: "单频 GNSS 接收机电离层模型选型：Klobuchar 基础改正与 SBAS IGP 增强"
 layout: article
 date: 2026-06-19
 category: "GNSS 定位算法"
 author: "Andy"
-summary: "从 Klobuchar 类广播模型和 SBAS IGP 格网模型两个维度，基于单站单日数据复算误差统计，讨论单频 GNSS 接收机电离层改正模型的工程选型方法。"
+summary: "围绕单频 GNSS 接收机的电离层改正选型，分析 Klobuchar 类广播模型的低成本价值与误差局限，并讨论 SBAS IGP 格网模型对单频定位服务稳定性的改善。"
 ---
 
 <style>
@@ -96,11 +96,11 @@ summary: "从 Klobuchar 类广播模型和 SBAS IGP 格网模型两个维度，�
 
   .article-prose .bar-row {
     display: grid;
-    grid-template-columns: 92px minmax(260px, 1fr) 58px 58px;
+    grid-template-columns: 112px minmax(260px, 1fr) 64px 64px;
     gap: 0.65rem;
     align-items: center;
     margin: 0.48rem 0;
-    min-width: 520px;
+    min-width: 560px;
     color: var(--ion-muted);
     font-size: 0.9rem;
   }
@@ -177,13 +177,6 @@ summary: "从 Klobuchar 类广播模型和 SBAS IGP 格网模型两个维度，�
   .article-prose .wide { background: rgba(182, 129, 46, 0.2); }
   .article-prose .japan { background: rgba(168, 91, 86, 0.18); }
 
-  .article-prose .heat-table td,
-  .article-prose .heat-table th,
-  .article-prose .decision-table td,
-  .article-prose .decision-table th {
-    white-space: nowrap;
-  }
-
   .article-prose .heat-best {
     font-weight: 800;
     color: var(--ion-blue);
@@ -218,61 +211,57 @@ summary: "从 Klobuchar 类广播模型和 SBAS IGP 格网模型两个维度，�
   }
 </style>
 
-# 单频 GNSS 接收机电离层模型选型：基于单站单日数据的复算分析
+# 单频 GNSS 接收机电离层模型选型：Klobuchar 基础改正与 SBAS IGP 增强
 
-单频 GNSS 接收机无法通过双频无电离层组合消除一阶电离层延迟，电离层残差会直接进入伪距观测方程。在电离层活动增强、低仰角观测占比升高、区域模型适配不足或格网改正可用性不稳定时，残余伪距误差达到米级并不罕见。电离层模型选型因此属于单频接收机定位算法中的基础工程问题：可获取性、误差分布、异常保护和连续性需要同时评估。
+单频 GNSS 接收机无法通过双频无电离层组合消除一阶电离层延迟，伪距观测中会保留显著的电离层残差。工程上最容易获得的改正手段是广播 Klobuchar 类模型：它随导航电文播发，计算量很小，不依赖额外通信链路，适合作为单频接收机的基础电离层改正。代价也很清楚：Klobuchar 是低阶经验模型，改正效果有限，残余误差在低仰角、电离层活动较强或区域适配不足时仍可达到米级。
 
-本文仅使用单测站、单日数据重新计算统计量，忽略原分析材料中的结论性描述。文中的结果不用于推出区域、季节或全场景通用结论，重点是给出一套可复用的分析方法，并说明这些数据对单频接收机选型有哪些可靠启示。
+如果接收机具备 SBAS 能力，IGP 电离层格网模型能够提供区域化的格网延迟和质量信息。相比 Klobuchar 的少量广播参数，格网模型携带更直接的空间信息，通常更适合作为单频定位服务的增强改正来源。本文基于单测站单日数据，从 Klobuchar provider 差异、UTC 时段差异、低仰角误差以及 SBAS IGP 对定位服务稳定性的影响四个角度，讨论单频接收机的模型选型。
 
 <div class="summary-panel" markdown="0">
-  <p><strong>技术摘要。</strong>在该样本中，BDS Klobuchar-like 模型的全日 RMS、MAE 和 95% 分位绝对误差最低，平均偏差接近 0 m；QZS-Wide 在最低仰角和部分 UTC 小时表现更好，但整体存在约 -2.31 m 的相对负偏差；GPS 与 QZS-Japan 在若干时段仍可能成为小时最优模型，说明全日均值不能替代分时段评估。</p>
-  <p><strong>对单频接收机的含义。</strong>Klobuchar 类模型适合作为连续基础改正。若接收机同时获得多套广播模型，模型选择应按测站区域、卫星系统、仰角、UTC 时段和残差监控结果进行配置或加权，不宜把单日总体排序固化为跨区域、跨日期的通用规则。</p>
-  <p><strong>SBAS 格网模型。</strong>在定位结果中，DPS 的各自有效历元总体分布优于 SPS；同历元配对后，水平误差仍有改善，垂直均值略有退化，三维均值仅小幅改善。SBAS IGP 可作为精度增强候选，启用条件应包含可用性、完整性标志、残差一致性和回退策略。</p>
+  <p><strong>核心判断。</strong>Klobuchar 类模型的价值在于廉价、连续、易实现；它能给单频接收机提供基础改正，但残余误差仍然明显。该样本中四类 Klobuchar 模型全日 RMS 约 2.66-3.30 m，P95 约 5.35-6.50 m，说明它更适合作为基础层和回退层。</p>
+  <p><strong>provider 与时段差异。</strong>不同 provider 的 Klobuchar 模型表现并不一致。按 UTC 小时统计，BDS 仅在 12/24 小时取得最低 RMS，QZS-Wide、QZS-Japan 和 GPS 也分别在若干小时占优；模型间最大小时 RMS 差值约 3.81 m。</p>
+  <p><strong>格网增强。</strong>SBAS IGP 属于格网电离层模型。使用 SBAS 电离层改正的 DPS 相比使用 Klobuchar 的 SPS，在各自有效历元下 3D Mean 从 2.30 m 降至 1.94 m，3D C95 从 4.90 m 降至 3.97 m。它更适合作为具备服务覆盖和完整性监控时的增强解。</p>
 </div>
 
-## 1. 分析口径与指标定义
+## 1. 选型问题：先保证基础改正，再争取区域增强
 
-Klobuchar 维度评估四套广播电离层模型：GPS、BDS、QZS-Wide、QZS-Japan。误差定义为模型给出的斜向电离层改正量减去 GIM 斜向参考量：
+单频接收机的电离层模型选型可以分成两层。第一层是基础改正，目标是用最低成本降低一阶电离层延迟的主要量级；第二层是增强改正，目标是在区域服务可用时进一步压低残余误差并改善定位服务的一致性。
 
-$$
-e_{iono}=I_{model}^{slant}-I_{GIM}^{slant}
-$$
+Klobuchar 模型位于基础层。它的工程优势非常明确：导航电文即可获得，不增加接收机通信成本，算法实现简单，适合芯片、模组和低功耗设备长期保留。它的精度上限同样明确：模型参数少，空间分辨率有限，对低仰角和电离层时变结构的描述能力不足。
 
-GIM 是后处理参考产品，适合用于模型间相对比较，但不能等同于真实电离层延迟。下文中“偏小”“偏大”“接近无偏”均指相对该参考量而言。该部分每套模型包含 2,446,538 个样本，并按总体、仰角、UTC 小时、卫星系统、CN0 和相关性进行复算。
-
-SBAS 维度评估 SPS 与 DPS 的定位误差。SPS 在这里代表使用 Klobuchar 类模型的单点定位结果，DPS 代表引入 SBAS IGP 格网电离层改正后的定位结果。SPS 有 86,373 个有效历元，DPS 有 60,510 个有效历元；由于 DPS 可用历元少于 SPS，定位收益需要同时查看“各自有效历元总体统计”和“同历元配对统计”。
+SBAS IGP 格网模型位于增强层。它把电离层延迟以格网点形式播发，并伴随完整性相关质量信息。对于单频定位服务，SBAS IGP 的价值不只在于降低某一时刻的误差，还在于减弱 Klobuchar 模型在 provider、UTC 时段和区域适配上的不稳定表现。
 
 <div class="metric-grid" markdown="0">
   <div class="metric-card">
-    <div class="metric-label">Klobuchar 样本</div>
-    <div class="metric-value">244.7万</div>
-    <div class="metric-note">每套模型样本数</div>
+    <div class="metric-label">Klobuchar 成本</div>
+    <div class="metric-value">最低</div>
+    <div class="metric-note">随导航电文获得</div>
   </div>
   <div class="metric-card">
-    <div class="metric-label">DPS 可用率</div>
-    <div class="metric-value">70.1%</div>
-    <div class="metric-note">相对 SPS 有效历元</div>
+    <div class="metric-label">Klobuchar 残差</div>
+    <div class="metric-value">2.66-3.30 m</div>
+    <div class="metric-note">四类模型全日 RMS</div>
   </div>
   <div class="metric-card">
-    <div class="metric-label">配对历元</div>
-    <div class="metric-value">60,510</div>
-    <div class="metric-note">SPS 与 DPS 同时有效</div>
+    <div class="metric-label">低仰角 RMS</div>
+    <div class="metric-value">约 4 m</div>
+    <div class="metric-note">0°-20° 分箱仍明显偏大</div>
   </div>
   <div class="metric-card">
-    <div class="metric-label">UTC 覆盖</div>
-    <div class="metric-value">24 h</div>
-    <div class="metric-note">单日连续统计</div>
+    <div class="metric-label">DPS 3D C95</div>
+    <div class="metric-value">3.97 m</div>
+    <div class="metric-note">低于 SPS 的 4.90 m</div>
   </div>
 </div>
 
-## 2. 全日总体排序：BDS 的综合误差最低，QZS-Wide 的离散度最低
+## 2. Klobuchar 是廉价基础模型，但改正效果有限
 
-全日总体统计显示，BDS Klobuchar-like 的 RMS 为 2.66 m、MAE 为 2.17 m、95% 分位绝对误差为 5.35 m，均为四套模型中最低。它的平均偏差为 -0.03 m，说明该样本中 BDS 的全日正负误差抵消较充分。不过 BDS 的标准差为 2.66 m，高于其他模型，表明“均值接近 0 m”并不等于单历元误差小。
+以 GIM 斜向电离层产品作为参考量，该样本中四类 Klobuchar 模型的全日 RMS 分布在 2.66-3.30 m 之间，95% 分位绝对误差分布在 5.35-6.50 m 之间。BDS Klobuchar-like 在全日 RMS、MAE 和 P95 上最低，QZS-Wide 的标准差最低但存在约 -2.31 m 的平均偏差，GPS 和 QZS-Japan 的残余误差更高。
 
-QZS-Wide 的 RMS 为 2.77 m，略高于 BDS，但标准差只有 1.54 m，是四套模型中最低；同时平均偏差为 -2.31 m，说明它在该测站该日呈现较稳定的相对负偏差。GPS 的平均偏差为 -2.07 m，RMS 为 2.92 m；QZS-Japan 的 RMS、MAE 和 95% 分位绝对误差最高。
+这组数据说明 Klobuchar 模型可以显著优于完全不做电离层建模的单频伪距解算状态，但它并不能把电离层误差压到可忽略水平。对算法实现而言，Klobuchar 应承担“基础改正”和“连续回退”的职责；对精度敏感的单频定位服务，还需要额外的区域增强信息或更保守的残差定权。
 
 <div class="chart-panel" markdown="0">
-  <div class="chart-title">图 1  全日总体误差对比 <span>单位：m；条形为 RMS，右侧为 P95</span></div>
+  <div class="chart-title">图 1  Klobuchar provider 的全日误差水平 <span>单位：m；条形为 RMS，右侧为 P95</span></div>
   <div class="bar-row">
     <div>BDS</div>
     <div class="bar-track"><span class="bar-fill" style="width: 40.9%"></span></div>
@@ -297,41 +286,24 @@ QZS-Wide 的 RMS 为 2.77 m，略高于 BDS，但标准差只有 1.54 m，是四
     <div class="bar-value">3.30</div>
     <div class="bar-value">6.50</div>
   </div>
-  <p class="caption">P95 为绝对误差 95% 分位。BDS 的综合分位误差最低，QZS-Wide 的误差离散度最低但偏差方向明显。</p>
+  <p class="caption">四类模型均保留米级残差。BDS 在该单站单日样本中综合误差最低，但这一排序需要在目标区域和目标时段复核。</p>
 </div>
 
-| 模型 | Mean | STD | RMS | MAE | P50 | P95 |
-|---|---:|---:|---:|---:|---:|---:|
-| GPS | -2.07 | 2.07 | 2.92 | 2.32 | 1.94 | 6.06 |
-| BDS | -0.03 | 2.66 | 2.66 | 2.17 | 1.90 | 5.35 |
-| QZS-Wide | -2.31 | 1.54 | 2.77 | 2.31 | 1.93 | 5.63 |
-| QZS-Japan | -2.82 | 1.71 | 3.30 | 2.82 | 2.27 | 6.50 |
+| Provider | Mean | STD | RMS | MAE | P95 |
+|---|---:|---:|---:|---:|---:|
+| GPS | -2.07 | 2.07 | 2.92 | 2.32 | 6.06 |
+| BDS | -0.03 | 2.66 | 2.66 | 2.17 | 5.35 |
+| QZS-Wide | -2.31 | 1.54 | 2.77 | 2.31 | 5.63 |
+| QZS-Japan | -2.82 | 1.71 | 3.30 | 2.82 | 6.50 |
 
-**选型含义：**全日总体指标支持把 BDS 作为该测站该日的主要候选模型，但不能只看平均偏差。QZS-Wide 的低离散度适合进入候选集，尤其需要结合低仰角和分时段表现进一步判断。QZS-Japan 在全日总体上不占优，但分时段仍有局部表现，直接排除会损失对模型时变性的认识。
+## 3. provider 与 UTC 时段会显著改变 Klobuchar 表现
 
-## 3. 仰角维度：低仰角与中高仰角呈现不同模型排序
+Klobuchar provider 的差异不能只看全日平均值。按 UTC 小时统计，四类模型的误差峰值和低误差时段并不同步。BDS 在 12 个小时取得最低 RMS，QZS-Wide 在 5 个小时最低，QZS-Japan 在 4 个小时最低，GPS 在 3 个小时最低。UTC 7 h 的模型间 RMS 差值约 3.81 m，是全日差异最大的小时。
 
-按仰角分箱后，模型排序出现明显变化。0°-10° 仰角内，QZS-Wide 的 RMS 为 3.93 m，低于 GPS、BDS 和 QZS-Japan；从 10° 开始，BDS 在所有仰角分箱中取得最低 RMS。误差随仰角升高整体下降，符合斜向电离层延迟映射函数的基本规律。
-
-| 仰角分箱 | GPS RMS | BDS RMS | QZS-Wide RMS | QZS-Japan RMS | 分箱最低 |
-|---|---:|---:|---:|---:|---|
-| 0°-10° | 4.34 | 4.67 | <span class="heat-best">3.93</span> | 4.61 | QZS-Wide |
-| 10°-20° | 4.65 | <span class="heat-best">4.07</span> | 4.17 | 4.82 | BDS |
-| 20°-30° | 3.46 | <span class="heat-best">3.04</span> | 3.27 | 3.88 | BDS |
-| 30°-45° | 2.60 | <span class="heat-best">2.31</span> | 2.57 | 3.10 | BDS |
-| 45°-60° | 2.09 | <span class="heat-best">1.81</span> | 2.12 | 2.58 | BDS |
-| 60°-90° | 1.63 | <span class="heat-best">1.53</span> | 1.72 | 2.10 | BDS |
-
-把卫星系统纳入分箱后，结论更细。BDS 在 18 个“卫星系统 × 仰角”分箱中的 13 个分箱 RMS 最低，按样本量加权覆盖约 742 万个模型-观测组合；QZS-Wide 在 GPS 与 BDS 卫星的 0°-20° 低仰角分箱占优；GPS 模型只在 GPS 卫星 45°-60° 分箱占优。
-
-**选型含义：**仰角是 Klobuchar 类模型选型与定权的核心变量。该样本支持一种工程做法：中高仰角以 BDS 作为主要候选，低仰角保留 QZS-Wide 候选，并对低仰角观测持续采用更保守的随机模型。该做法仍需要在目标区域、多日和不同电离层活动水平下复核。
-
-## 4. UTC 维度：全日排序会掩盖明显的时段差异
-
-分 UTC 小时统计后，四套模型没有形成单一支配关系。BDS 在 12 个小时 RMS 最低，QZS-Wide 在 5 个小时最低，QZS-Japan 在 4 个小时最低，GPS 在 3 个小时最低。模型间 RMS 差值在 UTC 6-8 h 附近达到 3 m 以上，而在 UTC 15-19 h 多数小时收敛到 0.1 m 以内。
+这意味着单频接收机如果可以获得多套 Klobuchar 参数，provider 的选择和定权应结合时间、区域和残差表现进行验证。全日综合最好的 provider，在特定 UTC 时段未必表现最好；某个 provider 在全日平均上落后，也可能在局部时段给出较低 RMS。工程上更稳妥的做法是把 provider 作为模型状态的一部分纳入监控，而不能只保存一个固定排序。
 
 <div class="chart-panel" markdown="0">
-  <div class="chart-title">图 2  每个 UTC 小时的最低 RMS 模型 <span>颜色表示该小时 RMS 最低的模型</span></div>
+  <div class="chart-title">图 2  每个 UTC 小时 RMS 最低的 Klobuchar provider <span>颜色表示该小时最低 RMS 模型</span></div>
   <div class="legend">
     <span><i class="gps"></i>GPS</span>
     <span><i class="bds"></i>BDS</span>
@@ -364,36 +336,79 @@ QZS-Wide 的 RMS 为 2.77 m，略高于 BDS，但标准差只有 1.54 m，是四
     <div class="utc-cell bds"><b>22</b>BDS</div>
     <div class="utc-cell bds"><b>23</b>BDS</div>
   </div>
-  <p class="caption">UTC 小时统计按同一参考口径计算。该图强调模型表现的时变性，不用于制定固定 UTC 切换门限。</p>
+  <p class="caption">该图只描述单站单日样本的时段差异。它支持“需要按 UTC/区域验证 provider 表现”的工程判断，不支持固定小时切换规则。</p>
 </div>
 
-| 统计项 | 结果 |
+| UTC 维度 | 数据表现 |
 |---|---|
 | 最低 RMS 小时数 | BDS 12 h，QZS-Wide 5 h，QZS-Japan 4 h，GPS 3 h |
-| 最大模型间 RMS 差值 | UTC 7 h，约 3.81 m |
-| 高差值时段 | UTC 6-8 h 差值均超过 3 m |
-| 高收敛时段 | UTC 15-19 h 多数小时模型间差值低于 0.1 m |
-| 单模型峰值 | QZS-Japan 在 UTC 7 h 达到 6.09 m；GPS 在 UTC 8 h 达到 4.63 m；QZS-Wide 在 UTC 7 h 达到 4.60 m；BDS 在 UTC 4 h 达到 3.95 m |
+| 最大模型间差值 | UTC 7 h，约 3.81 m |
+| 模型峰值 | QZS-Japan UTC 7 h 约 6.09 m；GPS UTC 8 h 约 4.63 m；QZS-Wide UTC 7 h 约 4.60 m；BDS UTC 4 h 约 3.95 m |
+| 工程含义 | provider、UTC、本地时、电离层活动水平和区域位置需要共同参与模型验证 |
 
-**选型含义：**UTC 维度对模型选型有实质影响。单频接收机若具备多模型输入，不宜只保存全日或全局模型排序；更稳妥的做法是把 UTC、本地时、电离层活动指标、仰角和卫星系统纳入模型残差监控或随机模型。该样本只能说明时段差异存在，不能支持固定小时切换策略。
+## 4. 低仰角下 Klobuchar 残差明显偏大
 
-## 5. CN0 与相关性：信号强度不能单独解释模型误差
+低仰角观测的电离层斜向延迟更大，多路径和遮挡风险也更高。该样本中，0°-10° 仰角分箱的最佳 RMS 仍为 3.93 m，10°-20° 分箱的最佳 RMS 为 4.07 m；到 60°-90° 分箱，最佳 RMS 降至 1.53 m。这个变化符合斜向映射函数的基本规律，也说明低仰角下仅依赖 Klobuchar 模型很难获得稳定的伪距改正效果。
 
-相关性统计显示，绝对误差与仰角呈中等负相关，相关系数约为 -0.40 到 -0.52；与 CN0 的相关性较弱，绝对值大多低于 0.13；与 GIM VTEC 的相关性在不同模型间差异较大，QZS-Japan 和 QZS-Wide 的绝对误差随 GIM VTEC 增大而上升更明显。
+因此，低仰角观测的处理不应只依靠切换 provider。更合理的策略包括提高电离层残差方差、降低低仰角观测权重、结合残差一致性进行粗差检测，并在 SBAS IGP 可用时使用格网改正作为增强来源。
 
-| 变量 | GPS r(abs err) | BDS r(abs err) | QZS-Wide r(abs err) | QZS-Japan r(abs err) |
-|---|---:|---:|---:|---:|
-| 仰角 | -0.42 | -0.52 | -0.40 | -0.44 |
-| CN0 | -0.05 | -0.12 | -0.04 | -0.06 |
-| GIM VTEC | 0.39 | -0.10 | 0.46 | 0.71 |
+| 仰角分箱 | GPS RMS | BDS RMS | QZS-Wide RMS | QZS-Japan RMS | 分箱最低 |
+|---|---:|---:|---:|---:|---|
+| 0°-10° | 4.34 | 4.67 | <span class="heat-best">3.93</span> | 4.61 | QZS-Wide |
+| 10°-20° | 4.65 | <span class="heat-best">4.07</span> | 4.17 | 4.82 | BDS |
+| 20°-30° | 3.46 | <span class="heat-best">3.04</span> | 3.27 | 3.88 | BDS |
+| 30°-45° | 2.60 | <span class="heat-best">2.31</span> | 2.57 | 3.10 | BDS |
+| 45°-60° | 2.09 | <span class="heat-best">1.81</span> | 2.12 | 2.58 | BDS |
+| 60°-90° | 1.63 | <span class="heat-best">1.53</span> | 1.72 | 2.10 | BDS |
 
-**选型含义：**CN0 更适合进入观测噪声、遮挡、多路径和粗差检测模型，不适合作为电离层模型本身的主要选择变量。电离层模型选择更应依赖区域验证、仰角、时间、电离层活动水平、残差一致性和完整性信息。
+## 5. SBAS IGP 是格网模型，增强效果明显高于 Klobuchar 基础改正
 
-## 6. SBAS IGP 定位效果：非配对总体改善明显，配对收益更有限
+SBAS IGP 电离层模型以格网点形式描述区域电离层延迟，并提供与完整性相关的质量信息。它的信息结构比 Klobuchar 的少量经验参数更丰富，尤其适合服务覆盖区域内的单频定位增强。对于接收机算法，SBAS IGP 通常作为受控增强源使用，在格网覆盖、完整性标志和残差检查满足条件时提高电离层改正质量。
 
-各自有效历元总体统计中，DPS 的水平、垂直和三维误差均低于 SPS：3D Mean 从 2.30 m 降至 1.94 m，3D C95 从 4.90 m 降至 3.97 m。但这组统计混合了可用性差异，DPS 只覆盖 SPS 历元的 70.1%，因此它反映的是“各自有效条件下的运行表现”，不能直接解释为同一历元上的因果改善。
+从定位结果看，使用 SBAS 电离层改正数据的 DPS 在各自有效历元下明显优于使用 Klobuchar 的 SPS。水平 Mean 从 1.27 m 降至 0.97 m，3D Mean 从 2.30 m 降至 1.94 m；水平 C95 从 2.91 m 降至 1.92 m，3D C95 从 4.90 m 降至 3.97 m。该统计口径反映了服务可用条件下的实际表现。考虑算法归因时，还需要关注同历元配对统计；配对后水平误差和高分位误差仍有改善，三维平均收益收窄。
 
-| 口径 | 分量 | SPS Mean | DPS Mean | Mean 差异 | SPS C95 | DPS C95 | C95 差异 |
+<div class="chart-panel" markdown="0">
+  <div class="chart-title">图 3  SPS 与 DPS 的全天定位误差对比 <span>单位：m；各自有效历元统计，数值越低越好</span></div>
+  <div class="bar-row">
+    <div>SPS 3D Mean</div>
+    <div class="bar-track"><span class="bar-fill alt" style="width: 47.0%"></span></div>
+    <div class="bar-value">2.30</div>
+    <div class="bar-value"></div>
+  </div>
+  <div class="bar-row">
+    <div>DPS 3D Mean</div>
+    <div class="bar-track"><span class="bar-fill" style="width: 39.6%"></span></div>
+    <div class="bar-value">1.94</div>
+    <div class="bar-value"></div>
+  </div>
+  <div class="bar-row">
+    <div>SPS 3D C95</div>
+    <div class="bar-track"><span class="bar-fill alt" style="width: 100%"></span></div>
+    <div class="bar-value">4.90</div>
+    <div class="bar-value"></div>
+  </div>
+  <div class="bar-row">
+    <div>DPS 3D C95</div>
+    <div class="bar-track"><span class="bar-fill" style="width: 81.0%"></span></div>
+    <div class="bar-value">3.97</div>
+    <div class="bar-value"></div>
+  </div>
+  <div class="bar-row">
+    <div>SPS 小时 STD</div>
+    <div class="bar-track"><span class="bar-fill alt" style="width: 72.0%"></span></div>
+    <div class="bar-value">0.72</div>
+    <div class="bar-value"></div>
+  </div>
+  <div class="bar-row">
+    <div>DPS 小时 STD</div>
+    <div class="bar-track"><span class="bar-fill" style="width: 65.0%"></span></div>
+    <div class="bar-value">0.65</div>
+    <div class="bar-value"></div>
+  </div>
+  <p class="caption">DPS 的 3D Mean 和 C95 均低于 SPS；逐小时 3D Mean 的标准差也略低。DPS 可用历元约为 SPS 的 70.1%，服务启用仍需质量门限和回退策略。</p>
+</div>
+
+| 统计口径 | 分量 | SPS Mean | DPS Mean | Mean 差异 | SPS C95 | DPS C95 | C95 差异 |
 |---|---|---:|---:|---:|---:|---:|---:|
 | 各自有效历元 | H | 1.27 | 0.97 | +23.8% | 2.91 | 1.92 | +33.9% |
 | 各自有效历元 | V | 1.71 | 1.53 | +10.3% | 4.38 | 3.68 | +15.8% |
@@ -402,75 +417,32 @@ QZS-Wide 的 RMS 为 2.77 m，略高于 BDS，但标准差只有 1.54 m，是四
 | 同历元配对 | V | 1.48 | 1.53 | -3.7% | 3.93 | 3.68 | +6.1% |
 | 同历元配对 | 3D | 1.95 | 1.94 | +0.5% | 4.13 | 3.97 | +3.9% |
 
-<div class="chart-panel" markdown="0">
-  <div class="chart-title">图 3  同历元配对后 DPS 相对 SPS 的变化 <span>正值表示 DPS 误差统计更低</span></div>
-  <div class="bar-row">
-    <div>H Mean</div>
-    <div class="bar-track"><span class="bar-fill" style="width: 28.0%"></span></div>
-    <div class="bar-value">+5.6%</div>
-    <div class="bar-value"></div>
-  </div>
-  <div class="bar-row">
-    <div>H C95</div>
-    <div class="bar-track"><span class="bar-fill" style="width: 53.5%"></span></div>
-    <div class="bar-value">+10.7%</div>
-    <div class="bar-value"></div>
-  </div>
-  <div class="bar-row">
-    <div>V Mean</div>
-    <div class="bar-track"><span class="bar-fill alt" style="width: 18.5%"></span></div>
-    <div class="bar-value">-3.7%</div>
-    <div class="bar-value"></div>
-  </div>
-  <div class="bar-row">
-    <div>V C95</div>
-    <div class="bar-track"><span class="bar-fill" style="width: 30.5%"></span></div>
-    <div class="bar-value">+6.1%</div>
-    <div class="bar-value"></div>
-  </div>
-  <div class="bar-row">
-    <div>3D Mean</div>
-    <div class="bar-track"><span class="bar-fill" style="width: 2.5%"></span></div>
-    <div class="bar-value">+0.5%</div>
-    <div class="bar-value"></div>
-  </div>
-  <div class="bar-row">
-    <div>3D C95</div>
-    <div class="bar-track"><span class="bar-fill" style="width: 19.5%"></span></div>
-    <div class="bar-value">+3.9%</div>
-    <div class="bar-value"></div>
-  </div>
-  <p class="caption">配对统计更适合判断同一历元启用 SBAS IGP 后的变化。水平分量改善较清晰，垂直均值未改善，三维平均误差变化很小。</p>
-</div>
+## 6. DPS 的全天服务表现更稳定，但仍需完整性和回退
 
-小时级统计进一步显示，DPS 并非每个时段都改善 3D 平均误差。按各自有效历元统计，DPS 在 16/24 个小时 3D Mean 低于 SPS；按同历元配对统计，DPS 在 12/24 个小时 3D Mean 低于 SPS。第 19、20、16、21、6、4、15 小时改善较明显；第 0、3、23、13、5、14 小时出现明显退化。由于这些小时同时存在 DPS 可用样本数变化，解释时需要把格网可用性和定位误差一起看。
+Klobuchar 模型误差在 UTC 维度上呈现明显 provider 差异和时段差异。定位服务层面，DPS 引入 SBAS IGP 后，在有效服务历元下给出的全天误差分布更低：DPS 3D Mean 低于 SPS，3D C95 也低于 SPS；逐小时 3D Mean 的标准差从约 0.72 m 降至约 0.65 m，16/24 个小时的 DPS 3D Mean 低于 SPS。
 
-**选型含义：**SBAS IGP 在该样本中能够降低水平误差和高分位尾部误差，但单日配对结果不支持“启用后所有分量稳定改善”的结论。对单频接收机而言，SBAS IGP 更适合作为受控增强源：当 IGP 覆盖、完整性标志、观测残差和解算状态满足条件时提高权重；当格网不可用、残差异常或几何条件变差时，回退到 Klobuchar 类基础改正。
+这说明 SBAS IGP 有助于削弱 Klobuchar 基础模型在不同 UTC 时段、电离层活跃程度和 provider 适配差异下带来的服务波动。该结论仍然需要保留边界：DPS 并非每小时都优于 SPS，个别小时仍会出现退化；DPS 可用历元少于 SPS，也说明格网增强服务需要可用性、完整性标志、残差一致性和解算稳定性共同约束。
 
-## 7. 面向单频接收机的可复用选型方法
+| 指标 | SPS | DPS | 解释 |
+|---|---:|---:|---|
+| 有效历元 | 86,373 | 60,510 | DPS 覆盖约为 SPS 的 70.1% |
+| 3D Mean | 2.30 m | 1.94 m | DPS 有效历元下平均误差更低 |
+| 3D C95 | 4.90 m | 3.97 m | DPS 尾部误差更低 |
+| 逐小时 3D Mean 标准差 | 0.72 m | 0.65 m | DPS 小时波动略低 |
+| 3D Mean 较低小时数 | - | 16/24 | DPS 多数小时低于 SPS |
 
-电离层模型选型应从“可获取、可验证、可回退”三个层面实施。单站单日数据可以建立局部经验，但不能替代长期区域验证。
+## 7. 面向单频接收机的工程选型建议
 
-| 工程问题 | 建议分析维度 | 本样本给出的启示 |
-|---|---|---|
-| 基础模型如何选 | 总体 RMS、MAE、P95、平均偏差、标准差 | BDS 综合指标最低，但 QZS-Wide 低离散度值得保留为候选 |
-| 低仰角如何处理 | 仰角分箱、卫星系统分箱、残差分布 | 0°-10° 内 QZS-Wide RMS 最低，低仰角仍应采用保守定权 |
-| 是否需要分时段策略 | UTC 小时 RMS、模型间差值、峰值时段 | 最优模型随 UTC 小时变化，固定全日排序会丢失信息 |
-| CN0 能否参与选择 | CN0 分箱、CN0 与绝对误差相关性 | CN0 与模型误差相关性弱，更适合观测定权和粗差检测 |
-| SBAS IGP 是否启用 | 各自有效统计、同历元配对统计、小时覆盖率 | 有增强潜力，但配对收益有限且时段差异明显 |
-| 如何控制风险 | 完整性标志、残差一致性、回退路径 | SBAS IGP 应受控启用，Klobuchar 基础改正需要持续保留 |
+单频接收机的电离层模型选型建议采用分层策略。
 
-推荐的工程流程如下：
-
-1. 以可持续获取的 Klobuchar 类模型作为基础电离层改正，保证单频接收机在无增强服务时仍有连续改正能力。
-2. 在目标区域采集多日、多电离层活动水平的数据，按模型、卫星系统、仰角、UTC、本地时、VTEC 水平和定位状态复算误差。
-3. 使用 RMS、MAE、P95、平均偏差和标准差共同评价模型。平均偏差用于识别系统性偏差，RMS 与 P95 用于评价定位误差风险，标准差用于评价模型稳定性。
-4. 将模型选择与随机模型耦合。低仰角、高残差时段和模型分歧大的时段应提高电离层残差方差，不能只切换模型名称。
-5. 具备 SBAS 能力时，把 IGP 格网改正纳入增强候选，并同时检查 GIVE/完整性标志、格网覆盖、残差一致性、解算稳定性和告警状态。
-6. 对增强模型设置降权和回退机制。DPS 与 SPS 或 Klobuchar 解之间的差异可作为监控量，异常时回到基础改正或降低增强权重。
+1. Klobuchar 作为基础改正长期保留。它成本最低、可获得性最好，适合所有单频接收机作为基础电离层改正和增强服务不可用时的回退模型。
+2. Klobuchar provider 需要按区域和时段验证。不同 provider 在全日、UTC 小时和仰角分箱下表现不同，单站单日数据只能形成局部经验，产品策略需要多站、多日和不同电离层活动水平验证。
+3. 低仰角观测需要更保守的随机模型。0°-20° 分箱下即使选择较优 provider，RMS 仍约 4 m；低仰角观测应降低权重，并结合残差检测和质量控制。
+4. SBAS IGP 作为单频增强解优先考虑。格网模型在服务覆盖区内比 Klobuchar 提供更丰富的区域电离层信息，适合用于 DPS 一类单频增强定位服务。
+5. DPS 需要完整性、可用性和回退机制。SBAS IGP 增强能够改善总体误差分布和全天一致性，但格网缺失、质量标志异常、残差不一致或几何条件变差时，应降权或回退到 Klobuchar/SPS。
 
 ## 8. 结论
 
-该单站单日数据支持以下较稳健的判断：Klobuchar 类模型仍是单频 GNSS 接收机最现实的基础电离层改正来源；在本样本中，BDS 的全日综合误差最低，QZS-Wide 在低仰角和部分 UTC 时段具有优势；UTC 时段、仰角和卫星系统会显著改变模型排序；CN0 不能单独解释电离层模型误差；SBAS IGP 具备增强潜力，但其收益需要按同历元配对和可用性共同评估。
+Klobuchar 类模型是单频 GNSS 接收机改善电离层延迟最廉价、最容易获取的模型。它适合承担基础改正任务，但该样本中的 RMS 和 P95 表明其残余误差仍处于米级，低仰角下尤其明显。不同 provider 的表现差异也较大，UTC 小时统计显示最优模型随时段变化，单频接收机需要把 provider、时段、仰角和残差监控纳入模型选型。
 
-因此，单频接收机的模型选型不宜依赖单一总体排名。更可靠的做法是建立可复算的本地验证流程：用 Klobuchar 类模型保证连续性，用分箱统计确定候选模型和随机模型，用 SBAS IGP 提供受控增强，并用完整性与残差监控决定启用、降权和回退。
+SBAS IGP 属于格网电离层模型，提供了比 Klobuchar 更丰富的区域改正信息。使用 SBAS 电离层改正数据的 DPS，相比使用 Klobuchar 的 SPS，在有效服务历元下表现出更低的 3D Mean 和 3D C95，全天逐小时误差也略更收敛。工程上更合理的路径是：Klobuchar 保证低成本连续改正，SBAS IGP 在覆盖和质量满足条件时提供增强，质量监控决定启用、降权和回退。
