@@ -381,7 +381,7 @@ QZS-Wide 的 RMS 为 2.77 m，略高于 BDS，但标准差只有 1.54 m，是四
 
 相关性统计显示，绝对误差与仰角呈中等负相关，相关系数约为 -0.40 到 -0.52；与 CN0 的相关性较弱，绝对值大多低于 0.13；与 GIM VTEC 的相关性在不同模型间差异较大，QZS-Japan 和 QZS-Wide 的绝对误差随 GIM VTEC 增大而上升更明显。
 
-| 变量 | GPS r(|err|) | BDS r(|err|) | QZS-Wide r(|err|) | QZS-Japan r(|err|) |
+| 变量 | GPS r(abs err) | BDS r(abs err) | QZS-Wide r(abs err) | QZS-Japan r(abs err) |
 |---|---:|---:|---:|---:|
 | 仰角 | -0.42 | -0.52 | -0.40 | -0.44 |
 | CN0 | -0.05 | -0.12 | -0.04 | -0.06 |
