@@ -224,7 +224,7 @@ summary: "从 Klobuchar 类广播模型和 SBAS IGP 格网模型两个维度，�
 
 本文仅使用单测站、单日数据重新计算统计量，忽略原分析材料中的结论性描述。文中的结果不用于推出区域、季节或全场景通用结论，重点是给出一套可复用的分析方法，并说明这些数据对单频接收机选型有哪些可靠启示。
 
-<div class="summary-panel">
+<div class="summary-panel" markdown="0">
   <p><strong>技术摘要。</strong>在该样本中，BDS Klobuchar-like 模型的全日 RMS、MAE 和 95% 分位绝对误差最低，平均偏差接近 0 m；QZS-Wide 在最低仰角和部分 UTC 小时表现更好，但整体存在约 -2.31 m 的相对负偏差；GPS 与 QZS-Japan 在若干时段仍可能成为小时最优模型，说明全日均值不能替代分时段评估。</p>
   <p><strong>对单频接收机的含义。</strong>Klobuchar 类模型适合作为连续基础改正。若接收机同时获得多套广播模型，模型选择应按测站区域、卫星系统、仰角、UTC 时段和残差监控结果进行配置或加权，不宜把单日总体排序固化为跨区域、跨日期的通用规则。</p>
   <p><strong>SBAS 格网模型。</strong>在定位结果中，DPS 的各自有效历元总体分布优于 SPS；同历元配对后，水平误差仍有改善，垂直均值略有退化，三维均值仅小幅改善。SBAS IGP 可作为精度增强候选，启用条件应包含可用性、完整性标志、残差一致性和回退策略。</p>
@@ -242,7 +242,7 @@ GIM 是后处理参考产品，适合用于模型间相对比较，但不能等�
 
 SBAS 维度评估 SPS 与 DPS 的定位误差。SPS 在这里代表使用 Klobuchar 类模型的单点定位结果，DPS 代表引入 SBAS IGP 格网电离层改正后的定位结果。SPS 有 86,373 个有效历元，DPS 有 60,510 个有效历元；由于 DPS 可用历元少于 SPS，定位收益需要同时查看“各自有效历元总体统计”和“同历元配对统计”。
 
-<div class="metric-grid">
+<div class="metric-grid" markdown="0">
   <div class="metric-card">
     <div class="metric-label">Klobuchar 样本</div>
     <div class="metric-value">244.7万</div>
@@ -271,7 +271,7 @@ SBAS 维度评估 SPS 与 DPS 的定位误差。SPS 在这里代表使用 Klobuc
 
 QZS-Wide 的 RMS 为 2.77 m，略高于 BDS，但标准差只有 1.54 m，是四套模型中最低；同时平均偏差为 -2.31 m，说明它在该测站该日呈现较稳定的相对负偏差。GPS 的平均偏差为 -2.07 m，RMS 为 2.92 m；QZS-Japan 的 RMS、MAE 和 95% 分位绝对误差最高。
 
-<div class="chart-panel">
+<div class="chart-panel" markdown="0">
   <div class="chart-title">图 1  全日总体误差对比 <span>单位：m；条形为 RMS，右侧为 P95</span></div>
   <div class="bar-row">
     <div>BDS</div>
@@ -330,7 +330,7 @@ QZS-Wide 的 RMS 为 2.77 m，略高于 BDS，但标准差只有 1.54 m，是四
 
 分 UTC 小时统计后，四套模型没有形成单一支配关系。BDS 在 12 个小时 RMS 最低，QZS-Wide 在 5 个小时最低，QZS-Japan 在 4 个小时最低，GPS 在 3 个小时最低。模型间 RMS 差值在 UTC 6-8 h 附近达到 3 m 以上，而在 UTC 15-19 h 多数小时收敛到 0.1 m 以内。
 
-<div class="chart-panel">
+<div class="chart-panel" markdown="0">
   <div class="chart-title">图 2  每个 UTC 小时的最低 RMS 模型 <span>颜色表示该小时 RMS 最低的模型</span></div>
   <div class="legend">
     <span><i class="gps"></i>GPS</span>
@@ -402,7 +402,7 @@ QZS-Wide 的 RMS 为 2.77 m，略高于 BDS，但标准差只有 1.54 m，是四
 | 同历元配对 | V | 1.48 | 1.53 | -3.7% | 3.93 | 3.68 | +6.1% |
 | 同历元配对 | 3D | 1.95 | 1.94 | +0.5% | 4.13 | 3.97 | +3.9% |
 
-<div class="chart-panel">
+<div class="chart-panel" markdown="0">
   <div class="chart-title">图 3  同历元配对后 DPS 相对 SPS 的变化 <span>正值表示 DPS 误差统计更低</span></div>
   <div class="bar-row">
     <div>H Mean</div>
