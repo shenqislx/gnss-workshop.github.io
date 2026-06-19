@@ -164,11 +164,11 @@ summary: "基于 24 小时实测数据，从广播 Klobuchar 类模型误差和 
 
 工程实现中，Klobuchar 类广播模型最容易获取，计算量低、覆盖连续，适合作为单频接收机的基础电离层改正来源；具备 SBAS 能力时，IGP 格网模型可以提供更强的区域增强信息，但需要同时考虑可用性、收敛状态和异常保护。本文基于两个 24 小时数据集，从可获取性、改正精度和定位收益三个角度，给出单频接收机的模型选型建议。
 
-- 基础广播模型：利用 GPS、BDS、QZS-Wide、QZS-Japan 四种 Klobuchar 类模型的误差统计，确定单频接收机的默认改正源。
+- 基础广播模型：利用 GPS、BDS、QZS-Wide、QZS-Japan 四种 Klobuchar 类模型的误差统计，确定单频接收机的基础改正候选。
 - SBAS 格网增强：利用 DPS 与 SPS 的定位结果统计，评估 SBAS IGP 可用时的定位增益和工程风险。
 
 <div class="lead-card">
-  <strong>结论先行：</strong>Klobuchar 类模型适合作为单频接收机的基础改正方案。华东测站数据表明，低高度角优先 QZS-Wide，中高高度角优先 BDS；SBAS IGP 可用且质量通过时，DPS 在水平和 3D 定位上较 SPS 有更大收益，但需要配套覆盖率、重收敛和尾部离群监控。
+  <strong>结论先行：</strong>Klobuchar 类模型适合作为单频接收机的连续基础改正。华东测站单日数据表明，QZS-Wide 可作为低高度角候选，BDS 在总体 RMS 和平均偏差上表现更稳；SBAS IGP 可用、完整性标志有效且残差监控通过时，可作为增强候选纳入定位解算，但需要保留 Klobuchar/SPS 回退路径。
 </div>
 
 ## 1. 评估口径：围绕单频接收机选型
@@ -177,7 +177,7 @@ summary: "基于 24 小时实测数据，从广播 Klobuchar 类模型误差和 
 
 | 目录 | 评估对象 | 参考/输出 | 对选型的作用 |
 |---|---|---|---|
-| `tmp/Klobuchar` | GPS / BDS / QZS-Wide / QZS-Japan 四类 Klobuchar 改正 | 以 GIM slant 改正量为参考 | 确定单频基础改正模型的优先级 |
+| `tmp/Klobuchar` | GPS / BDS / QZS-Wide / QZS-Japan 四类 Klobuchar 改正 | 以 GIM slant 改正量为参考 | 形成单频基础改正模型的候选排序 |
 | `tmp/analysis` | SPS 与 DPS 定位结果 | 输出 H / V / 3D 定位误差 | 评估 SBAS IGP 相对 Klobuchar SPS 的定位增益 |
 
 Klobuchar 数据来自 2026-05-23 UTC 24 小时，测站约 31.16°N / 121.55°E，每个模型 2,446,538 个样本，总计 9,786,152 个观测。DPS/SPS 数据来自 2026-06-02 到 2026-06-03 的 24 小时静态定位测试，SPS 有 86,373 个有效历元，DPS 有 60,510 个有效历元。
@@ -194,7 +194,7 @@ $$
 e_{iono} = I_{model}^{slant} - I_{GIM}^{slant}
 $$
 
-因此负均值意味着模型给出的电离层延迟小于 GIM 参考，也就是欠改正。
+GIM 在这里作为后处理参考产品，用于比较不同广播模型的相对误差，并不等同于真实电离层延迟。因此，文中“欠改正”“接近无偏”等表述均指相对 GIM slant 参考而言；负均值表示模型给出的电离层延迟小于 GIM 参考。
 
 <div class="metric-grid" markdown="0">
   <div class="metric-card">
@@ -258,14 +258,14 @@ $$
     <rect x="610" y="50" width="30" height="16" rx="8" fill="rgba(255,255,255,.7)" stroke="rgba(31,31,27,.1)"/>
     <text x="646" y="63" font-size="12" fill="#6d675d">标签 = Mean 偏差</text>
   </svg>
-  <p class="caption">GPS、QZS-Wide、QZS-Japan 存在约 2 m 量级欠改正；BDS 的均值偏差接近 0。</p>
+  <p class="caption">相对 GIM 参考，GPS、QZS-Wide、QZS-Japan 存在约 2 m 量级负偏差；BDS 的均值偏差接近 0。</p>
 </div>
 
-总体统计显示：BDS 的 RMS 最低，且均值几乎为零；QZS-Wide 与 GPS 的 RMS 差距不大，但二者都明显欠改正；QZS-Japan 在这个经度范围下表现最差。由此可见，QZSS 针对日本区域优化的模型不宜直接外推为中国区域的通用改正源。
+总体统计显示：BDS 的 RMS 最低，且相对 GIM 的均值接近零；QZS-Wide 与 GPS 的 RMS 差距不大，但二者都有明显负偏差；QZS-Japan 在该华东测站、该日数据下误差最大。由此可见，QZSS 针对日本区域优化的模型不宜在该类区域场景中默认使用，若要扩展到更大区域，仍需多站、多日和不同电离层活动条件下验证。
 
 ## 3. UTC 时段：不同模型的误差峰值并不同步
 
-Klobuchar 类模型的误差具有明显日变化特征。单频接收机在进行模型选型和方差建模时，应考虑 UTC 时段和本地太阳时对电离层活动的影响。对华东测站而言，GPS、QZS-Wide、QZS-Japan 的 RMS 峰值集中在 UTC 07-08，对应北京时间 15-16 时；BDS 的峰值出现在 UTC 04，对应北京时间 12 时左右，较 GPS/QZS 系列提前约 3-4 小时。
+Klobuchar 类模型的误差具有明显日变化特征。单频接收机在进行模型选型和方差建模时，需要关注 UTC 时段、本地太阳时与模型播发区域之间的共同影响。对华东测站 2026-05-23 的数据而言，GPS、QZS-Wide、QZS-Japan 的 RMS 峰值集中在 UTC 07-08，对应北京时间 15-16 时；BDS 的峰值出现在 UTC 04，对应北京时间 12 时左右，较 GPS/QZS 系列提前约 3-4 小时。
 
 <div class="ion-chart" markdown="0">
   <div class="ion-chart-title">图 2：不同 UTC 时段下的 Klobuchar RMS <span>GPS/QZS 下午峰值明显，BDS 峰值相位提前</span></div>
@@ -305,7 +305,7 @@ Klobuchar 类模型的误差具有明显日变化特征。单频接收机在进�
   <p class="caption">GPS 与 QZS-Wide 在 UTC 07-08 达到约 4.4-4.6 m，QZS-Japan 同时段升至约 5.7-6.1 m；BDS 在 UTC 04 附近达到约 4.0 m，随后在 UTC 06-13 保持相对较低水平。</p>
 </div>
 
-逐小时统计对模型调度有两个直接含义。第一，UTC 06-09，即北京时间 14-17 时，GPS/QZS 系列 Klobuchar 的误差方差应适当放大，尤其需要限制 QZS-Japan 在中国区域的使用。第二，BDS 的峰值提前，单纯按“地方时下午统一放大所有模型方差”的策略会高估部分时段、低估部分时段，建议为 BDS 与 GPS/QZS 系列分别设置时间相关方差模型。
+逐小时统计对模型调度有两个启示。第一，该日该站在 UTC 06-09，即北京时间 14-17 时，GPS/QZS 系列 Klobuchar 的 RMS 明显升高，接收机可在残差监控中提高对这些模型的方差敏感度。第二，BDS 的峰值相位提前，说明固定采用“地方时下午统一放大所有模型方差”的策略可能掩盖模型间差异。更稳妥的做法是把 UTC、本地时、区域位置和模型来源作为方差建模变量，并通过多站多日数据验证具体门限。
 
 ## 4. 高度角比 CN0 更适合驱动模型选择
 
@@ -346,27 +346,28 @@ Klobuchar 类模型的误差具有明显日变化特征。单频接收机在进�
     <circle cx="226" cy="26" r="5" fill="#ad6b35"/><text x="238" y="30" font-size="12" fill="#6d675d">QZS-Wide</text>
     <circle cx="326" cy="26" r="5" fill="#9a4d3d"/><text x="338" y="30" font-size="12" fill="#6d675d">QZS-Japan</text>
   </svg>
-  <p class="caption">高度角低于 20° 时，QZS-Wide 在 GPS/BDS 卫星上更有优势；高度角超过 20° 后，BDS 通常是更稳的选择。</p>
+  <p class="caption">高度角低于 20° 时，QZS-Wide 在 GPS/BDS 卫星上表现较好；高度角升高后，各模型差异收敛，BDS 在多数分箱更稳。</p>
 </div>
 
-由 `best_model.csv` 可以得到更接近工程实现的模型矩阵：
+由 `best_model.csv` 可以得到更接近工程实现的候选矩阵。这里的“推荐”不宜理解为硬切换规则，更适合作为加权、监控或 A/B 验证的初始依据：
 
-| 卫星系统 | 高度角 | 推荐模型 | 解释 |
+| 卫星系统 | 高度角 | 候选模型 | 解释 |
 |---|---:|---|---|
-| GPS / BDS | < 20° | QZS-Wide | 低高度角下 RMS 通常比 BDS/GPS 更低 |
-| GPS / BDS | ≥ 20° | BDS | 中高高度角下 BDS 误差更小且无偏 |
-| QZSS | 全高度角，尤其 ≥10° | BDS | 本测站下 BDS 明显优于 GPS 与 QZS-Japan |
-| 中国大陆通用策略 | 任意 | 避免 QZS-Japan | 区域适配性差，系统性欠改正最大 |
+| GPS / BDS | < 20° | QZS-Wide | 低高度角下 RMS 通常较低，可作为低仰角加权候选 |
+| GPS / BDS | 20-45° | BDS | 中等高度角下 BDS 误差较小，平均偏差也更接近 GIM 参考 |
+| GPS | 45-60° | GPS / BDS 并行验证 | 该分箱中 GPS 原生模型 RMS 最低，提示不宜用单一高度角阈值硬切换 |
+| QZSS | ≥10° | BDS | 本测站下 BDS 在多数分箱 RMS 更低 |
+| 华东测站该日策略 | 任意 | 不默认使用 QZS-Japan | 该站该日相对 GIM 负偏差和 RMS 较大，扩展结论需更多区域数据支撑 |
 
-因此，单频接收机进行电离层模型调度时，不宜直接使用 CN0 作为主判据。CN0 主要反映信号质量、遮挡和多径，和电离层模型误差没有直接物理关系。更可靠的调度变量包括高度角、地方时段、区域经纬度，以及不同模型改正量之间的一致性。
+因此，单频接收机进行电离层模型调度时，不宜直接使用 CN0 作为主判据。CN0 主要反映信号质量、遮挡和多径，和电离层模型误差没有直接物理关系；但它仍然适合用于观测噪声建模、遮挡/多径识别和粗差检测。更可靠的电离层模型调度变量包括高度角、地方时段、区域经纬度，以及不同模型改正量之间的一致性。
 
-## 5. 格网模型维度：DPS 的主体分布更好，但尾部要保护
+## 5. 格网模型维度：DPS 有增强潜力，收益需按配对口径验证
 
-第二组数据关注定位算法输出：SPS 使用 Klobuchar，DPS 使用 SBAS 播发的 IGP 格网模型。总体结果表明，DPS 的水平、垂直、3D 平均误差和 C95 都优于 SPS。
+第二组数据关注定位算法输出：SPS 使用 Klobuchar，DPS 使用 SBAS 播发的 IGP 格网模型。总体分布显示，DPS 在各自有效历元口径下的水平、垂直、3D 平均误差和 C95 均低于 SPS。不过，SPS 有 86,373 个有效历元，DPS 有 60,510 个有效历元，两者并非严格同历元配对；因此，这组总体分布更适合描述“可用解的表现”，不宜直接解释为 DPS 相对 SPS 的因果收益。
 
 <div class="ion-chart" markdown="0">
-  <div class="ion-chart-title">图 4：DPS 相对 SPS 的定位误差改善 <span>正值表示 DPS 更优</span></div>
-  <svg viewBox="0 0 760 360" role="img" aria-label="DPS improvement over SPS chart">
+  <div class="ion-chart-title">图 4：各自有效历元下 DPS 与 SPS 的总体差异 <span>正值表示 DPS 分布更低，非严格配对统计</span></div>
+  <svg viewBox="0 0 760 360" role="img" aria-label="DPS and SPS non-paired distribution difference chart">
     <rect x="0" y="0" width="760" height="360" rx="18" fill="#faf8f2"/>
     <line x1="94" y1="286" x2="704" y2="286" stroke="rgba(31,31,27,.22)"/>
     <line x1="94" y1="226" x2="704" y2="226" stroke="rgba(31,31,27,.08)"/>
@@ -391,24 +392,32 @@ Klobuchar 类模型的误差具有明显日变化特征。单频接收机在进�
     <text x="198" y="318" text-anchor="middle" font-size="13" fill="#1f1f1b">水平 H</text>
     <text x="390" y="318" text-anchor="middle" font-size="13" fill="#1f1f1b">垂直 V</text>
     <text x="582" y="318" text-anchor="middle" font-size="13" fill="#1f1f1b">三维 3D</text>
-    <rect x="550" y="34" width="18" height="10" rx="3" fill="#587850"/><text x="574" y="43" font-size="12" fill="#6d675d">Mean 改善</text>
-    <rect x="638" y="34" width="18" height="10" rx="3" fill="#ad6b35"/><text x="662" y="43" font-size="12" fill="#6d675d">C95 改善</text>
+    <rect x="550" y="34" width="18" height="10" rx="3" fill="#587850"/><text x="574" y="43" font-size="12" fill="#6d675d">Mean 差异</text>
+    <rect x="638" y="34" width="18" height="10" rx="3" fill="#ad6b35"/><text x="662" y="43" font-size="12" fill="#6d675d">C95 差异</text>
   </svg>
-  <p class="caption">DPS 水平方向收益最大：Mean 从 1.27 m 降到 0.97 m，C95 从 2.91 m 降到 1.92 m。</p>
+  <p class="caption">按各自有效历元统计，DPS 水平方向分布更低：Mean 从 1.27 m 降到 0.97 m，C95 从 2.91 m 降到 1.92 m。</p>
 </div>
 
-| 分量 | SPS Mean | DPS Mean | Mean 改善 | SPS C95 | DPS C95 | C95 改善 |
+| 分量 | SPS Mean | DPS Mean | Mean 差异 | SPS C95 | DPS C95 | C95 差异 |
 |---|---:|---:|---:|---:|---:|---:|
 | 水平 H | 1.269 m | 0.967 m | 23.8% | 2.910 m | 1.923 m | 33.9% |
 | 垂直 V | 1.706 m | 1.530 m | 10.3% | 4.377 m | 3.685 m | 15.8% |
 | 三维 3D | 2.302 m | 1.941 m | 15.7% | 4.898 m | 3.968 m | 19.0% |
+
+为了减少有效历元不同带来的选择偏差，还需要看同历元配对结果。只保留 DPS 与 SPS 同时有解的 60,510 个历元后，收益明显收窄：水平 Mean 改善约 5.6%，3D Mean 改善约 0.5%；垂直 Mean 从 1.475 m 增至 1.530 m，未体现平均误差改善。
+
+| 分量 | 配对 SPS Mean | 配对 DPS Mean | Mean 变化 | 配对 SPS C95 | 配对 DPS C95 | C95 变化 |
+|---|---:|---:|---:|---:|---:|---:|
+| 水平 H | 1.024 m | 0.967 m | +5.6% | 2.154 m | 1.923 m | +10.7% |
+| 垂直 V | 1.475 m | 1.530 m | -3.7% | 3.925 m | 3.685 m | +6.1% |
+| 三维 3D | 1.951 m | 1.941 m | +0.5% | 4.128 m | 3.968 m | +3.9% |
 
 格网模型带来的增益需要与工程可用性一起评估。这组数据里 DPS 有两个风险点：
 
 - 有效历元为 60,510，而 SPS 为 86,373，DPS 覆盖率约 70%。
 - DPS 的最大误差更大：3D 最大值 20.935 m，高于 SPS 的 14.517 m。
 
-这说明 SBAS IGP 适合作为增强解使用，前提是接收机具备质量控制和回退机制。主体误差分布改善明显，同时尾部离群也需要被纳入完整性保护。
+这说明 SBAS IGP 适合作为增强候选使用，前提是接收机具备质量控制和回退机制。DPS 的可用解分布较好，但配对口径下收益并非全维度稳定，尾部离群也需要被纳入完整性保护。
 
 <div class="ion-chart" markdown="0">
   <div class="ion-chart-title">图 5：24 小时逐小时 3D 平均误差 <span>DPS 多数时段更低，但并非每小时都占优</span></div>
@@ -436,21 +445,21 @@ Klobuchar 类模型的误差具有明显日变化特征。单频接收机在进�
     <line x1="536" y1="34" x2="570" y2="34" stroke="#456f91" stroke-width="3"/><text x="578" y="38" font-size="12" fill="#6d675d">SPS 3D Mean</text>
     <line x1="536" y1="56" x2="570" y2="56" stroke="#ad6b35" stroke-width="3"/><text x="578" y="60" font-size="12" fill="#6d675d">DPS 3D Mean</text>
   </svg>
-  <p class="caption">DPS 在 15/24 个小时的 3D Mean 上优于 SPS；第 6、16、20 小时反而变差，说明还需要可用性和异常保护。</p>
+  <p class="caption">非配对逐小时统计中，DPS 在 15/24 个小时的 3D Mean 上低于 SPS；第 2、5、6、7、10、16、17、19、20 小时更高。逐小时样本量不同，需结合覆盖率解释。</p>
 </div>
 
 ## 6. 工程选型：基础改正与格网增强
 
-综合两组证据，可以形成一套面向单频接收机的分层策略：Klobuchar 类模型提供连续可用的基础改正，SBAS IGP 在可用且质量通过时提供更高精度的区域增强，增强解进入定位前需要经过质量门限。
+综合两组证据，可以形成一套面向单频接收机的分层策略：Klobuchar 类模型提供连续可用的基础改正；SBAS IGP 在可用、完整性标志有效且残差监控通过时，作为区域增强候选进入定位解算；增强解需要经过质量门限、覆盖率检查和异常保护。
 
 <div class="strategy-grid" markdown="0">
   <div class="strategy-card">
     <h4>基础层：Klobuchar 改正</h4>
-    <p>保证任何时候都有电离层一阶改正。低高度角用 QZS-Wide，中高高度角用 BDS，避免在中国区域默认使用 QZS-Japan。</p>
+    <p>提供连续的一阶电离层改正。低高度角可评估 QZS-Wide 权重，中高高度角重点验证 BDS；QZS-Japan 在该华东测站数据下不宜默认采用。</p>
   </div>
   <div class="strategy-card">
-    <h4>增强层：SBAS IGP 优先</h4>
-    <p>SBAS IGP 可用且质量通过时启用 DPS。水平和 3D 主体分布会明显改善，适合导航、授时和一般位置服务。</p>
+    <h4>增强层：SBAS IGP 候选增强</h4>
+    <p>SBAS IGP 可用且质量通过时，提高 DPS 解的候选权重。水平误差和 C95 具备改善空间，垂直方向仍需单独监控。</p>
   </div>
   <div class="strategy-card">
     <h4>保护层：异常与回退</h4>
@@ -462,12 +471,12 @@ Klobuchar 类模型的误差具有明显日变化特征。单频接收机在进�
 
 ```text
 if sbas_igp_available and sbas_quality_passed:
-    use DPS with SBAS IGP
+    raise_weight(DPS_with_SBAS_IGP)
 else:
     if elevation_deg < 20:
-        use QZS-Wide Klobuchar
+        evaluate(QZS_Wide_Klobuchar)
     else:
-        use BDS Klobuchar-like
+        evaluate(BDS_Klobuchar_like)
 ```
 
 进一步，接收机里可以增加以下监控量：
@@ -478,16 +487,16 @@ else:
 | DPS/SPS 残差差异 | 捕捉格网异常或模型突变 | 差异过大时冻结 DPS 或降权 |
 | BDS 与 QZS-Wide 改正差 | 低成本电离层异常探测 | 差值过大时膨胀电离层方差 |
 | 高度角 | 模型调度与权重设置 | 低高度角更保守，必要时降权 |
-| UTC / 地方时段 | 电离层日变化及模型峰值相位差 | GPS/QZS 系列在 UTC 06-09 膨胀方差，BDS 单独建模 |
+| UTC / 地方时段 | 电离层日变化及模型峰值相位差 | 作为方差建模变量，具体门限需多站多日验证 |
 
 ## 7. 结论
 
-对单频 GNSS 接收机来说，电离层模型选型应优先服务于伪距误差控制、连续可用性和异常保护。Klobuchar 类模型连续、低成本、易实现，适合作为基础改正来源，但不同广播源的区域适配性差异明显；SBAS IGP 格网模型能带来更大的定位收益，同时需要处理覆盖率、收敛和尾部风险。
+对单频 GNSS 接收机来说，电离层模型选型应优先服务于伪距误差控制、连续可用性和异常保护。Klobuchar 类模型连续、低成本、易实现，适合作为基础改正来源，但不同广播源的区域适配性差异明显；SBAS IGP 格网模型具备增强潜力，同时需要处理覆盖率、收敛和尾部风险。
 
 基于这两组数据，一个务实结论是：
 
-- Klobuchar 维度：在华东测站，BDS 是总体最优且几乎无偏的模型；低高度角时 QZS-Wide 更值得优先使用；QZS-Japan 不适合作为中国区域通用模型。UTC 维度上，GPS/QZS 系列在 UTC 07-08 误差峰值明显，BDS 峰值提前到 UTC 04 左右。
-- 格网模型维度：DPS 相比 SPS 的水平 Mean 改善 23.8%，3D Mean 改善 15.7%，C95 也同步改善；但 DPS 覆盖率约 70%，最大误差更大，必须有质量控制。
-- 接收机策略：DPS 优先，SPS 保底；Klobuchar 内部再按高度角选择 QZS-Wide 或 BDS。
+- Klobuchar 维度：在华东测站单日数据中，BDS 相对 GIM 的总体 RMS 最低且均值接近零；低高度角时 QZS-Wide 可作为候选；QZS-Japan 在该站该日不宜默认采用。UTC 维度上，GPS/QZS 系列在 UTC 07-08 误差峰值明显，BDS 峰值提前到 UTC 04 左右，提示方差模型需要保留模型来源和时段信息。
+- 格网模型维度：非配对总体分布中 DPS 低于 SPS，但同历元配对后，水平 Mean 改善约 5.6%，3D Mean 改善约 0.5%，垂直 Mean 未改善；C95 在水平、垂直和 3D 上分别改善约 10.7%、6.1% 和 3.9%。这说明 SBAS IGP 的收益需要按配对样本、覆盖率和实时质量共同评估。
+- 接收机策略：Klobuchar 维持基础连续改正；SBAS IGP 在完整性、覆盖率和残差监控通过时作为增强候选；SPS/Klobuchar 回退机制应始终保留。
 
-因此，推荐的工程路径是分层使用：基础模型保证可用性，格网模型提升精度，质量监控决定增强解的启用、降权和回退。
+因此，推荐的工程路径是分层使用：基础模型保证可用性，格网模型作为精度增强候选，质量监控决定增强解的启用、降权和回退。
