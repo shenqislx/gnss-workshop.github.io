@@ -16,13 +16,13 @@ published: false
 
 ### 0.1 线性状态空间模型
 
-$$
+```math
 x_k = F_{k-1}x_{k-1}+B_{k-1}u_{k-1}+w_{k-1}
-$$
+```
 
-$$
+```math
 z_k = H_kx_k+v_k
-$$
+```
 
 其中：
 
@@ -42,41 +42,41 @@ $$
 
 Time Update：
 
-$$
+```math
 \hat x_k^- = F_{k-1}\hat x_{k-1}^+ + B_{k-1}u_{k-1}
-$$
+```
 
-$$
+```math
 P_k^- = F_{k-1}P_{k-1}^+F_{k-1}^T+Q_{k-1}
-$$
+```
 
 Measurement Update：
 
-$$
+```math
 \nu_k=z_k-H_k\hat x_k^-
-$$
+```
 
-$$
+```math
 S_k=H_kP_k^-H_k^T+R_k
-$$
+```
 
-$$
+```math
 K_k=P_k^-H_k^TS_k^{-1}
-$$
+```
 
-$$
+```math
 \hat x_k^+=\hat x_k^-+K_k\nu_k
-$$
+```
 
-$$
+```math
 P_k^+=(I-K_kH_k)P_k^-
-$$
+```
 
 同时给出数值上更稳健的 Joseph 形式：
 
-$$
+```math
 P_k^+=(I-K_kH_k)P_k^-(I-K_kH_k)^T+K_kR_kK_k^T
-$$
+```
 
 ---
 
@@ -88,24 +88,24 @@ $$
 
 从已知后验开始：
 
-$$
+```math
 p(x_{k-1}\mid z_{1:k-1})
 =
 \mathcal N(\hat x_{k-1}^+,P_{k-1}^+)
-$$
+```
 
 ### 1.2 Time Update：Chapman–Kolmogorov 概率传播
 
 写出预测分布：
 
-$$
+```math
 p(x_k\mid z_{1:k-1})
 =
 \int
 p(x_k\mid x_{k-1})
 p(x_{k-1}\mid z_{1:k-1})
 \,dx_{k-1}
-$$
+```
 
 推导要点：
 
@@ -116,12 +116,12 @@ $$
 
 ### 1.3 Measurement Update：贝叶斯公式
 
-$$
+```math
 p(x_k\mid z_{1:k})
 \propto
 p(z_k\mid x_k)\,
 p(x_k\mid z_{1:k-1})
-$$
+```
 
 推导要点：
 
@@ -148,27 +148,27 @@ $$
 
 定义上一历元后验误差：
 
-$$
+```math
 \tilde x_{k-1}^+=x_{k-1}-\hat x_{k-1}^+
-$$
+```
 
 定义当前预测误差：
 
-$$
+```math
 \tilde x_k^-=x_k-\hat x_k^-
-$$
+```
 
 代入状态方程，得到：
 
-$$
+```math
 \tilde x_k^-=F_{k-1}\tilde x_{k-1}^++w_{k-1}
-$$
+```
 
 对误差外积取期望：
 
-$$
+```math
 P_k^-=E[\tilde x_k^-(\tilde x_k^-)^T]
-$$
+```
 
 展开所有项，说明：
 
@@ -181,26 +181,26 @@ $$
 
 先假设校正器具有形式：
 
-$$
+```math
 \hat x_k^+
 =
 \hat x_k^-+
 K_k(z_k-H_k\hat x_k^-)
-$$
+```
 
 定义新息：
 
-$$
+```math
 \nu_k=z_k-H_k\hat x_k^-
-$$
+```
 
 推导更新后的估计误差：
 
-$$
+```math
 \tilde x_k^+
 =
 (I-K_kH_k)\tilde x_k^- - K_kv_k
-$$
+```
 
 再对误差外积取期望，得到 Joseph 协方差形式。
 
@@ -208,23 +208,23 @@ $$
 
 可沿两条等价路线展开：
 
-1. 最小化 $\operatorname{tr}(P_k^+)$；
+1. 最小化 $\mathrm{tr}(P_k^+)$；
 2. 使用最优估计的正交性原理：
    $E[\tilde x_k^+\nu_k^T]=0$。
 
 由此求得：
 
-$$
+```math
 K_k=P_k^-H_k^T(H_kP_k^-H_k^T+R_k)^{-1}
-$$
+```
 
 ### 2.4 从 Joseph 形式化简到简式
 
 将最优 $K_k$ 代入 Joseph 形式，证明：
 
-$$
+```math
 P_k^+=(I-K_kH_k)P_k^-
-$$
+```
 
 同时说明：
 
@@ -242,21 +242,21 @@ $$
 
 将 $x_{k-1}$ 和 $w_{k-1}$ 看成联合随机变量：
 
-$$
+```math
 x_k=F_{k-1}x_{k-1}+B_{k-1}u_{k-1}+w_{k-1}
-$$
+```
 
 使用仿射变换的均值公式：
 
-$$
+```math
 E[Ax+b]=AE[x]+b
-$$
+```
 
 以及协方差公式：
 
-$$
-\operatorname{Cov}(Ax)=A\operatorname{Cov}(x)A^T
-$$
+```math
+\mathrm{Cov}(Ax)=A\mathrm{Cov}(x)A^T
+```
 
 直接得到预测均值与预测协方差。
 
@@ -266,13 +266,13 @@ $$
 
 由
 
-$$
+```math
 z_k=H_kx_k+v_k
-$$
+```
 
 构造：
 
-$$
+```math
 \begin{bmatrix}
 x_k\\
 z_k
@@ -289,32 +289,32 @@ P_k^- & P_k^-H_k^T\\
 H_kP_k^- & H_kP_k^-H_k^T+R_k
 \end{bmatrix}
 \right)
-$$
+```
 
 逐项解释：
 
-- $\operatorname{Cov}(x_k,z_k)=P_k^-H_k^T$；
-- $\operatorname{Cov}(z_k)=S_k$；
+- $\mathrm{Cov}(x_k,z_k)=P_k^-H_k^T$；
+- $\mathrm{Cov}(z_k)=S_k$；
 - Kalman 增益本质是“状态与量测的交叉协方差”乘以“量测自身协方差的逆”。
 
 ### 3.3 对联合高斯分布做条件化
 
 套用联合高斯条件分布公式，得到：
 
-$$
+```math
 E[x_k\mid z_k]
 =
 \hat x_k^-+
 P_k^-H_k^TS_k^{-1}
 (z_k-H_k\hat x_k^-)
-$$
+```
 
-$$
-\operatorname{Cov}(x_k\mid z_k)
+```math
+\mathrm{Cov}(x_k\mid z_k)
 =
 P_k^- -
 P_k^-H_k^TS_k^{-1}H_kP_k^-
-$$
+```
 
 由此识别出 $K_k$，并得到标准 Measurement Update。
 
@@ -335,36 +335,36 @@ $$
 
 将上一历元后验写成二次代价：
 
-$$
+```math
 \|x_{k-1}-\hat x_{k-1}^+\|_{(P_{k-1}^+)^{-1}}^2
-$$
+```
 
 将状态转移写成动态残差：
 
-$$
+```math
 \|x_k-F_{k-1}x_{k-1}-B_{k-1}u_{k-1}\|_{Q_{k-1}^{-1}}^2
-$$
+```
 
 把两项组成关于 $(x_{k-1},x_k)$ 的联合高斯负对数。通过消元或 Schur 补消去 $x_{k-1}$，得到只关于 $x_k$ 的预测代价：
 
-$$
+```math
 \|x_k-\hat x_k^-\|_{(P_k^-)^{-1}}^2
-$$
+```
 
 并证明其均值和协方差正是 Time Update 的结果。
 
 ### 4.2 Measurement Update：最大后验估计
 
-$$
+```math
 \hat x_k^{\mathrm{MAP}}
 =
 \arg\max_{x_k}
 p(x_k\mid z_{1:k})
-$$
+```
 
 利用贝叶斯公式并取负对数，将其改写为：
 
-$$
+```math
 \hat x_k^+
 =
 \arg\min_x
@@ -373,7 +373,7 @@ $$
 +
 \|z_k-H_kx\|_{R_k^{-1}}^2
 \right]
-$$
+```
 
 说明：
 
@@ -385,19 +385,19 @@ $$
 
 令梯度为零：
 
-$$
+```math
 \left[(P_k^-)^{-1}+H_k^TR_k^{-1}H_k\right]\hat x_k^+
 =
 (P_k^-)^{-1}\hat x_k^-+H_k^TR_k^{-1}z_k
-$$
+```
 
 由此得到：
 
-$$
+```math
 (P_k^+)^{-1}
 =
 (P_k^-)^{-1}+H_k^TR_k^{-1}H_k
-$$
+```
 
 以及对应的信息向量更新。
 
@@ -405,9 +405,9 @@ $$
 
 利用 Woodbury 矩阵恒等式，将信息形式改写为：
 
-$$
+```math
 K_k=P_k^-H_k^T(H_kP_k^-H_k^T+R_k)^{-1}
-$$
+```
 
 并恢复标准状态更新与协方差更新公式。
 
@@ -446,13 +446,13 @@ $$
 
 ### 6.2 非线性模型时
 
-$$
+```math
 x_k=f(x_{k-1},u_{k-1})+w_{k-1}
-$$
+```
 
-$$
+```math
 z_k=h(x_k)+v_k
-$$
+```
 
 说明四种视角分别如何延伸到 EKF、UKF、迭代 EKF 和非线性最小二乘。
 
