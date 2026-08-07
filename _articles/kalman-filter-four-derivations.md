@@ -1,11 +1,10 @@
 ---
 title: "从四个角度推导 Kalman Filter：Time Update 与 Measurement Update"
 layout: article
-date: 2026-07-30
+date: 2026-08-07
 category: "GNSS 定位算法"
 author: "Andy"
 summary: "从贝叶斯递推、估计误差与最优增益、随机变量仿射变换与联合高斯条件化、MAP 与加权最小二乘四个角度，完整推导 Kalman Filter 的时间更新和量测更新。"
-published: false
 ---
 
 > 你知道吗，Kalman Filter 的公式至少有四种解释方式。相应的，也就有至少四种不同理解它的办法。
